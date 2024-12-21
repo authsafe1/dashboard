@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "AuthSafe",
+  "short_name": "AuthSafe",
+  "description": "An open-source platform for enterprise user authentication, offering OAuth2, OIDC, and 2FA integration for secure access control and management.",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "/icons/logo-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/logo-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
