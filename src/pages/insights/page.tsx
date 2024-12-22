@@ -61,7 +61,7 @@ const Insight = () => {
               </Grid>
               <Grid
                 size={{ xs: 12, md: 4 }}
-                onClick={() => navigate('/dashboar/log/security')}
+                onClick={() => navigate('/log/security')}
                 sx={{ cursor: 'pointer' }}
               >
                 <Typography variant="h5" color="textSecondary">
