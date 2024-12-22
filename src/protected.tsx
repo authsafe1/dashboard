@@ -11,7 +11,7 @@ const ProtectedRoute: FC<{ children: ReactNode }> = ({ children }) => {
     return <Loader loading={true} />;
   }
   if (!isAuthenticated) {
-    return <Navigate to="/auth/signin" replace state={{ from: location }} />;
+    return <Navigate to="/auth/login" replace state={{ from: location }} />;
   } else {
     return children;
   }
