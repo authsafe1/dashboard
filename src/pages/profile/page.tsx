@@ -272,7 +272,7 @@ const Profile = () => {
       const metadataObject = { metadata: metadataToObject(metadata) };
       setMetadataApiResponse({ ...metadataApiResponse, loading: true });
       try {
-        const response = await fetch(`/api/organization/update`, {
+        const response = await fetch(`/organization/update`, {
           method: 'PUT',
           credentials: 'include',
           body: JSON.stringify(metadataObject),
@@ -316,7 +316,7 @@ const Profile = () => {
   const handleDeleteOrganization = async () => {
     setDeletionApiResponse({ ...deletionApiResponse, loading: true });
     try {
-      const response = await fetch(`/api/organization/delete`, {
+      const response = await fetch(`/organization/delete`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -354,7 +354,7 @@ const Profile = () => {
   const handleEnableTwoFA = async () => {
     setTwoApiResponse({ ...twoFaApiResponse, loading: true });
     try {
-      const response = await fetch(`/api/2fa/enable`, {
+      const response = await fetch(`/2fa/enable`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -396,7 +396,7 @@ const Profile = () => {
   const handleDisableTwoFA = async () => {
     setTwoApiResponse({ ...twoFaApiResponse, loading: true });
     try {
-      const response = await fetch(`/api/2fa/disable`, {
+      const response = await fetch(`/2fa/disable`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -455,7 +455,7 @@ const Profile = () => {
     formData.append('file', compressedPhoto);
     setPhotoApiResponse({ ...photoApiResponse, loading: true });
     try {
-      const response = await fetch(`/api/organization/upload/photo`, {
+      const response = await fetch(`/organization/upload/photo`, {
         method: 'POST',
         credentials: 'include',
         body: formData,
@@ -709,7 +709,7 @@ const Profile = () => {
                   <SecretManager
                     label="JWKS URL"
                     fullWidth
-                    value={`https://authsafe.in/api/oauth2/.well-known/jwks`}
+                    value={`https://authsafe.in/oauth2/.well-known/jwks`}
                     copyFunc
                     visibilityFunc={false}
                   />

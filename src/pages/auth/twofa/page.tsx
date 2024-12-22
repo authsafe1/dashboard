@@ -41,7 +41,7 @@ const TwoFactorAuthentication: FC = () => {
     const body = { email: searchParams.get('email'), token: otp };
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/2fa/verify`,
+        `${import.meta.env.VITE_API_URL}/2fa/verify`,
         {
           method: 'POST',
           credentials: 'include',

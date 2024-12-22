@@ -82,7 +82,7 @@ const Register: FC = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/organization/create`,
+          `${import.meta.env.VITE_API_URL}/organization/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -116,7 +116,7 @@ const Register: FC = () => {
   };
 
   const handleGoogleRegister = () => {
-    window.location.replace(`${import.meta.env.VITE_API_URL}/api/auth/google`);
+    window.location.replace(`${import.meta.env.VITE_API_URL}/auth/google`);
   };
 
   useEffect(() => {

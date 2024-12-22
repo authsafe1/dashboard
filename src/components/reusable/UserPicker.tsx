@@ -44,7 +44,7 @@ const UserPicker: React.FC<UserPickerProps> = ({
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/admin/user/all`,
+          `${import.meta.env.VITE_API_URL}/admin/user/all`,
           {
             method: 'POST',
             credentials: 'include',

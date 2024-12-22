@@ -67,7 +67,7 @@ const Authorize: FC = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `/api/oauth2/authorize?${queryParams.toString()}`,
+          `/oauth2/authorize?${queryParams.toString()}`,
           {
             method: 'POST',
             credentials: 'include',

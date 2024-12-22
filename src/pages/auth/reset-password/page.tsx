@@ -49,7 +49,7 @@ const ResetPassword: FC = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
+          `${import.meta.env.VITE_API_URL}/auth/reset-password`,
           {
             method: 'POST',
             credentials: 'include',

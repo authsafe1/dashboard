@@ -57,7 +57,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/check`,
+        `${import.meta.env.VITE_API_URL}/auth/check`,
         {
           method: 'GET',
           credentials: 'include',

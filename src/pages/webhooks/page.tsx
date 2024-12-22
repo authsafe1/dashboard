@@ -303,7 +303,7 @@ const Webhooks = () => {
   const handleDeleteWebhook = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/api/webhook/delete/${id}`, {
+      const response = await fetch(`/webhook/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -355,7 +355,7 @@ const Webhooks = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/webhook/create`, {
+        const response = await fetch(`/webhook/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(tempBody),

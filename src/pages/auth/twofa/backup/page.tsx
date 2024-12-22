@@ -38,7 +38,7 @@ const TwoFactorBackup: FC = () => {
     const body = { code };
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/2fa/backup/verify`,
+        `${import.meta.env.VITE_API_URL}/2fa/backup/verify`,
         {
           method: 'POST',
           credentials: 'include',

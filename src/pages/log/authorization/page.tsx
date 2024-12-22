@@ -34,14 +34,17 @@ const AuthorizationLog = () => {
     const take = rowsPerPage;
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/authorization/all`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/log/authorization/all`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ skip, take }),
         },
-        body: JSON.stringify({ skip, take }),
-      });
+      );
       const result = await response.json();
 
       setData(result);
@@ -55,7 +58,7 @@ const AuthorizationLog = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/organization/log/authorization/count`,
+        `${import.meta.env.VITE_API_URL}/organization/log/authorization/count`,
         {
           method: 'GET',
           credentials: 'include',

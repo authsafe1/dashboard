@@ -62,7 +62,7 @@ const SignIn: FC = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/login`,
+          `${import.meta.env.VITE_API_URL}/auth/login`,
           {
             method: 'POST',
             credentials: 'include',
@@ -99,7 +99,7 @@ const SignIn: FC = () => {
   };
 
   const handleGoogleSignIn = () => {
-    window.location.replace(`${import.meta.env.VITE_API_URL}/api/auth/google`);
+    window.location.replace(`${import.meta.env.VITE_API_URL}/auth/google`);
   };
 
   useEffect(() => {
