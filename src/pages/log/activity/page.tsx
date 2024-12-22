@@ -34,14 +34,17 @@ const ActivityLog = () => {
     const take = rowsPerPage;
     setLoading(true);
     try {
-      const response = await fetch(`/organization/log/activity/all`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/log/activity/all`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ skip, take }),
         },
-        body: JSON.stringify({ skip, take }),
-      });
+      );
       const result = await response.json();
 
       setData(result);
@@ -54,13 +57,16 @@ const ActivityLog = () => {
   const fetchTotalCount = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/organization/log/activity/count`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/log/activity/count`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       const result = await response.json();
 
       setTotalCount(result);
