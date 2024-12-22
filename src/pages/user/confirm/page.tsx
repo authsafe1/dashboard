@@ -58,7 +58,7 @@ const Confirm = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `/api/user/confirm?token=${queryParams.get('token')}`,
+          `/user/confirm?token=${queryParams.get('token')}`,
           {
             method: 'POST',
             credentials: 'include',

@@ -34,7 +34,7 @@ const ActivityLog = () => {
     const take = rowsPerPage;
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/activity/all`, {
+      const response = await fetch(`/organization/log/activity/all`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -54,7 +54,7 @@ const ActivityLog = () => {
   const fetchTotalCount = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/activity/count`, {
+      const response = await fetch(`/organization/log/activity/count`, {
         method: 'GET',
         credentials: 'include',
         headers: {

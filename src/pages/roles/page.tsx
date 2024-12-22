@@ -186,7 +186,7 @@ const Roles = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/role/create`, {
+        const response = await fetch(`/role/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),

@@ -46,7 +46,7 @@ const PermissionPicker: React.FC<PermissionPickerProps> = ({
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/permission/all`,
+          `${import.meta.env.VITE_API_URL}/permission/all`,
           {
             method: 'POST',
             credentials: 'include',

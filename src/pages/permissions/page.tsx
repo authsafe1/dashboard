@@ -176,7 +176,7 @@ const Permissions = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/permission/create`, {
+        const response = await fetch(`/permission/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),

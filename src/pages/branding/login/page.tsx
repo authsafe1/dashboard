@@ -47,7 +47,7 @@ const BrandingLogin = () => {
       tempBody.logo = undefined;
     }
     try {
-      const response = await fetch(`/api/organization/branding/update`, {
+      const response = await fetch(`/organization/branding/update`, {
         method: 'PUT',
         credentials: 'include',
         body: JSON.stringify(tempBody),

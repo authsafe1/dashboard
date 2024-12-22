@@ -77,7 +77,7 @@ const GoogleCreate: FC = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/organization/google/create`,
+          `${import.meta.env.VITE_API_URL}/organization/google/create`,
           {
             method: 'POST',
             credentials: 'include',

@@ -338,7 +338,7 @@ const Applications = () => {
   const handleDeleteClient = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/api/client/delete/${id}`, {
+      const response = await fetch(`/client/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -395,7 +395,7 @@ const Applications = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/client/create`, {
+        const response = await fetch(`/client/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(tempBody),

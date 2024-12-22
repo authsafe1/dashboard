@@ -46,7 +46,7 @@ const RolePicker: React.FC<RolePickerProps> = ({
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/role/all`,
+          `${import.meta.env.VITE_API_URL}/role/all`,
           {
             method: 'POST',
             credentials: 'include',

@@ -34,7 +34,7 @@ const AuthorizationLog = () => {
     const take = rowsPerPage;
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/authorization/all`, {
+      const response = await fetch(`/organization/log/authorization/all`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -54,16 +54,13 @@ const AuthorizationLog = () => {
   const fetchTotalCount = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/organization/log/authorization/count`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const response = await fetch(`/organization/log/authorization/count`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
       const result = await response.json();
 
       setTotalCount(result);

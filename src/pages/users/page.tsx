@@ -520,7 +520,7 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/user/create`, {
+        const response = await fetch(`/user/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),
@@ -561,7 +561,7 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/user/invite`, {
+        const response = await fetch(`/user/invite`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),
@@ -616,7 +616,7 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/user/update/${id}`, {
+        const response = await fetch(`/user/update/${id}`, {
           method: 'PUT',
           credentials: 'include',
           body: JSON.stringify(tempBody),
@@ -649,7 +649,7 @@ const Users = () => {
   const handleDeleteUser = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/api/user/delete/${id}`, {
+      const response = await fetch(`/user/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -679,7 +679,7 @@ const Users = () => {
   const handleUserRoleAssign = async (id: string, roleId: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/api/user/assign/role/${id}`, {
+      const response = await fetch(`/user/assign/role/${id}`, {
         method: 'POST',
         credentials: 'include',
         body: JSON.stringify({ roleId }),

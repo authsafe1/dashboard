@@ -517,7 +517,7 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/user/create`, {
+        const response = await fetch(`/user/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(userBody),
@@ -576,7 +576,7 @@ const QuickStart = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/client/create`, {
+        const response = await fetch(`/client/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(tempBody),
@@ -624,7 +624,7 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/permission/create`, {
+        const response = await fetch(`/permission/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(permissionBody),
@@ -676,7 +676,7 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/api/role/create`, {
+        const response = await fetch(`/role/create`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(roleBody),

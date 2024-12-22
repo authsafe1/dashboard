@@ -55,7 +55,7 @@ const ForgotPassword: FC = () => {
     if (!tempError.email) {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        await fetch(`/api/auth/forgot-password`, {
+        await fetch(`/auth/forgot-password`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),

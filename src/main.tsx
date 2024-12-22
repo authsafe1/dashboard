@@ -21,7 +21,7 @@ import NotFoundComponent from './not-found';
 import ProtectedRoute from './protected';
 
 const Profile = lazy(() => import('./pages/profile/page'));
-const SignIn = lazy(() => import('./pages/auth/login/page'));
+const Login = lazy(() => import('./pages/auth/login/page'));
 const Register = lazy(() => import('./pages/auth/register/page'));
 const GoogleCreate = lazy(() => import('./pages/auth/google/create/page'));
 const ForgotPassword = lazy(() => import('./pages/auth/forgot-password/page'));
@@ -50,7 +50,7 @@ const OAuth2Authorization = lazy(() => import('./pages/oauth2/authorize/page'));
 const authConfirmLoader = async ({ request }: LoaderFunctionArgs<any>) => {
   const token = new URL(request.url).searchParams.get('token');
   return await fetch(
-    `${import.meta.env.VITE_API_URL}/api/organization/confirm?token=${token}`,
+    `${import.meta.env.VITE_API_URL}/organization/confirm?token=${token}`,
     {
       method: 'POST',
       credentials: 'include',
@@ -62,7 +62,7 @@ const authConfirmLoader = async ({ request }: LoaderFunctionArgs<any>) => {
 };
 
 const applicationsLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/api/client/all`, {
+  return await fetch(`${import.meta.env.VITE_API_URL}/client/all`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -72,7 +72,7 @@ const applicationsLoader: LoaderFunction = async () => {
 };
 
 const usersLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/api/user/all`, {
+  return await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -82,7 +82,7 @@ const usersLoader: LoaderFunction = async () => {
 };
 
 const permissionsLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/api/permission/all`, {
+  return await fetch(`${import.meta.env.VITE_API_URL}/permission/all`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -92,7 +92,7 @@ const permissionsLoader: LoaderFunction = async () => {
 };
 
 const rolesLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/api/role/all`, {
+  return await fetch(`${import.meta.env.VITE_API_URL}/role/all`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -102,7 +102,7 @@ const rolesLoader: LoaderFunction = async () => {
 };
 
 const webhooksLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/api/webhook/all`, {
+  return await fetch(`${import.meta.env.VITE_API_URL}/webhook/all`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -112,16 +112,13 @@ const webhooksLoader: LoaderFunction = async () => {
 };
 
 const brandingLoader: LoaderFunction = async () => {
-  return await fetch(
-    `${import.meta.env.VITE_API_URL}/api/organization/branding`,
-    {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  return await fetch(`${import.meta.env.VITE_API_URL}/organization/branding`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+  });
 };
 
 const oauth2Loader: LoaderFunction = async ({ request }) => {
@@ -133,7 +130,7 @@ const oauth2Loader: LoaderFunction = async ({ request }) => {
     return await fetch(
       `${
         import.meta.env.VITE_API_URL
-      }/api/organization/branding?organizationId=${organizationId}`,
+      }/organization/branding?organizationId=${organizationId}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -149,16 +146,14 @@ const oauth2Loader: LoaderFunction = async ({ request }) => {
 
 const dashboardLoader: LoaderFunction = async () => {
   const dashboardUrl = [
-    { url: `${import.meta.env.VITE_API_URL}/api/user/count`, method: 'GET' },
-    { url: `${import.meta.env.VITE_API_URL}/api/client/count`, method: 'GET' },
+    { url: `${import.meta.env.VITE_API_URL}/user/count`, method: 'GET' },
+    { url: `${import.meta.env.VITE_API_URL}/client/count`, method: 'GET' },
     {
-      url: `${
-        import.meta.env.VITE_API_URL
-      }/api/organization/log/security/count`,
+      url: `${import.meta.env.VITE_API_URL}/organization/log/security/count`,
       method: 'GET',
     },
     {
-      url: `${import.meta.env.VITE_API_URL}/api/organization/log/activity/data`,
+      url: `${import.meta.env.VITE_API_URL}/organization/log/activity/data`,
       method: 'GET',
     },
   ];
@@ -275,8 +270,8 @@ const router = createBrowserRouter([
         path: 'auth',
         children: [
           {
-            path: 'signin',
-            element: <SignIn />,
+            path: 'login',
+            element: <Login />,
           },
           {
             path: 'register',

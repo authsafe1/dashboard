@@ -34,7 +34,7 @@ const SecurityLog = () => {
     const take = rowsPerPage;
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/security/all`, {
+      const response = await fetch(`/organization/log/security/all`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -54,7 +54,7 @@ const SecurityLog = () => {
   const fetchTotalCount = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/organization/log/security/count`, {
+      const response = await fetch(`/organization/log/security/count`, {
         method: 'GET',
         credentials: 'include',
         headers: {
