@@ -143,6 +143,7 @@ const TwoFaModal: FC<ITwoFaProps> = ({
                   fullWidth
                   copyFunc
                   visibilityFunc={false}
+                  rotateFunc={false}
                   value={backupCodes.join(' ')}
                 />
               </Grid>
@@ -195,6 +196,12 @@ const Profile = () => {
     success: false,
     message: '',
   });
+  const [apiKeyResponse, setApiKeyResponse] = useState({
+    error: false,
+    loading: false,
+    success: false,
+    message: '',
+  });
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -220,7 +227,7 @@ const Profile = () => {
 
   useEffect(() => {
     setMetadata(parseMetadata(organization?.metadata));
-  }, []);
+  }, [organization?.metadata]);
 
   const handleMetadataChange = (value: KeyValue[]) => {
     setMetadata(value);
@@ -272,14 +279,17 @@ const Profile = () => {
       const metadataObject = { metadata: metadataToObject(metadata) };
       setMetadataApiResponse({ ...metadataApiResponse, loading: true });
       try {
-        const response = await fetch(`/organization/update`, {
-          method: 'PUT',
-          credentials: 'include',
-          body: JSON.stringify(metadataObject),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/organization/update`,
+          {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(metadataObject),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setMetadataApiResponse({
             ...metadataApiResponse,
@@ -316,13 +326,16 @@ const Profile = () => {
   const handleDeleteOrganization = async () => {
     setDeletionApiResponse({ ...deletionApiResponse, loading: true });
     try {
-      const response = await fetch(`/organization/delete`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/delete`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setDeletionApiResponse({
           ...deletionApiResponse,
@@ -354,13 +367,16 @@ const Profile = () => {
   const handleEnableTwoFA = async () => {
     setTwoApiResponse({ ...twoFaApiResponse, loading: true });
     try {
-      const response = await fetch(`/2fa/enable`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/2fa/enable`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setTwoApiResponse({
           ...twoFaApiResponse,
@@ -396,13 +412,16 @@ const Profile = () => {
   const handleDisableTwoFA = async () => {
     setTwoApiResponse({ ...twoFaApiResponse, loading: true });
     try {
-      const response = await fetch(`/2fa/disable`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/2fa/disable`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setTwoApiResponse({
           ...twoFaApiResponse,
@@ -455,11 +474,14 @@ const Profile = () => {
     formData.append('file', compressedPhoto);
     setPhotoApiResponse({ ...photoApiResponse, loading: true });
     try {
-      const response = await fetch(`/organization/upload/photo`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/upload/photo`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+        },
+      );
       if (response.ok) {
         setPhotoApiResponse({
           ...photoApiResponse,
@@ -484,6 +506,41 @@ const Profile = () => {
         error: true,
         loading: false,
         message: 'Error uploading photo',
+      });
+    }
+  };
+
+  const handleRotateApiKey = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/secret/rotate`,
+        {
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (response.ok) {
+        setApiKeyResponse({
+          ...apiKeyResponse,
+          success: true,
+          error: false,
+          loading: false,
+          message: 'API Key Rotated',
+        });
+        checkAuth();
+      } else {
+        constants.fetchError(response.status);
+      }
+    } catch (error: any) {
+      setApiKeyResponse({
+        ...apiKeyResponse,
+        success: false,
+        error: true,
+        loading: false,
+        message: error.message || 'Error rotating secret',
       });
     }
   };
@@ -515,6 +572,19 @@ const Profile = () => {
         handleClose={() => {
           setMetadataApiResponse({
             ...metadataApiResponse,
+            success: false,
+            error: false,
+          });
+          checkAuth();
+        }}
+      />
+      <Alert
+        success={apiKeyResponse.success}
+        error={apiKeyResponse.error}
+        message={apiKeyResponse.message}
+        handleClose={() => {
+          setApiKeyResponse({
+            ...apiKeyResponse,
             success: false,
             error: false,
           });
@@ -701,8 +771,20 @@ const Profile = () => {
                     label="Organization ID"
                     fullWidth
                     value={organization?.id}
-                    copyFunc
-                    visibilityFunc
+                    copyFunc={true}
+                    visibilityFunc={true}
+                    rotateFunc={false}
+                  />
+                </Grid>
+                <Grid>
+                  <SecretManager
+                    label="API Key"
+                    fullWidth
+                    value={organization?.Secret?.apiKey}
+                    copyFunc={true}
+                    visibilityFunc={true}
+                    rotateFunc={true}
+                    onRotate={handleRotateApiKey}
                   />
                 </Grid>
                 <Grid>
@@ -710,8 +792,9 @@ const Profile = () => {
                     label="JWKS URL"
                     fullWidth
                     value={`https://authsafe.in/oauth2/.well-known/jwks`}
-                    copyFunc
+                    copyFunc={true}
                     visibilityFunc={false}
+                    rotateFunc={false}
                   />
                 </Grid>
                 <Grid>
@@ -720,8 +803,9 @@ const Profile = () => {
                     fullWidth
                     label="Public Key"
                     value={organization?.Secret?.publicKey}
-                    copyFunc
+                    copyFunc={true}
                     visibilityFunc={false}
+                    rotateFunc={false}
                   />
                 </Grid>
               </Grid>

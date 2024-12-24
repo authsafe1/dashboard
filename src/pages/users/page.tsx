@@ -520,14 +520,17 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/user/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(body),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/user/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -561,14 +564,17 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/user/invite`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(body),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/user/invite`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -616,14 +622,17 @@ const Users = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/user/update/${id}`, {
-          method: 'PUT',
-          credentials: 'include',
-          body: JSON.stringify(tempBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/user/update/${id}`,
+          {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(tempBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -649,13 +658,16 @@ const Users = () => {
   const handleDeleteUser = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/user/delete/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/user/delete/${id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setApiResponse({
           ...apiResponse,
@@ -679,14 +691,17 @@ const Users = () => {
   const handleUserRoleAssign = async (id: string, roleId: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/user/assign/role/${id}`, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({ roleId }),
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/user/assign/role/${id}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify({ roleId }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setApiResponse({
           ...apiResponse,

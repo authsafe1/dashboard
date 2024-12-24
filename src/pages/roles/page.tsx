@@ -186,14 +186,17 @@ const Roles = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/role/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(body),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/role/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,

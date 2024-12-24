@@ -1,29 +1,37 @@
 import {
   CheckCircle,
   ContentCopy,
+  Refresh,
   Visibility,
   VisibilityOff,
-} from "@mui/icons-material";
+} from '@mui/icons-material';
 import {
   IconButton,
   InputAdornment,
   TextField,
   TextFieldProps,
-} from "@mui/material";
-import React, { useState } from "react";
-import GeneralTooltip from "../reusable/GeneralTooltip";
+} from '@mui/material';
+import React, { useState } from 'react';
+import GeneralTooltip from '../reusable/GeneralTooltip';
 
-type SecretManagerProps = TextFieldProps & {
+type SecretManagerWithRotationProps = TextFieldProps & {
+  copyFunc: boolean;
+  visibilityFunc: boolean;
+  rotateFunc: true;
+  onRotate: () => Promise<void>;
+};
+
+type SecretManagerWithoutRotationProps = TextFieldProps & {
+  rotateFunc: false;
   copyFunc: boolean;
   visibilityFunc: boolean;
 };
 
-const SecretManager: React.FC<SecretManagerProps> = ({
-  copyFunc,
-  visibilityFunc,
-  value,
-  ...props
-}) => {
+type SecretManagerProps =
+  | SecretManagerWithRotationProps
+  | SecretManagerWithoutRotationProps;
+
+const SecretManager: React.FC<SecretManagerProps> = (props) => {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -37,22 +45,29 @@ const SecretManager: React.FC<SecretManagerProps> = ({
 
   return (
     <TextField
-      value={value}
-      type={visibilityFunc ? (visible ? "text" : "password") : "text"}
+      value={props.value}
+      type={props.visibilityFunc ? (visible ? 'text' : 'password') : 'text'}
       slotProps={{
         input: {
           endAdornment: (
             <InputAdornment position="end">
-              {visibilityFunc ? (
+              {props.rotateFunc ? (
+                <GeneralTooltip title="Rotate" arrow>
+                  <IconButton onClick={props.onRotate}>
+                    <Refresh />
+                  </IconButton>
+                </GeneralTooltip>
+              ) : null}
+              {props.visibilityFunc ? (
                 <GeneralTooltip title="Reveal" arrow>
                   <IconButton onClick={() => setVisible(!visible)}>
                     {visible ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </GeneralTooltip>
               ) : null}
-              {copyFunc ? (
+              {props.copyFunc ? (
                 <GeneralTooltip title="Copy" arrow>
-                  <IconButton onClick={() => handleCopy(value as string)}>
+                  <IconButton onClick={() => handleCopy(props.value as string)}>
                     {copied ? <CheckCircle color="success" /> : <ContentCopy />}
                   </IconButton>
                 </GeneralTooltip>

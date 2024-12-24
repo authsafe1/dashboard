@@ -27,6 +27,7 @@ interface Organization {
   metadata: object;
   Secret: {
     publicKey: string;
+    apiKey: string;
   };
 }
 

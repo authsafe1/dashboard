@@ -47,14 +47,17 @@ const BrandingLogin = () => {
       tempBody.logo = undefined;
     }
     try {
-      const response = await fetch(`/organization/branding/update`, {
-        method: 'PUT',
-        credentials: 'include',
-        body: JSON.stringify(tempBody),
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/branding/update`,
+        {
+          method: 'PUT',
+          credentials: 'include',
+          body: JSON.stringify(tempBody),
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setApiResponse({
           ...apiResponse,

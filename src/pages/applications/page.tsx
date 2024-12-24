@@ -200,6 +200,7 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               fullWidth
               copyFunc
               visibilityFunc={false}
+              rotateFunc={false}
             />
           </Grid>
           <Grid>
@@ -209,6 +210,7 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               fullWidth
               copyFunc
               visibilityFunc
+              rotateFunc={false}
             />
           </Grid>
         </Grid>
@@ -338,13 +340,16 @@ const Applications = () => {
   const handleDeleteClient = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/client/delete/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/client/delete/${id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setApiResponse({
           ...apiResponse,
@@ -395,14 +400,17 @@ const Applications = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/client/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(tempBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/client/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(tempBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
