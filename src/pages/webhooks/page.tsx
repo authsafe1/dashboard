@@ -303,13 +303,16 @@ const Webhooks = () => {
   const handleDeleteWebhook = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
-      const response = await fetch(`/webhook/delete/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/webhook/delete/${id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (response.ok) {
         setApiResponse({
           ...apiResponse,
@@ -355,14 +358,17 @@ const Webhooks = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/webhook/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(tempBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/webhook/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(tempBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,

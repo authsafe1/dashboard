@@ -517,14 +517,17 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/user/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(userBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/user/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(userBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -576,14 +579,17 @@ const QuickStart = () => {
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/client/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(tempBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/client/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(tempBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -624,14 +630,17 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/permission/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(permissionBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/permission/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(permissionBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,
@@ -676,14 +685,17 @@ const QuickStart = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        const response = await fetch(`/role/create`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(roleBody),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/role/create`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(roleBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         if (response.ok) {
           setApiResponse({
             ...apiResponse,

@@ -55,7 +55,7 @@ const ForgotPassword: FC = () => {
     if (!tempError.email) {
       setApiResponse({ ...apiResponse, loading: true });
       try {
-        await fetch(`/auth/forgot-password`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/auth/forgot-password`, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(body),
