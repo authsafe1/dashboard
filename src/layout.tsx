@@ -34,7 +34,7 @@ import {
 } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar } from './components';
 import constants from './config/constants';
 import { useAuth } from './context/AuthContext';
@@ -225,13 +225,6 @@ const Layout = () => {
     }
   };
 
-  const handleNavigation = (url: string) => {
-    setProfileMenuOpen(() => false);
-    setTimeout(() => {
-      navigate(url);
-    }, 500);
-  };
-
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
@@ -270,13 +263,13 @@ const Layout = () => {
           />
         </ListItem>
         <Divider />
-        <MenuItem onClick={() => handleNavigation('/profile')}>
+        <MenuItem LinkComponent={Link} href="/profile">
           <ListItemIcon>
             <Person />
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={() => handleNavigation('/docs')}>
+        <MenuItem component="a" href={`${import.meta.env.VITE_BASE_URL}/docs`}>
           <ListItemIcon>
             <MenuBook />
           </ListItemIcon>
