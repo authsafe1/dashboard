@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import { RichTextEditor } from '../../../components';
+import { RichTextEditor } from '../../components';
 
 interface IEmailTemplateDialog {
   title: string;

@@ -20,11 +20,11 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
-import { Alert, GeneralTooltip, PermissionPicker } from '../../components';
-import constants from '../../config/constants';
+import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
+import { Alert, GeneralTooltip } from '../components';
+import constants from '../config/constants';
 
-interface IRoleLoaderData {
+interface IPermissionLoaderData {
   id: string;
   name: string;
   key: string;
@@ -33,17 +33,17 @@ interface IRoleLoaderData {
   updatedAt: string;
 }
 
-interface ICreateRoleProps {
+interface ICreatePermissionProps {
   open: boolean;
-  body: { name: string; key: string; description: string; permissions: any[] };
-  validation: { name: boolean; key: boolean; permissions: boolean };
+  body: { name: string; key: string; description: string };
+  validation: { name: boolean; key: boolean };
   loading: boolean;
-  handleInputChange: (name: string, value: any) => void;
+  handleInputChange: (name: string, value: string) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
 }
 
-const CreateRole: FC<ICreateRoleProps> = ({
+const CreatePermission: FC<ICreatePermissionProps> = ({
   open,
   body,
   validation,
@@ -54,7 +54,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create Role</DialogTitle>
+      <DialogTitle>Create Permission</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -62,7 +62,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="e.g. System Access"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -81,9 +81,13 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Key"
               fullWidth
               required
-              placeholder="sys_admin"
+              placeholder="feature:permission"
               error={validation.key}
-              helperText={validation.key ? 'Must not be blank' : ''}
+              helperText={
+                validation.key
+                  ? "Key must follow the pattern '[segment1]:[segment2]'"
+                  : ''
+              }
               value={body.key}
               onChange={(event) => handleInputChange('key', event.target.value)}
               slotProps={{
@@ -92,6 +96,9 @@ const CreateRole: FC<ICreateRoleProps> = ({
                     <InputAdornment position="start">org:</InputAdornment>
                   ),
                 },
+                inputLabel: {
+                  shrink: true,
+                },
               }}
             />
           </Grid>
@@ -99,7 +106,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Permission to access all system resources"
               value={body.description}
               multiline
               rows={3}
@@ -111,17 +118,6 @@ const CreateRole: FC<ICreateRoleProps> = ({
                   shrink: true,
                 },
               }}
-            />
-          </Grid>
-          <Grid>
-            <PermissionPicker
-              multiple
-              required
-              error={validation.permissions}
-              helperText="Atleast one permission must be selected"
-              onPermissionSelect={(permissions) =>
-                handleInputChange('permissions', permissions)
-              }
             />
           </Grid>
         </Grid>
@@ -142,13 +138,22 @@ const CreateRole: FC<ICreateRoleProps> = ({
   );
 };
 
-const Roles = () => {
-  const [addRole, setAddRole] = useState(false);
+export const dataLoader: LoaderFunction = async () => {
+  return await fetch(`${import.meta.env.VITE_API_URL}/permission/all`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+const Permissions = () => {
+  const [addPermission, setAddPermission] = useState(false);
   const [body, setBody] = useState({
     name: '',
     key: '',
     description: '',
-    permissions: [],
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -159,26 +164,21 @@ const Roles = () => {
   const [validation, setValidation] = useState({
     name: false,
     key: false,
-    permissions: false,
   });
 
   const { revalidate } = useRevalidator();
 
-  const loaderData = useLoaderData() as IRoleLoaderData[];
+  const loaderData = useLoaderData() as IPermissionLoaderData[];
 
-  const handleCreateRole = async () => {
+  const handleCreatePermission = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (!/^[a-z0-9_]+$/.test(body.key)) {
+    if (!/^[a-z0-9_]+:[a-z0-9_]+$/.test(body.key)) {
       tempValidation.key = true;
-      validationCount++;
-    }
-    if (body.permissions.length < 1) {
-      tempValidation.permissions = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -187,7 +187,7 @@ const Roles = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/role/create`,
+          `${import.meta.env.VITE_API_URL}/permission/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -202,7 +202,7 @@ const Roles = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new role',
+            message: 'Created new permission',
           });
         } else {
           constants.fetchError(response.status);
@@ -212,20 +212,20 @@ const Roles = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: error.message || 'Error creating role',
+          message: error.message || 'Error creating permission',
         });
       }
     }
   };
 
-  const handleInputChange = (name: string, value: any) => {
+  const handleInputChange = (name: string, value: string) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
   };
 
-  const handleRoleModalClose = () => {
-    setBody({ ...body, name: '', key: '', description: '', permissions: [] });
-    setAddRole(false);
+  const handlePermissionModalClose = () => {
+    setBody({ ...body, name: '', key: '', description: '' });
+    setAddPermission(false);
   };
 
   return (
@@ -242,25 +242,25 @@ const Roles = () => {
             error: false,
           });
           revalidate();
-          handleRoleModalClose();
+          handlePermissionModalClose();
         }}
       />
-      <CreateRole
-        open={addRole}
+      <CreatePermission
+        open={addPermission}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleRoleModalClose}
-        handleSubmit={handleCreateRole}
+        handleClose={handlePermissionModalClose}
         handleInputChange={handleInputChange}
+        handleSubmit={handleCreatePermission}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">Roles</Typography>
+            <Typography variant="h4">Permissions</Typography>
             <Typography color="textSecondary">
-              Define user access levels and roles to ensure appropriate access
-              to resources within your organization.
+              Define and manage permissions to control access and privileges
+              across your applications.
             </Typography>
           </Grid>
           <Grid>
@@ -268,9 +268,9 @@ const Roles = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={() => setAddRole(true)}
+              onClick={() => setAddPermission(true)}
             >
-              Create Role
+              Create Permission
             </Button>
           </Grid>
         </Grid>
@@ -313,4 +313,4 @@ const Roles = () => {
   );
 };
 
-export default Roles;
+export default Permissions;

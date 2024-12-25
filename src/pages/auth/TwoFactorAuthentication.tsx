@@ -11,14 +11,14 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import { MuiOtpInput } from 'mui-one-time-password-input';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
-import { Alert, AuthSafeIcon, Loader } from '../../../components';
-import constants from '../../../config/constants';
-import { useAuth } from '../../../context/AuthContext';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Loader } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const TwoFactorAuthentication: FC = () => {
+const TwoFactorAuthentication = () => {
   const [searchParams] = useSearchParams();
   const [otp, setOtp] = useState('');
 

@@ -15,13 +15,36 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
-import { useLoaderData, useLocation } from 'react-router';
+import { useState } from 'react';
+import { LoaderFunction, useLoaderData, useLocation } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon } from '../../../components';
-import constants from '../../../config/constants';
+import { Alert, AuthSafeIcon } from '../components';
+import constants from '../config/constants';
 
-const Authorize: FC = () => {
+export const dataLoader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+
+  const organizationId = url.searchParams.get('organization_id');
+
+  if (organizationId) {
+    return await fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/organization/branding?organizationId=${organizationId}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  } else {
+    return null;
+  }
+};
+
+const OAuth2Authorize = () => {
   const [body, setBody] = useState({
     email: '',
     password: '',
@@ -248,4 +271,4 @@ const Authorize: FC = () => {
   );
 };
 
-export default Authorize;
+export default OAuth2Authorize;

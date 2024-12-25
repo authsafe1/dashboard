@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
-import { Alert, AuthSafeIcon } from '../../../components';
-import constants from '../../../config/constants';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon } from '../components';
+import constants from '../config/constants';
+import { useThemeToggle } from '../context/ThemeContext';
 
-const Confirm = () => {
+const UserConfirm = () => {
   const loaderData: any = useLoaderData();
 
   const [body, setBody] = useState({
@@ -58,7 +58,9 @@ const Confirm = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `/user/confirm?token=${queryParams.get('token')}`,
+          `${import.meta.env.VITE_API_URL}/user/confirm?token=${queryParams.get(
+            'token',
+          )}`,
           {
             method: 'POST',
             credentials: 'include',
@@ -218,4 +220,4 @@ const Confirm = () => {
   );
 };
 
-export default Confirm;
+export default UserConfirm;

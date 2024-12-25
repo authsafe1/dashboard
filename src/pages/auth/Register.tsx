@@ -14,15 +14,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, Loader } from '../../../components';
-import constants from '../../../config/constants';
-import { useAuth } from '../../../context/AuthContext';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Loader } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const Register: FC = () => {
+const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();

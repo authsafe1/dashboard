@@ -25,11 +25,11 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { FC, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
+import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, GeneralTooltip, RolePicker } from '../../components';
-import { Role } from '../../components/reusable/RolePicker';
-import constants from '../../config/constants';
+import { Alert, GeneralTooltip, RolePicker } from '../components';
+import { Role } from '../components/reusable/RolePicker';
+import constants from '../config/constants';
 
 interface IUserLoaderData {
   id: string;
@@ -471,6 +471,16 @@ interface MoreOpenState {
     email: string;
   };
 }
+
+export const dataLoader: LoaderFunction = async () => {
+  return await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 const Users = () => {
   const [addUser, setAddUser] = useState(false);

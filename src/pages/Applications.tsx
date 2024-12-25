@@ -21,15 +21,15 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
+import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
 import {
   Alert,
   GeneralTooltip,
   GrantSelector,
   SecretManager,
-} from '../../components';
-import constants from '../../config/constants';
+} from '../components';
+import constants from '../config/constants';
 
 interface IApplicationLoaderData {
   id: string;
@@ -198,7 +198,7 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               label="Client ID"
               value={body.id}
               fullWidth
-              copyFunc
+              copyFunc={true}
               visibilityFunc={false}
               rotateFunc={false}
             />
@@ -208,7 +208,7 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               label="Client Secret"
               value={body.secret}
               fullWidth
-              copyFunc
+              copyFunc={true}
               visibilityFunc
               rotateFunc={false}
             />
@@ -291,6 +291,16 @@ interface MoreOpenState {
     secret: string;
   };
 }
+
+export const dataLoader: LoaderFunction = async () => {
+  return await fetch(`${import.meta.env.VITE_API_URL}/client/all`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 const Applications = () => {
   const [addApplication, setAddApplication] = useState(false);

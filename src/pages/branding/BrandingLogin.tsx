@@ -13,9 +13,19 @@ import {
 } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input';
 import { useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
-import { Alert, Preview } from '../../../components';
-import constants from '../../../config/constants';
+import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
+import { Alert, Preview } from '../../components';
+import constants from '../../config/constants';
+
+export const dataLoader: LoaderFunction = async () => {
+  return await fetch(`${import.meta.env.VITE_API_URL}/organization/branding`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 const BrandingLogin = () => {
   const theme = useTheme();

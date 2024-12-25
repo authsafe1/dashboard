@@ -12,14 +12,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon } from '../../../components';
-import { useAuth } from '../../../context/AuthContext';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon } from '../../components';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const ForgotPassword: FC = () => {
+const ForgotPassword = () => {
   const [body, setBody] = useState({
     email: '',
   });

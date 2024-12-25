@@ -6,9 +6,23 @@ import {
   Link as MuiLink,
   Typography,
 } from '@mui/material';
-import { Link, useLoaderData } from 'react-router';
+import { Link, LoaderFunction, useLoaderData } from 'react-router';
 
-const Confirm = () => {
+export const dataLoader: LoaderFunction = async ({ request }) => {
+  const token = new URL(request.url).searchParams.get('token');
+  return await fetch(
+    `${import.meta.env.VITE_API_URL}/organization/confirm?token=${token}`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
+
+const AuthConfirm = () => {
   const loaderData: any = useLoaderData();
 
   return (
@@ -42,4 +56,4 @@ const Confirm = () => {
   );
 };
 
-export default Confirm;
+export default AuthConfirm;

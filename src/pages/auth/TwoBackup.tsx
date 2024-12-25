@@ -9,14 +9,14 @@ import {
   IconButton,
   TextField,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { Alert, AuthSafeIcon, Loader } from '../../../../components';
-import constants from '../../../../config/constants';
-import { useAuth } from '../../../../context/AuthContext';
-import { useThemeToggle } from '../../../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Loader } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const TwoFactorBackup: FC = () => {
+const TwoFactorBackup = () => {
   const [code, setCode] = useState('');
 
   const navigate = useNavigate();

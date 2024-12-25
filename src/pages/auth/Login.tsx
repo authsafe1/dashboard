@@ -14,15 +14,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, Loader } from '../../../components';
-import constants from '../../../config/constants';
-import { useAuth } from '../../../context/AuthContext';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Loader } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const SignIn: FC = () => {
+const Login = () => {
   const [body, setBody] = useState({
     email: '',
     password: '',
@@ -49,7 +49,7 @@ const SignIn: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSignIn = async () => {
+  const handleLogin = async () => {
     const tempError = { email: false, password: false };
     if (!isEmail(body.email)) {
       tempError.email = true;
@@ -150,7 +150,7 @@ const SignIn: FC = () => {
           component="form"
           onSubmit={(event) => {
             event.preventDefault();
-            handleSignIn();
+            handleLogin();
           }}
         >
           <Card
@@ -280,4 +280,4 @@ const SignIn: FC = () => {
   );
 };
 
-export default SignIn;
+export default Login;

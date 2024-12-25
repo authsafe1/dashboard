@@ -12,13 +12,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { Alert, AuthSafeIcon } from '../../../components';
-import constants from '../../../config/constants';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon } from '../../components';
+import constants from '../../config/constants';
+import { useThemeToggle } from '../../context/ThemeContext';
 
-const ResetPassword: FC = () => {
+const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const [body, setBody] = useState({
     password: '',

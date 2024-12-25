@@ -24,7 +24,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
-import constants from '../../../config/constants';
+import constants from '../config/constants';
 
 const StyledCard = styled(MuiCard)<{ selected?: boolean; disabled?: boolean }>(
   ({ theme }) => ({
@@ -108,7 +108,7 @@ const payments = [
   { name: 'Expiry date:', detail: '04/2024' },
 ];
 
-const Review: FC = () => {
+const Review = () => {
   return (
     <Stack spacing={2}>
       <List disablePadding>
@@ -299,7 +299,7 @@ function getStepContent(step: number) {
       throw new Error('Unknown step');
   }
 }
-export default function Checkout() {
+export default function BillingPlan() {
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);

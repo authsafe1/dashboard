@@ -19,6 +19,7 @@ type SecretManagerWithRotationProps = TextFieldProps & {
   visibilityFunc: boolean;
   rotateFunc: true;
   onRotate: () => Promise<void>;
+  loading: boolean;
 };
 
 type SecretManagerWithoutRotationProps = TextFieldProps & {
@@ -52,11 +53,35 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
           endAdornment: (
             <InputAdornment position="end">
               {props.rotateFunc ? (
-                <GeneralTooltip title="Rotate" arrow>
-                  <IconButton onClick={props.onRotate}>
-                    <Refresh />
-                  </IconButton>
-                </GeneralTooltip>
+                props.loading ? (
+                  <Refresh
+                    sx={{
+                      animation: props.loading
+                        ? 'rotate 1s linear infinite'
+                        : 'none',
+                      '@keyframes rotate': {
+                        '0%': { transform: 'rotate(0deg)' },
+                        '100%': { transform: 'rotate(360deg)' },
+                      },
+                    }}
+                  />
+                ) : (
+                  <GeneralTooltip title="Rotate" arrow>
+                    <IconButton onClick={props.onRotate}>
+                      <Refresh
+                        sx={{
+                          animation: props.loading
+                            ? 'rotate 1s linear infinite'
+                            : 'none',
+                          '@keyframes rotate': {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(360deg)' },
+                          },
+                        }}
+                      />
+                    </IconButton>
+                  </GeneralTooltip>
+                )
               ) : null}
               {props.visibilityFunc ? (
                 <GeneralTooltip title="Reveal" arrow>

@@ -28,9 +28,9 @@ import {
   GeneralTooltip,
   MetadataTable,
   SecretManager,
-} from '../../components';
-import constants from '../../config/constants';
-import { useAuth } from '../../context/AuthContext';
+} from '../components';
+import constants from '../config/constants';
+import { useAuth } from '../context/AuthContext';
 
 interface KeyValue {
   key: string;
@@ -141,7 +141,7 @@ const TwoFaModal: FC<ITwoFaProps> = ({
                   minRows={2}
                   maxRows={3}
                   fullWidth
-                  copyFunc
+                  copyFunc={true}
                   visibilityFunc={false}
                   rotateFunc={false}
                   value={backupCodes.join(' ')}
@@ -344,22 +344,16 @@ const Profile = () => {
           loading: false,
           message: 'Deleted orgnization',
         });
-      } else if (response.status === 401) {
-        setDeletionApiResponse({
-          ...deletionApiResponse,
-          success: false,
-          error: true,
-          loading: false,
-          message: 'Not authenticated',
-        });
+      } else {
+        constants.fetchError(response.status);
       }
-    } catch {
+    } catch (error: any) {
       setDeletionApiResponse({
         ...deletionApiResponse,
         success: false,
         error: true,
         loading: false,
-        message: 'Error deleting organization',
+        message: error.message || 'Error deleting organization',
       });
     }
   };
@@ -782,6 +776,7 @@ const Profile = () => {
                     fullWidth
                     value={organization?.Secret?.apiKey}
                     copyFunc={true}
+                    loading={apiKeyResponse.loading}
                     visibilityFunc={true}
                     rotateFunc={true}
                     onRotate={handleRotateApiKey}
@@ -791,7 +786,9 @@ const Profile = () => {
                   <SecretManager
                     label="JWKS URL"
                     fullWidth
-                    value={`https://authsafe.in/oauth2/.well-known/jwks`}
+                    value={`${
+                      import.meta.env.VITE_API_URL
+                    }/oauth2/.well-known/jwks`}
                     copyFunc={true}
                     visibilityFunc={false}
                     rotateFunc={false}

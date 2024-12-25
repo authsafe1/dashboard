@@ -23,10 +23,10 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
+import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
-import { Alert, GeneralTooltip } from '../../components';
-import constants from '../../config/constants';
+import { Alert, GeneralTooltip } from '../components';
+import constants from '../config/constants';
 
 interface ICreateWebhookProps {
   open: boolean;
@@ -250,6 +250,16 @@ interface MoreOpenState {
     url: string;
   };
 }
+
+export const dataLoader: LoaderFunction = async () => {
+  return await fetch(`${import.meta.env.VITE_API_URL}/webhook/all`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 const Webhooks = () => {
   const [addWebhook, setAddWebhook] = useState(false);
