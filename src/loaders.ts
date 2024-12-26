@@ -126,7 +126,7 @@ export const insightLoader: LoaderFunction = async () => {
           return await response.json();
         }
       } catch {
-        return redirect('/auth/signin');
+        return redirect('/auth/login');
       }
     }),
   );
