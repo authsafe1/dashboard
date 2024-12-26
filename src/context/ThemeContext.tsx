@@ -34,7 +34,7 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
     ? 'dark'
     : 'light';
 
-  const cachedTheme = localStorage.getItem('__authsafe_theme') as PaletteMode;
+  const cachedTheme = localStorage.getItem('theme') as PaletteMode;
   const [theme, setTheme] = useState<PaletteMode>(cachedTheme || preferredMode);
 
   const toggleTheme = useCallback(() => {
@@ -47,7 +47,7 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
         return 'dark';
       }
     });
-  }, [theme]);
+  }, []);
 
   const dynamicTheme = getTheme(theme);
 
