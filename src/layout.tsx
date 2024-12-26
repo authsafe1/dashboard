@@ -34,7 +34,7 @@ import {
 } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar } from './components';
 import constants from './config/constants';
 import { useAuth } from './context/AuthContext';
@@ -172,7 +172,7 @@ const Layout = () => {
 
   const profileMenuAnchor = useRef<HTMLButtonElement | null>(null);
 
-  const { organization, isAuthenticated, checkAuth } = useAuth();
+  const { organization, checkAuth } = useAuth();
   const { theme, toggleTheme } = useThemeToggle();
 
   const [alertOpen, setAlertOpen] = useState(!organization?.isVerified);
@@ -218,10 +218,10 @@ const Layout = () => {
       );
       await checkAuth();
       if (response.ok) {
-        navigate('/auth/signin', { replace: true });
+        navigate('/auth/login', { replace: true });
       }
     } catch {
-      navigate('/auth/signin', { replace: true });
+      navigate('/auth/login', { replace: true });
     }
   };
 
@@ -229,7 +229,7 @@ const Layout = () => {
     setAlertOpen(false);
   };
 
-  return isAuthenticated ? (
+  return (
     <Box sx={{ display: 'flex' }}>
       <Menu
         anchorEl={profileMenuAnchor.current}
@@ -263,7 +263,7 @@ const Layout = () => {
           />
         </ListItem>
         <Divider />
-        <MenuItem LinkComponent={Link} href="/profile">
+        <MenuItem component={Link} to="/profile">
           <ListItemIcon>
             <Person />
           </ListItemIcon>
@@ -377,8 +377,6 @@ const Layout = () => {
         <Outlet />
       </Main>
     </Box>
-  ) : (
-    <Navigate to="/auth/signin" replace />
   );
 };
 
