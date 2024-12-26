@@ -1,17 +1,17 @@
-import { grey, red } from "@mui/material/colors";
-import { alpha, createTheme, PaletteMode } from "@mui/material/styles";
+import { grey, red } from '@mui/material/colors';
+import { alpha, createTheme, PaletteMode } from '@mui/material/styles';
 
 export const brand = {
-  50: "#F4E5FF", // very light violet
-  100: "#E4C1FF", // light violet
-  200: "#D39DFF", // slightly darker violet
-  300: "#C279FF", // medium violet
-  400: "#B153FE", // primary shiny violet
-  500: "#9F3AFD", // slightly darker shiny violet
-  600: "#8C2ADF", // dark violet
-  700: "#7421B8", // medium dark violet
-  800: "#5B1991", // darker violet
-  900: "#45116A", // deepest violet
+  50: '#F4E5FF', // very light violet
+  100: '#E4C1FF', // light violet
+  200: '#D39DFF', // slightly darker violet
+  300: '#C279FF', // medium violet
+  400: '#B153FE', // primary shiny violet
+  500: '#9F3AFD', // slightly darker shiny violet
+  600: '#8C2ADF', // dark violet
+  700: '#7421B8', // medium dark violet
+  800: '#5B1991', // darker violet
+  900: '#45116A', // deepest violet
 };
 
 export const getTheme = (mode: PaletteMode) => {
@@ -19,7 +19,7 @@ export const getTheme = (mode: PaletteMode) => {
     palette: {
       mode,
       background: {
-        default: mode === "dark" ? "#121212" : undefined,
+        default: mode === 'dark' ? '#121212' : undefined,
       },
       primary: {
         main: brand[400],
@@ -37,22 +37,22 @@ export const getTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: ({ theme }) => ({
             padding: 8,
-            overflow: "clip",
-            backgroundColor: "hsl(0, 0%, 100%)",
-            border: "1px solid",
+            overflow: 'clip',
+            backgroundColor: 'hsl(0, 0%, 100%)',
+            border: '1px solid',
             borderColor: grey[100],
-            ":before": {
-              backgroundColor: "transparent",
+            ':before': {
+              backgroundColor: 'transparent',
             },
-            "&:first-of-type": {
+            '&:first-of-type': {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             },
-            "&:last-of-type": {
+            '&:last-of-type': {
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
             },
-            ...theme.applyStyles("dark", {
+            ...theme.applyStyles('dark', {
               backgroundColor: grey[900],
               borderColor: grey[800],
             }),
@@ -62,19 +62,19 @@ export const getTheme = (mode: PaletteMode) => {
       MuiAccordionSummary: {
         styleOverrides: {
           root: ({ theme }) => ({
-            border: "none",
+            border: 'none',
             borderRadius: 8,
-            "&:hover": { backgroundColor: grey[100] },
-            "&:focus-visible": { backgroundColor: "transparent" },
-            ...theme.applyStyles("dark", {
-              "&:hover": { backgroundColor: grey[800] },
+            '&:hover': { backgroundColor: grey[100] },
+            '&:focus-visible': { backgroundColor: 'transparent' },
+            ...theme.applyStyles('dark', {
+              '&:hover': { backgroundColor: grey[800] },
             }),
           }),
         },
       },
       MuiAccordionDetails: {
         styleOverrides: {
-          root: { mb: 20, border: "none" },
+          root: { mb: 20, border: 'none' },
         },
       },
       MuiButtonBase: {
@@ -84,11 +84,11 @@ export const getTheme = (mode: PaletteMode) => {
         },
         styleOverrides: {
           root: {
-            boxSizing: "border-box",
-            transition: "all 100ms ease",
-            "&:focus-visible": {
+            boxSizing: 'border-box',
+            transition: 'all 100ms ease',
+            '&:focus-visible': {
               outline: `3px solid ${alpha(brand[400], 0.5)}`,
-              outlineOffset: "2px",
+              outlineOffset: '2px',
             },
           },
         },
@@ -96,120 +96,129 @@ export const getTheme = (mode: PaletteMode) => {
       MuiButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            boxShadow: "none",
+            boxShadow: 'none',
             borderRadius: theme.shape.borderRadius,
-            textTransform: "none",
-            "&.Mui-disabled": {
+            textTransform: 'none',
+            '&.Mui-disabled': {
               color: alpha(theme.palette.text.primary, 0.3),
               backgroundColor: alpha(
                 theme.palette.action.disabledBackground,
                 0.12,
               ),
               borderColor: alpha(theme.palette.action.disabledBackground, 0.15),
-              boxShadow: "none",
+              boxShadow: 'none',
             },
             variants: [
               {
                 props: {
-                  size: "small",
+                  size: 'small',
                 },
                 style: {
-                  height: "2rem",
-                  padding: "0 0.5rem",
+                  height: '2rem',
+                  padding: '0 0.5rem',
                 },
               },
               {
                 props: {
-                  size: "medium",
+                  size: 'medium',
                 },
                 style: {
-                  height: "2.5rem",
+                  height: '2.5rem',
                 },
               },
               {
                 props: {
-                  color: "primary",
-                  variant: "contained",
+                  color: 'primary',
+                  variant: 'contained',
                 },
                 style: {
-                  color: "white",
+                  color: 'white',
                   backgroundColor: brand[300],
                   backgroundImage: `linear-gradient(to bottom right, ${alpha(
                     brand[400],
                     0.8,
                   )}, ${brand[500]}, ${brand[700]})`,
                   border: `1px solid ${brand[500]}`,
-                  "&:hover": {
+                  '&:hover': {
                     backgroundImage: `linear-gradient(to bottom right, ${brand[500]}, ${brand[700]})`,
-                    boxShadow: "none",
+                    boxShadow: 'none',
                   },
-                  "&:active": {
+                  '&:active': {
                     backgroundImage: `linear-gradient(to bottom right, ${brand[700]}, ${brand[900]})`,
                     boxShadow: `inset 0 2.5px 0 ${alpha(brand[700], 0.4)}`,
                   },
-                  "&.Mui-disabled": {
+                  '&.Mui-disabled': {
                     backgroundColor: alpha(brand[500], 0.4),
-                    color: alpha("#fff", 0.5),
+                    color: alpha('#fff', 0.5),
                   },
                 },
               },
               {
                 props: {
-                  color: "error",
-                  variant: "contained",
+                  color: 'error',
+                  variant: 'contained',
                 },
                 style: {
-                  color: "white",
+                  color: 'white',
                   backgroundColor: red[300],
-                  backgroundImage: `linear-gradient(to bottom right, ${alpha(red[400], 0.8)}, ${red[500]}, ${red[700]})`,
+                  backgroundImage: `linear-gradient(to bottom right, ${alpha(
+                    red[400],
+                    0.8,
+                  )}, ${red[500]}, ${red[700]})`,
                   border: `1px solid ${red[500]}`,
-                  "&:hover": {
+                  '&:hover': {
                     backgroundImage: `linear-gradient(to bottom right, ${red[500]}, ${red[700]})`,
-                    boxShadow: "none",
+                    boxShadow: 'none',
                   },
-                  "&:active": {
+                  '&:active': {
                     backgroundImage: `linear-gradient(to bottom right, ${red[700]}, ${red[900]})`,
                     boxShadow: `inset 0 2.5px 0 ${alpha(red[700], 0.4)}`,
                   },
-                  "&.Mui-disabled": {
+                  '&.Mui-disabled': {
                     backgroundColor: alpha(red[500], 0.4),
-                    color: alpha("#fff", 0.5),
+                    color: alpha('#fff', 0.5),
                   },
                 },
               },
               {
-                props: { variant: "outlined" },
+                props: { variant: 'outlined' },
                 style: {
                   color: brand[700],
                   backgroundColor: alpha(brand[300], 0.1),
                   borderColor: alpha(brand[200], 0.8),
-                  boxShadow: `inset 0 2px ${alpha(brand[50], 0.5)}, inset 0 -2px ${alpha(brand[200], 0.2)}`,
-                  "&:hover": {
+                  boxShadow: `inset 0 2px ${alpha(
+                    brand[50],
+                    0.5,
+                  )}, inset 0 -2px ${alpha(brand[200], 0.2)}`,
+                  '&:hover': {
                     backgroundColor: alpha(brand[300], 0.2),
                     borderColor: alpha(brand[300], 0.5),
-                    boxShadow: "none",
+                    boxShadow: 'none',
                   },
-                  "&:active": {
+                  '&:active': {
                     backgroundColor: alpha(brand[300], 0.3),
                     boxShadow: `inset 0 2.5px 0 ${alpha(brand[400], 0.2)}`,
-                    backgroundImage: "none",
+                    backgroundImage: 'none',
                   },
-                  ...theme.applyStyles("dark", {
+                  ...theme.applyStyles('dark', {
                     color: brand[200],
                     backgroundColor: alpha(brand[600], 0.1),
                     borderColor: alpha(brand[600], 0.6),
-                    boxShadow: `inset 0 2.5px ${alpha(brand[400], 0.1)}, inset 0 -2px ${alpha(grey[900], 0.5)}`,
-                    "&:hover": {
+                    boxShadow: `inset 0 2.5px ${alpha(
+                      brand[400],
+                      0.1,
+                    )}, inset 0 -2px ${alpha(grey[900], 0.5)}`,
+                    '&:hover': {
                       backgroundColor: alpha(brand[700], 0.2),
                       borderColor: alpha(brand[700], 0.5),
-                      boxShadow: "none",
+                      boxShadow: 'none',
                     },
-                    "&:active": {
+                    '&:active': {
                       backgroundColor: alpha(brand[800], 0.2),
                       boxShadow: `inset 0 2.5px 0 ${alpha(brand[900], 0.4)}`,
-                      backgroundImage: "none",
+                      backgroundImage: 'none',
                     },
-                    "&.Mui-disabled": {
+                    '&.Mui-disabled': {
                       color: alpha(brand[700], 0.4),
                       backgroundColor: alpha(brand[50], 0.1),
                       borderColor: alpha(brand[200], 0.2),
@@ -218,37 +227,40 @@ export const getTheme = (mode: PaletteMode) => {
                 },
               },
               {
-                props: { color: "secondary", variant: "outlined" },
+                props: { color: 'secondary', variant: 'outlined' },
                 style: {
                   backgroundColor: alpha(grey[300], 0.1),
                   borderColor: alpha(grey[300], 0.5),
                   color: grey[700],
-                  "&:hover": {
+                  '&:hover': {
                     backgroundColor: alpha(grey[300], 0.3),
                     borderColor: alpha(grey[300], 0.5),
-                    boxShadow: "none",
+                    boxShadow: 'none',
                   },
-                  "&:active": {
+                  '&:active': {
                     backgroundColor: alpha(grey[300], 0.4),
                     boxShadow: `inset 0 2.5px 0 ${alpha(grey[400], 0.2)}`,
-                    backgroundImage: "none",
+                    backgroundImage: 'none',
                   },
-                  ...theme.applyStyles("dark", {
+                  ...theme.applyStyles('dark', {
                     color: grey[300],
                     backgroundColor: alpha(grey[600], 0.1),
                     borderColor: alpha(grey[700], 0.5),
-                    boxShadow: `inset 0 2.5px ${alpha(grey[600], 0.1)}, inset 0 -2px ${alpha(grey[900], 0.5)}`,
-                    "&:hover": {
+                    boxShadow: `inset 0 2.5px ${alpha(
+                      grey[600],
+                      0.1,
+                    )}, inset 0 -2px ${alpha(grey[900], 0.5)}`,
+                    '&:hover': {
                       backgroundColor: alpha(grey[700], 0.2),
                       borderColor: alpha(grey[700], 0.5),
-                      boxShadow: "none",
+                      boxShadow: 'none',
                     },
-                    "&:active": {
+                    '&:active': {
                       backgroundColor: alpha(grey[800], 0.2),
                       boxShadow: `inset 0 2.5px 0 ${alpha(grey[900], 0.4)}`,
-                      backgroundImage: "none",
+                      backgroundImage: 'none',
                     },
-                    "&.Mui-disabled": {
+                    '&.Mui-disabled': {
                       color: alpha(grey[700], 0.3),
                       backgroundColor: alpha(grey[200], 0.1),
                       borderColor: alpha(grey[200], 0.4),
@@ -258,20 +270,20 @@ export const getTheme = (mode: PaletteMode) => {
               },
               {
                 props: {
-                  color: "primary",
-                  variant: "text",
+                  color: 'primary',
+                  variant: 'text',
                 },
                 style: {
                   color: brand[700],
-                  "&:hover": {
+                  '&:hover': {
                     backgroundColor: alpha(brand[300], 0.3),
                   },
-                  ...theme.applyStyles("dark", {
+                  ...theme.applyStyles('dark', {
                     color: brand[200],
-                    "&:hover": {
+                    '&:hover': {
                       backgroundColor: alpha(brand[700], 0.3),
                     },
-                    "&.Mui-disabled": {
+                    '&.Mui-disabled': {
                       color: alpha(brand[700], 0.4),
                     },
                   }),
@@ -279,20 +291,20 @@ export const getTheme = (mode: PaletteMode) => {
               },
               {
                 props: {
-                  color: "info",
-                  variant: "text",
+                  color: 'info',
+                  variant: 'text',
                 },
                 style: {
                   color: grey[700],
-                  "&:hover": {
+                  '&:hover': {
                     backgroundColor: alpha(grey[300], 0.3),
                   },
-                  ...theme.applyStyles("dark", {
+                  ...theme.applyStyles('dark', {
                     color: grey[200],
-                    "&:hover": {
+                    '&:hover': {
                       backgroundColor: alpha(grey[700], 0.3),
                     },
-                    "&.Mui-disabled": {
+                    '&.Mui-disabled': {
                       color: alpha(grey[500], 0.4),
                     },
                   }),
@@ -305,24 +317,24 @@ export const getTheme = (mode: PaletteMode) => {
       MuiCard: {
         styleOverrides: {
           root: ({ theme }) => ({
-            transition: "all 100ms ease",
+            transition: 'all 100ms ease',
             backgroundColor: grey[50],
             borderRadius: theme.shape.borderRadius,
             border: `1px solid ${alpha(grey[200], 0.5)}`,
-            boxShadow: "none",
-            ...theme.applyStyles("dark", {
+            boxShadow: 'none',
+            ...theme.applyStyles('dark', {
               backgroundColor: alpha(grey[800], 0.6),
               border: `1px solid ${alpha(grey[700], 0.3)}`,
             }),
             variants: [
               {
                 props: {
-                  variant: "outlined",
+                  variant: 'outlined',
                 },
                 style: {
                   border: `2px solid ${alpha(grey[700], 0.4)}`,
-                  boxShadow: "none",
-                  background: "transparent",
+                  boxShadow: 'none',
+                  background: 'transparent',
                 },
               },
             ],
@@ -334,31 +346,31 @@ export const getTheme = (mode: PaletteMode) => {
           root: ({ theme }) => ({
             py: 1.5,
             px: 0.5,
-            border: "1px solid",
+            border: '1px solid',
             borderColor: brand[100],
             fontWeight: 600,
             backgroundColor: brand[50],
-            "&:focus-visible": {
+            '&:focus-visible': {
               borderColor: brand[300],
               backgroundColor: brand[200],
             },
-            "& .MuiChip-label": {
+            '& .MuiChip-label': {
               color: brand[500],
             },
-            "& .MuiChip-icon": {
+            '& .MuiChip-icon': {
               color: brand[500],
             },
-            ...theme.applyStyles("dark", {
+            ...theme.applyStyles('dark', {
               borderColor: `${alpha(brand[500], 0.2)}`,
               backgroundColor: `${alpha(brand[900], 0.5)}`,
-              "&:focus-visible": {
+              '&:focus-visible': {
                 borderColor: brand[500],
                 backgroundColor: brand[800],
               },
-              "& .MuiChip-label": {
-                color: "#fff",
+              '& .MuiChip-label': {
+                color: '#fff',
               },
-              "& .MuiChip-icon": {
+              '& .MuiChip-icon': {
                 color: brand[200],
               },
             }),
@@ -369,7 +381,7 @@ export const getTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: ({ theme }) => ({
             borderColor: `${alpha(grey[200], 0.8)}`,
-            ...theme.applyStyles("dark", {
+            ...theme.applyStyles('dark', {
               borderColor: `${alpha(grey[700], 0.4)}`,
             }),
           }),
@@ -378,7 +390,7 @@ export const getTheme = (mode: PaletteMode) => {
       MuiFormLabel: {
         styleOverrides: {
           asterisk: {
-            color: red["A700"],
+            color: red['A700'],
           },
           root: ({ theme }) => ({
             typography: theme.typography.caption,
@@ -392,20 +404,20 @@ export const getTheme = (mode: PaletteMode) => {
             variants: [
               {
                 props: {
-                  size: "small",
+                  size: 'small',
                 },
                 style: {
-                  height: "2rem",
-                  width: "2rem",
+                  height: '2rem',
+                  width: '2rem',
                 },
               },
               {
                 props: {
-                  size: "medium",
+                  size: 'medium',
                 },
                 style: {
-                  height: "2.5rem",
-                  width: "2.5rem",
+                  height: '2.5rem',
+                  width: '2.5rem',
                 },
               },
             ],
@@ -415,38 +427,38 @@ export const getTheme = (mode: PaletteMode) => {
       MuiInputBase: {
         styleOverrides: {
           root: {
-            border: "none",
+            border: 'none',
           },
         },
       },
       MuiLink: {
         defaultProps: {
-          underline: "none",
+          underline: 'none',
         },
         styleOverrides: {
           root: {
             fontWeight: 500,
-            position: "relative",
-            textDecoration: "none",
-            "&::before": {
+            position: 'relative',
+            textDecoration: 'none',
+            '&::before': {
               content: '""',
-              position: "absolute",
+              position: 'absolute',
               width: 0,
-              height: "1px",
+              height: '1px',
               bottom: 0,
               left: 0,
               backgroundColor: brand[400],
               opacity: 0.7,
-              transition: "width 0.3s ease, opacity 0.3s ease",
+              transition: 'width 0.3s ease, opacity 0.3s ease',
             },
-            "&:hover::before": {
-              width: "100%",
+            '&:hover::before': {
+              width: '100%',
               opacity: 1,
             },
-            "&:focus-visible": {
+            '&:focus-visible': {
               outline: `3px solid ${alpha(brand[500], 0.5)}`,
-              outlineOffset: "4px",
-              borderRadius: "2px",
+              outlineOffset: '4px',
+              borderRadius: '2px',
             },
           },
         },
@@ -467,25 +479,25 @@ export const getTheme = (mode: PaletteMode) => {
             padding: 0,
             width: 54,
             height: 30,
-            "& .MuiSwitch-track": {
+            '& .MuiSwitch-track': {
               borderRadius: 14,
               backgroundColor: brand[500],
               opacity: 1,
-              transition: "background-color 200ms ease-in-out",
+              transition: 'background-color 200ms ease-in-out',
             },
-            "& .MuiSwitch-switchBase": {
+            '& .MuiSwitch-switchBase': {
               padding: 3,
-              "&.Mui-checked": {
-                transform: "translateX(25px)",
-                "& + .MuiSwitch-track": {
+              '&.Mui-checked': {
+                transform: 'translateX(25px)',
+                '& + .MuiSwitch-track': {
                   backgroundColor: brand[700],
                 },
               },
             },
-            "& .MuiSwitch-thumb": {
+            '& .MuiSwitch-thumb': {
               width: 24,
               height: 26,
-              boxShadow: "none",
+              boxShadow: 'none',
               backgroundColor: brand[900],
             },
           },
@@ -499,12 +511,12 @@ export const getTheme = (mode: PaletteMode) => {
               brand[200],
               0.5,
             )}`,
-            "& .Mui-selected": {
+            '& .Mui-selected': {
               color: brand[500],
             },
-            ...theme.applyStyles("dark", {
-              "& .Mui-selected": {
-                color: "hsl(0, 0%, 100%)",
+            ...theme.applyStyles('dark', {
+              '& .Mui-selected': {
+                color: 'hsl(0, 0%, 100%)',
               },
               boxShadow: `0 0 0 1px hsla(210, 0%, 0%, 0.5), 0 2px 12px ${alpha(
                 brand[700],
@@ -517,13 +529,13 @@ export const getTheme = (mode: PaletteMode) => {
       MuiToggleButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            padding: "12px 16px",
-            textTransform: "none",
+            padding: '12px 16px',
+            textTransform: 'none',
             borderRadius: theme.shape.borderRadius,
             fontWeight: 500,
-            ...theme.applyStyles("dark", {
+            ...theme.applyStyles('dark', {
               color: grey[400],
-              "&.Mui-selected": { color: brand[300] },
+              '&.Mui-selected': { color: brand[300] },
             }),
           }),
         },
@@ -533,22 +545,22 @@ export const getTheme = (mode: PaletteMode) => {
           paper: {
             minWidth: 200,
             borderRadius: 8,
-            padding: "4px 0",
+            padding: '4px 0',
           },
         },
       },
       MuiMenuItem: {
         styleOverrides: {
           root: ({ theme }) => ({
-            padding: "8px 16px",
-            fontSize: "0.875rem",
-            "&:hover": {
+            padding: '8px 16px',
+            fontSize: '0.875rem',
+            '&:hover': {
               backgroundColor: grey[100],
             },
             borderRadius: 4,
-            margin: "4px 8px",
-            ...theme.applyStyles("dark", {
-              "&:hover": {
+            margin: '4px 8px',
+            ...theme.applyStyles('dark', {
+              '&:hover': {
                 backgroundColor: grey[900],
               },
             }),
@@ -558,9 +570,9 @@ export const getTheme = (mode: PaletteMode) => {
       MuiListItemButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            "&.Mui-selected, &.Mui-selected:hover": {
+            '&.Mui-selected, &.Mui-selected:hover': {
               backgroundColor: brand[100],
-              ...theme.applyStyles("dark", {
+              ...theme.applyStyles('dark', {
                 backgroundColor: brand[600],
               }),
             },
@@ -570,7 +582,7 @@ export const getTheme = (mode: PaletteMode) => {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            minWidth: "32px",
+            minWidth: '32px',
             color: grey[500],
           },
         },
