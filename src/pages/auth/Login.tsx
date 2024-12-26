@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon, Loader } from '../../components';
@@ -118,7 +118,7 @@ const Login = () => {
   return loading ? (
     <Loader loading={true} />
   ) : (
-    <Box>
+    <Fragment>
       <Alert
         success={apiResponse.success}
         error={apiResponse.error}
@@ -142,9 +142,11 @@ const Login = () => {
       />
       <Grid
         container
-        height="100vh"
         justifyContent="center"
         alignItems="center"
+        flexDirection="column"
+        py={6}
+        height="100dvh"
       >
         <Grid
           component="form"
@@ -162,7 +164,10 @@ const Login = () => {
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton onClick={() => navigate('/')} size="large">
+              <IconButton
+                href={`${import.meta.env.VITE_BASE_URL}`}
+                size="large"
+              >
                 <AuthSafeIcon fontSize="large" theme={theme} />
               </IconButton>
             </Box>
@@ -251,7 +256,11 @@ const Login = () => {
                 </Grid>
                 <Grid container width="100%" justifyContent="center">
                   <Grid>
-                    <MuiLink component={Link} to="/auth/forgot-password">
+                    <MuiLink
+                      component={Link}
+                      to="/auth/forgot-password"
+                      variant="body2"
+                    >
                       Forgot Password?
                     </MuiLink>
                   </Grid>
@@ -263,7 +272,7 @@ const Login = () => {
                 </Grid>
                 <Grid container width="100%" justifyContent="center">
                   <Grid>
-                    <Typography component="span">
+                    <Typography component="span" variant="body2">
                       Don't have an account?{` `}
                       <MuiLink component={Link} to="/auth/register">
                         Register
@@ -276,7 +285,7 @@ const Login = () => {
           </Card>
         </Grid>
       </Grid>
-    </Box>
+    </Fragment>
   );
 };
 

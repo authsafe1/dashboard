@@ -10,6 +10,7 @@ import RolePicker from './reusable/RolePicker';
 import SecretManager from './reusable/SecretManager';
 import UserPicker from './reusable/UserPicker';
 import FAQ from './ui/FAQ';
+import Footer from './ui/Footer';
 import GrantSelector from './ui/GrantSelector';
 import MetadataTable from './ui/MetadataTable';
 import MoreMenu from './ui/MoreMenu';
@@ -22,6 +23,7 @@ export {
   ErrorTooltip,
   FAQ,
   FileUploader,
+  Footer,
   GeneralTooltip,
   GrantSelector,
   Loader,

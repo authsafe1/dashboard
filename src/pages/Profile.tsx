@@ -596,7 +596,7 @@ const Profile = () => {
             error: false,
           });
           checkAuth();
-          navigate('/auth/signin');
+          navigate('/auth/login');
           setDeletionOpen(false);
         }}
       />

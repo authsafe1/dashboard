@@ -2,7 +2,6 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { GlobalStyles } from '@mui/material';
 import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
@@ -210,15 +209,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <ThemeProvider>
-      <GlobalStyles
-        styles={{
-          '*': {
-            userSelect: 'none',
-            msUserSelect: 'none',
-            MozUserSelect: 'none',
-          },
-        }}
-      />
       <AuthProvider>
         <Suspense fallback={<Loader loading={true} />}>
           <RouterProvider router={router} />

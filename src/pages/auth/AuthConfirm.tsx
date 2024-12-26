@@ -6,27 +6,20 @@ import {
   Link as MuiLink,
   Typography,
 } from '@mui/material';
-import { Link, LoaderFunction, useLoaderData } from 'react-router';
-
-export const dataLoader: LoaderFunction = async ({ request }) => {
-  const token = new URL(request.url).searchParams.get('token');
-  return await fetch(
-    `${import.meta.env.VITE_API_URL}/organization/confirm?token=${token}`,
-    {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
-};
+import { Link, useLoaderData } from 'react-router';
 
 const AuthConfirm = () => {
   const loaderData: any = useLoaderData();
 
   return (
-    <Grid container height="100vh" justifyContent="center" alignItems="center">
+    <Grid
+      container
+      height="100vh"
+      justifyContent="center"
+      alignItems="center"
+      py={6}
+      px={4}
+    >
       <Grid>
         <Card
           variant="outlined"
@@ -46,7 +39,7 @@ const AuthConfirm = () => {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: 'center' }}>
-            <MuiLink component={Link} to="/auth/signin" replace>
+            <MuiLink component={Link} to="/auth/login" replace variant="body2">
               Back to SignIn
             </MuiLink>
           </CardActions>

@@ -97,6 +97,8 @@ const TwoFactorBackup = () => {
         height="100vh"
         justifyContent="center"
         alignItems="center"
+        py={6}
+        px={4}
       >
         <Grid
           component="form"
@@ -114,7 +116,10 @@ const TwoFactorBackup = () => {
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton onClick={() => navigate('/')} size="large">
+              <IconButton
+                href={`${import.meta.env.VITE_BASE_URL}`}
+                size="large"
+              >
                 <AuthSafeIcon fontSize="large" theme={theme} />
               </IconButton>
             </Box>
