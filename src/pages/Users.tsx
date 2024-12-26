@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { FC, useState } from 'react';
-import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
+import { useLoaderData, useRevalidator } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, GeneralTooltip, RolePicker } from '../components';
 import { Role } from '../components/reusable/RolePicker';
@@ -179,7 +179,7 @@ const CreateUser: FC<ICreateUserProps> = ({
             </Tabs>
           </Grid>
           {tabValue === 0 ? (
-            <>
+            <Grid container spacing={2} width="100%" direction="column">
               <Grid>
                 <TextField
                   label="Name"
@@ -244,28 +244,30 @@ const CreateUser: FC<ICreateUserProps> = ({
                   }}
                 />
               </Grid>
-            </>
+            </Grid>
           ) : (
-            <Grid>
-              <TextField
-                label="Email"
-                fullWidth
-                required
-                type="email"
-                autoComplete="email"
-                placeholder="e.g. john.doe@example.com"
-                error={validation.email}
-                helperText={validation.email ? 'Must be an email' : ''}
-                value={body.email}
-                onChange={(event) =>
-                  handleInputChange('email', event.target.value)
-                }
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
+            <Grid container width="100%" direction="column">
+              <Grid>
+                <TextField
+                  label="Email"
+                  fullWidth
+                  required
+                  type="email"
+                  autoComplete="email"
+                  placeholder="e.g. john.doe@example.com"
+                  error={validation.email}
+                  helperText={validation.email ? 'Must be an email' : ''}
+                  value={body.email}
+                  onChange={(event) =>
+                    handleInputChange('email', event.target.value)
+                  }
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Grid>
             </Grid>
           )}
         </Grid>
@@ -471,16 +473,6 @@ interface MoreOpenState {
     email: string;
   };
 }
-
-export const dataLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
 
 const Users = () => {
   const [addUser, setAddUser] = useState(false);

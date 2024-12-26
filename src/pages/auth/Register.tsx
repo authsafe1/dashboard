@@ -146,7 +146,7 @@ const Register = () => {
         message={apiResponse.message}
         handleClose={() => {
           if (apiResponse.success) {
-            navigate('/auth/signin');
+            navigate('/auth/login');
           }
           setApiResponse({
             ...apiResponse,
@@ -162,6 +162,8 @@ const Register = () => {
         height="100vh"
         justifyContent="center"
         alignItems="center"
+        py={6}
+        px={4}
       >
         <Grid
           component="form"
@@ -179,7 +181,10 @@ const Register = () => {
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton onClick={() => navigate('/')} size="large">
+              <IconButton
+                href={`${import.meta.env.VITE_BASE_URL}`}
+                size="large"
+              >
                 <AuthSafeIcon fontSize="large" theme={theme} />
               </IconButton>
             </Box>
@@ -300,9 +305,9 @@ const Register = () => {
                 </Grid>
                 <Grid container width="100%" justifyContent="center">
                   <Grid>
-                    <Typography component="span">
+                    <Typography component="span" variant="body2">
                       Already have an account?{` `}
-                      <MuiLink component={Link} to="/auth/signin">
+                      <MuiLink component={Link} to="/auth/login">
                         Login
                       </MuiLink>
                     </Typography>

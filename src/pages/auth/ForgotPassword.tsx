@@ -90,7 +90,7 @@ const ForgotPassword = () => {
             success: false,
             message: '',
           });
-          navigate('/auth/signin', {
+          navigate('/auth/login', {
             replace: true,
           });
         }}
@@ -100,6 +100,8 @@ const ForgotPassword = () => {
         height="100vh"
         justifyContent="center"
         alignItems="center"
+        py={6}
+        px={4}
       >
         <Grid
           component="form"
@@ -117,7 +119,10 @@ const ForgotPassword = () => {
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton onClick={() => navigate('/')} size="large">
+              <IconButton
+                href={`${import.meta.env.VITE_BASE_URL}`}
+                size="large"
+              >
                 <AuthSafeIcon fontSize="large" theme={theme} />
               </IconButton>
             </Box>
@@ -167,9 +172,9 @@ const ForgotPassword = () => {
                 </Grid>
                 <Grid container width="100%" justifyContent="center">
                   <Grid>
-                    <Typography component="span">
+                    <Typography component="span" variant="body2">
                       Back to{' '}
-                      <MuiLink component={Link} to="/auth/signin">
+                      <MuiLink component={Link} to="/auth/login">
                         Login
                       </MuiLink>
                     </Typography>
