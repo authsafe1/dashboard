@@ -24,14 +24,38 @@ export const applicationsLoader: LoaderFunction = async () => {
   });
 };
 
-export const usersLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const usersLoader: LoaderFunction = async ({ request }) => {
+  const skip = new URL(request.url).searchParams.get('skip') || 0;
+  const take = new URL(request.url).searchParams.get('take') || 10;
+
+  try {
+    const response1 = await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ skip, take }),
+    });
+    const response2 = await fetch(
+      `${import.meta.env.VITE_API_URL}/user/count`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (response1.ok && response2.ok) {
+      const all = await response1.json();
+      const count = await response2.json();
+      return { count, all };
+    }
+  } catch (err) {
+    console.log(err);
+    return redirect('/');
+  }
 };
 
 export const permissionsLoader: LoaderFunction = async () => {
