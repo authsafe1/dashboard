@@ -2,7 +2,6 @@ import { ErrorOutline } from '@mui/icons-material';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useNavigate, useRouteError } from 'react-router';
-import { useAuth } from './context/AuthContext';
 
 interface IBackButtonProps {
   text: string;
@@ -37,7 +36,6 @@ const StyledBackButton: FC<IBackButtonProps> = ({ text, handleClick }) => {
 const ErrorComponent = () => {
   const error = useRouteError();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   return (
     <Container maxWidth="md" sx={{ textAlign: 'center', py: 6 }}>
@@ -57,17 +55,10 @@ const ErrorComponent = () => {
             ? error.message
             : 'An unexpected error has occurred.'}
         </Typography>
-        {isAuthenticated ? (
-          <StyledBackButton
-            text="Back to Dashboard"
-            handleClick={() => navigate('/dashboard')}
-          />
-        ) : (
-          <StyledBackButton
-            text="Back to Home"
-            handleClick={() => navigate('/')}
-          />
-        )}
+        <StyledBackButton
+          text="Back to Dashboard"
+          handleClick={() => navigate('/')}
+        />
       </Box>
     </Container>
   );

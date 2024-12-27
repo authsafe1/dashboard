@@ -63,8 +63,8 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
+          { index: true, element: <QuickStart /> },
           { path: 'profile', element: <Profile /> },
-          { path: '', element: <QuickStart /> },
           {
             path: 'insights',
             element: <Insight />,
