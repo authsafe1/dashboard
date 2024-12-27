@@ -300,7 +300,7 @@ const Layout = () => {
               <MenuIcon />
             </IconButton>
             <IconButton
-              onClick={() => navigate('/')}
+              href={import.meta.env.VITE_BASE_URL}
               sx={[drawerOpen && { display: 'none' }]}
             >
               <AuthSafeIcon
@@ -335,7 +335,7 @@ const Layout = () => {
       >
         <DrawerHeader>
           <Box sx={{ ml: 1 }}>
-            <IconButton onClick={() => navigate('/')}>
+            <IconButton href={import.meta.env.VITE_BASE_URL}>
               <AuthSafeIcon theme={theme} fontSize="large" />
             </IconButton>
           </Box>
