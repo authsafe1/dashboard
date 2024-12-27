@@ -18,27 +18,31 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TablePagination,
   TableRow,
   Tabs,
   TextField,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { FC, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
+import React, { FC, useMemo, useState } from 'react';
+import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, GeneralTooltip, RolePicker } from '../components';
 import { Role } from '../components/reusable/RolePicker';
 import constants from '../config/constants';
 
 interface IUserLoaderData {
-  id: string;
-  name: string;
-  email: string;
-  isVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-  Role: Role;
+  count: number;
+  all: {
+    id: string;
+    name: string;
+    email: string;
+    isVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    Role: Role;
+  }[];
 }
 
 interface IRoleAssignmentProps {
@@ -479,6 +483,9 @@ const Users = () => {
   const [roleAssignment, setRoleAssignment] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [deleteUser, setDeleteUser] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [body, setBody] = useState<UserBody>({
     name: '',
     email: '',
@@ -501,6 +508,38 @@ const Users = () => {
   });
 
   const { revalidate } = useRevalidator();
+
+  const page = useMemo(() => {
+    const skip = searchParams.get('skip');
+    const take = searchParams.get('take');
+
+    if (skip && take) {
+      const skipValue = Number(skip);
+      const takeValue = Number(take);
+
+      if (
+        Number.isNaN(skipValue) ||
+        Number.isNaN(takeValue) ||
+        takeValue === 0
+      ) {
+        return 0;
+      }
+      return Math.floor(skipValue / takeValue);
+    }
+    return 0;
+  }, [searchParams]);
+
+  const rowsPerPage = useMemo(() => {
+    const take = searchParams.get('take');
+
+    if (take) {
+      const takeValue = Number(take);
+      if (!Number.isNaN(takeValue) && takeValue > 0) {
+        return takeValue;
+      }
+    }
+    return 10;
+  }, [searchParams]);
 
   const handleCreateUser = async () => {
     const tempValidation = { ...validation };
@@ -642,7 +681,6 @@ const Users = () => {
             error: false,
             message: 'Updated user',
           });
-          revalidate();
         } else {
           constants.fetchError(response.status);
         }
@@ -788,7 +826,7 @@ const Users = () => {
     setDeleteUser(false);
   };
 
-  const loaderData = useLoaderData() as IUserLoaderData[];
+  const loaderData = useLoaderData() as IUserLoaderData;
 
   return (
     <>
@@ -874,52 +912,77 @@ const Users = () => {
         <TableContainer component={Grid} justifyContent="center" width="100%">
           <Table>
             <TableBody>
-              {loaderData.map((value) => (
-                <TableRow key={value.id}>
-                  <TableCell>{value.name}</TableCell>
-                  <TableCell>
-                    <MuiLink href={`mailto:${value.email}`} color="textPrimary">
-                      {value.email}
-                    </MuiLink>
-                  </TableCell>
-                  {value?.Role ? (
-                    <TableCell>{`Role: ${value.Role?.name}`}</TableCell>
-                  ) : null}
-                  {!value?.isVerified ? (
+              {loaderData &&
+                loaderData?.all &&
+                loaderData.all.map((value) => (
+                  <TableRow key={value.id}>
+                    <TableCell>{value.name}</TableCell>
                     <TableCell>
-                      <Chip label="Pending Confirmation" />
-                    </TableCell>
-                  ) : null}
-                  <TableCell>{`Created At: ${dayjs(value.createdAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>
-                    <GeneralTooltip title="More Info" arrow>
-                      <IconButton
-                        onClick={(event) =>
-                          setMoreMenuOpen({
-                            ...moreMenuOpen,
-                            open: event.currentTarget,
-                            state: {
-                              id: value.id,
-                              name: value.name,
-                              email: value.email,
-                            },
-                          })
-                        }
+                      <MuiLink
+                        href={`mailto:${value.email}`}
+                        color="textPrimary"
                       >
-                        <MoreHoriz />
-                      </IconButton>
-                    </GeneralTooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        {value.email}
+                      </MuiLink>
+                    </TableCell>
+                    {value?.Role ? (
+                      <TableCell>{`Role: ${value.Role?.name}`}</TableCell>
+                    ) : null}
+                    {!value?.isVerified ? (
+                      <TableCell>
+                        <Chip label="Pending Confirmation" />
+                      </TableCell>
+                    ) : null}
+                    <TableCell>{`Created At: ${dayjs(value.createdAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>
+                      <GeneralTooltip title="More Info" arrow>
+                        <IconButton
+                          onClick={(event) =>
+                            setMoreMenuOpen({
+                              ...moreMenuOpen,
+                              open: event.currentTarget,
+                              state: {
+                                id: value.id,
+                                name: value.name,
+                                email: value.email,
+                              },
+                            })
+                          }
+                        >
+                          <MoreHoriz />
+                        </IconButton>
+                      </GeneralTooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          component="div"
+          count={loaderData.count}
+          page={page as number}
+          rowsPerPage={rowsPerPage as number}
+          onPageChange={(_event, newPage) => {
+            const currentParams = Object.fromEntries(searchParams.entries());
+            setSearchParams({
+              ...currentParams,
+              skip: String(newPage * rowsPerPage),
+            });
+          }}
+          onRowsPerPageChange={(event) => {
+            const currentParams = Object.fromEntries(searchParams.entries());
+            setSearchParams({
+              ...currentParams,
+              take: event.target.value,
+            });
+          }}
+        />
       </Grid>
     </>
   );
