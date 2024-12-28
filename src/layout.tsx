@@ -196,7 +196,7 @@ const Layout = () => {
     } else {
       setDrawerOpen(true);
     }
-  }, []);
+  }, [isMobile]);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -351,7 +351,7 @@ const Layout = () => {
                 <ListItemButton
                   key={`list-button-${indexBottom}`}
                   onClick={() => navigate(to)}
-                  selected={location.pathname === to}
+                  selected={location.pathname === to.split('?')[0]}
                 >
                   <ListItemIcon>
                     <Icon />
