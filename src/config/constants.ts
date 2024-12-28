@@ -94,15 +94,23 @@ export default {
     {
       subheader: 'Users and Applications',
       routes: [
-        { to: '/users', text: 'Users', Icon: Person },
-        { to: '/applications', text: 'Applications', Icon: Apps },
+        { to: '/users?skip=0&take=10', text: 'Users', Icon: Person },
+        {
+          to: '/applications?skip=0&take=10',
+          text: 'Applications',
+          Icon: Apps,
+        },
       ],
     },
     {
       subheader: 'Access Management',
       routes: [
-        { to: '/roles', text: 'Roles', Icon: Badge },
-        { to: '/permissions', text: 'Permissions', Icon: Verified },
+        { to: '/roles?skip=0&take=10', text: 'Roles', Icon: Badge },
+        {
+          to: '/permissions?skip=0&take=10',
+          text: 'Permissions',
+          Icon: Verified,
+        },
       ],
     },
     {
@@ -124,7 +132,7 @@ export default {
       subheader: 'Developers',
       routes: [
         {
-          to: '/webhooks',
+          to: '/webhooks?skip=0&take=10',
           text: 'Webhooks',
           Icon: Webhook,
         },
