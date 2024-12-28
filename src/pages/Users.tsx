@@ -963,26 +963,28 @@ const Users = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          component="div"
-          count={loaderData.count}
-          page={page as number}
-          rowsPerPage={rowsPerPage as number}
-          onPageChange={(_event, newPage) => {
-            const currentParams = Object.fromEntries(searchParams.entries());
-            setSearchParams({
-              ...currentParams,
-              skip: String(newPage * rowsPerPage),
-            });
-          }}
-          onRowsPerPageChange={(event) => {
-            const currentParams = Object.fromEntries(searchParams.entries());
-            setSearchParams({
-              ...currentParams,
-              take: event.target.value,
-            });
-          }}
-        />
+        {loaderData && loaderData?.count ? (
+          <TablePagination
+            component="div"
+            count={loaderData?.count || 0}
+            page={page as number}
+            rowsPerPage={rowsPerPage as number}
+            onPageChange={(_event, newPage) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                skip: String(newPage * rowsPerPage),
+              });
+            }}
+            onRowsPerPageChange={(event) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                take: event.target.value,
+              });
+            }}
+          />
+        ) : null}
       </Grid>
     </>
   );

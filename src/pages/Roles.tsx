@@ -14,23 +14,27 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { FC, useState } from 'react';
-import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
+import { FC, useMemo, useState } from 'react';
+import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert, GeneralTooltip, PermissionPicker } from '../components';
 import constants from '../config/constants';
 
 interface IRoleLoaderData {
-  id: string;
-  name: string;
-  key: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
+  count: number;
+  all: {
+    id: string;
+    name: string;
+    key: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
 }
 
 interface ICreateRoleProps {
@@ -142,16 +146,6 @@ const CreateRole: FC<ICreateRoleProps> = ({
   );
 };
 
-export const loader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/role/all`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
-
 const Roles = () => {
   const [addRole, setAddRole] = useState(false);
   const [body, setBody] = useState({
@@ -172,9 +166,43 @@ const Roles = () => {
     permissions: false,
   });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = useMemo(() => {
+    const skip = searchParams.get('skip');
+    const take = searchParams.get('take');
+
+    if (skip && take) {
+      const skipValue = Number(skip);
+      const takeValue = Number(take);
+
+      if (
+        Number.isNaN(skipValue) ||
+        Number.isNaN(takeValue) ||
+        takeValue === 0
+      ) {
+        return 0;
+      }
+      return Math.floor(skipValue / takeValue);
+    }
+    return 0;
+  }, [searchParams]);
+
+  const rowsPerPage = useMemo(() => {
+    const take = searchParams.get('take');
+
+    if (take) {
+      const takeValue = Number(take);
+      if (!Number.isNaN(takeValue) && takeValue > 0) {
+        return takeValue;
+      }
+    }
+    return 10;
+  }, [searchParams]);
+
   const { revalidate } = useRevalidator();
 
-  const loaderData = useLoaderData() as IRoleLoaderData[];
+  const loaderData = useLoaderData() as IRoleLoaderData;
 
   const handleCreateRole = async () => {
     const tempValidation = { ...validation };
@@ -287,37 +315,60 @@ const Roles = () => {
         <TableContainer component={Grid} justifyContent="center" width="100%">
           <Table>
             <TableBody>
-              {loaderData.map((value) => (
-                <TableRow key={value.id}>
-                  <TableCell>
-                    <Typography gutterBottom fontWeight="bold">
-                      {value.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {value.description}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip label={value.key} />
-                  </TableCell>
-                  <TableCell>{`Created At: ${dayjs(value.createdAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>
-                    <GeneralTooltip title="More Info" arrow>
-                      <IconButton>
-                        <MoreHoriz />
-                      </IconButton>
-                    </GeneralTooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {loaderData &&
+                loaderData?.all.map((value) => (
+                  <TableRow key={value.id}>
+                    <TableCell>
+                      <Typography gutterBottom fontWeight="bold">
+                        {value.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {value.description}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip label={value.key} />
+                    </TableCell>
+                    <TableCell>{`Created At: ${dayjs(value.createdAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>
+                      <GeneralTooltip title="More Info" arrow>
+                        <IconButton>
+                          <MoreHoriz />
+                        </IconButton>
+                      </GeneralTooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        {loaderData && loaderData?.count ? (
+          <TablePagination
+            component="div"
+            count={loaderData?.count || 0}
+            page={page as number}
+            rowsPerPage={rowsPerPage as number}
+            onPageChange={(_event, newPage) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                skip: String(newPage * rowsPerPage),
+              });
+            }}
+            onRowsPerPageChange={(event) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                take: event.target.value,
+              });
+            }}
+          />
+        ) : null}
       </Grid>
     </>
   );

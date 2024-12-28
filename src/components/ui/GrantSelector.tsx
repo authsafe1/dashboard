@@ -4,7 +4,6 @@ import {
   CardContent,
   FormLabel,
   Grid2 as Grid,
-  Paper,
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
@@ -55,9 +54,7 @@ const GrantSelector: FC<IGrantSelectorProps> = ({
                   textAlign: 'center',
                 }}
               >
-                <Paper>
-                  <Icon fontSize="large" />
-                </Paper>
+                <Icon fontSize="large" />
                 <Typography variant="h6" component="span">
                   {title}
                 </Typography>
