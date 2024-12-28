@@ -17,13 +17,19 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { FC, useState } from 'react';
-import { LoaderFunction, useLoaderData, useRevalidator } from 'react-router';
+import { FC, useMemo, useState } from 'react';
+import {
+  LoaderFunction,
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from 'react-router';
 import isURL from 'validator/es/lib/isURL';
 import { Alert, GeneralTooltip } from '../components';
 import constants from '../config/constants';
@@ -44,13 +50,16 @@ interface ICreateWebhookProps {
 }
 
 interface IWebhookLoaderData {
-  id: string;
-  name: string;
-  url: string;
-  description: string;
-  events: string[];
-  createdAt: string;
-  updatedAt: string;
+  count: number;
+  all: {
+    id: string;
+    name: string;
+    url: string;
+    description: string;
+    events: string[];
+    createdAt: string;
+    updatedAt: string;
+  }[];
 }
 
 interface IMoreMenuProps {
@@ -286,8 +295,43 @@ const Webhooks = () => {
     message: '',
   });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = useMemo(() => {
+    const skip = searchParams.get('skip');
+    const take = searchParams.get('take');
+
+    if (skip && take) {
+      const skipValue = Number(skip);
+      const takeValue = Number(take);
+
+      if (
+        Number.isNaN(skipValue) ||
+        Number.isNaN(takeValue) ||
+        takeValue === 0
+      ) {
+        return 0;
+      }
+      return Math.floor(skipValue / takeValue);
+    }
+    return 0;
+  }, [searchParams]);
+
+  const rowsPerPage = useMemo(() => {
+    const take = searchParams.get('take');
+
+    if (take) {
+      const takeValue = Number(take);
+      if (!Number.isNaN(takeValue) && takeValue > 0) {
+        return takeValue;
+      }
+    }
+    return 10;
+  }, [searchParams]);
+
   const { revalidate } = useRevalidator();
-  const loaderData = useLoaderData() as IWebhookLoaderData[];
+
+  const loaderData = useLoaderData() as IWebhookLoaderData;
 
   const handleWebhookModalOpen = () => {
     setAddWebhook(true);
@@ -467,63 +511,86 @@ const Webhooks = () => {
         <TableContainer component={Grid} justifyContent="center" width="100%">
           <Table>
             <TableBody>
-              {loaderData.map((value) => (
-                <TableRow key={value.id}>
-                  <TableCell>
-                    <Typography fontWeight="bold" gutterBottom>
-                      {value.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {value.description}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Grid
-                      container
-                      spacing={1}
-                      alignItems="center"
-                      maxWidth={500}
-                    >
-                      <Grid>
-                        <Typography variant="body2">Events: </Typography>
-                      </Grid>
-                      {value.events.map((event) => (
-                        <Grid key={event}>
-                          <Chip label={event} />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </TableCell>
-                  <TableCell>{`Created At: ${dayjs(value.createdAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                    'D MMM YYYY',
-                  )}`}</TableCell>
-                  <TableCell>
-                    <GeneralTooltip title="More Info" arrow>
-                      <IconButton
-                        onClick={(event) =>
-                          setMoreMenuOpen({
-                            ...moreMenuOpen,
-                            open: event.currentTarget,
-                            state: {
-                              id: value.id,
-                              name: value.name,
-                              url: value.url,
-                            },
-                          })
-                        }
+              {loaderData &&
+                loaderData?.all.map((value) => (
+                  <TableRow key={value.id}>
+                    <TableCell>
+                      <Typography fontWeight="bold" gutterBottom>
+                        {value.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {value.description}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Grid
+                        container
+                        spacing={1}
+                        alignItems="center"
+                        maxWidth={500}
                       >
-                        <MoreHoriz />
-                      </IconButton>
-                    </GeneralTooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        <Grid>
+                          <Typography variant="body2">Events: </Typography>
+                        </Grid>
+                        {value.events.map((event) => (
+                          <Grid key={event}>
+                            <Chip label={event} />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </TableCell>
+                    <TableCell>{`Created At: ${dayjs(value.createdAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>
+                      <GeneralTooltip title="More Info" arrow>
+                        <IconButton
+                          onClick={(event) =>
+                            setMoreMenuOpen({
+                              ...moreMenuOpen,
+                              open: event.currentTarget,
+                              state: {
+                                id: value.id,
+                                name: value.name,
+                                url: value.url,
+                              },
+                            })
+                          }
+                        >
+                          <MoreHoriz />
+                        </IconButton>
+                      </GeneralTooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        {loaderData && loaderData?.count ? (
+          <TablePagination
+            component="div"
+            count={loaderData?.count || 0}
+            page={page as number}
+            rowsPerPage={rowsPerPage as number}
+            onPageChange={(_event, newPage) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                skip: String(newPage * rowsPerPage),
+              });
+            }}
+            onRowsPerPageChange={(event) => {
+              const currentParams = Object.fromEntries(searchParams.entries());
+              setSearchParams({
+                ...currentParams,
+                take: event.target.value,
+              });
+            }}
+          />
+        ) : null}
       </Grid>
     </>
   );
