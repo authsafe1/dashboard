@@ -1,257 +1,168 @@
 import { type LoaderFunction, redirect } from 'react-router';
 
+// Centralized API helper function
+const fetchApi = async (
+  url: string,
+  options: RequestInit = { method: 'GET', credentials: 'include' },
+) => {
+  try {
+    const response = await fetch(url, options);
+    if (response.ok) {
+      return await response.json();
+    } else if (response.redirected || response.status === 401) {
+      throw new Error('Unauthorized');
+    } else {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+  } catch {
+    return redirect('/auth/login');
+  }
+};
+
+// Common paginated data fetcher
+const fetchPaginatedData = async (
+  baseUrl: string,
+  skip: number,
+  take: number,
+) => {
+  const dataUrl = `${baseUrl}/all`;
+  const countUrl = `${baseUrl}/count`;
+
+  const dataPromise = fetchApi(dataUrl, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ skip, take }),
+  });
+
+  const countPromise = fetchApi(countUrl);
+
+  const [all, count] = await Promise.all([dataPromise, countPromise]);
+  return { all, count };
+};
+
+// Individual loaders
 export const authConfirmLoader: LoaderFunction = async ({ request }) => {
   const token = new URL(request.url).searchParams.get('token');
-  return await fetch(
-    `${import.meta.env.VITE_API_URL}/organization/confirm?token=${token}`,
-    {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
+  if (!token) throw new Error('Token is required');
+  const url = `${
+    import.meta.env.VITE_API_URL
+  }/organization/confirm?token=${token}`;
+  return fetchApi(url, { method: 'POST' });
 };
 
 export const applicationsLoader: LoaderFunction = async ({ request }) => {
-  const skip = new URL(request.url).searchParams.get('skip') || 0;
-  const take = new URL(request.url).searchParams.get('take') || 10;
-
-  try {
-    const response1 = await fetch(
-      `${import.meta.env.VITE_API_URL}/client/all`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ skip, take }),
-      },
-    );
-    const response2 = await fetch(
-      `${import.meta.env.VITE_API_URL}/client/count`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (response1.ok && response2.ok) {
-      const all = await response1.json();
-      const count = await response2.json();
-      return { count, all };
-    }
-  } catch {
-    return redirect('/');
-  }
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/client`,
+    +skip,
+    +take,
+  );
 };
 
 export const usersLoader: LoaderFunction = async ({ request }) => {
-  const skip = new URL(request.url).searchParams.get('skip') || 0;
-  const take = new URL(request.url).searchParams.get('take') || 10;
-
-  try {
-    const response1 = await fetch(`${import.meta.env.VITE_API_URL}/user/all`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ skip, take }),
-    });
-    const response2 = await fetch(
-      `${import.meta.env.VITE_API_URL}/user/count`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (response1.ok && response2.ok) {
-      const all = await response1.json();
-      const count = await response2.json();
-      return { count, all };
-    }
-  } catch {
-    return redirect('/');
-  }
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/user`,
+    +skip,
+    +take,
+  );
 };
 
 export const permissionsLoader: LoaderFunction = async ({ request }) => {
-  const skip = new URL(request.url).searchParams.get('skip') || 0;
-  const take = new URL(request.url).searchParams.get('take') || 10;
-
-  try {
-    const response1 = await fetch(
-      `${import.meta.env.VITE_API_URL}/permission/all`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ skip, take }),
-      },
-    );
-    const response2 = await fetch(
-      `${import.meta.env.VITE_API_URL}/permission/count`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (response1.ok && response2.ok) {
-      const all = await response1.json();
-      const count = await response2.json();
-      return { count, all };
-    }
-  } catch {
-    return redirect('/');
-  }
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/permission`,
+    +skip,
+    +take,
+  );
 };
 
 export const rolesLoader: LoaderFunction = async ({ request }) => {
-  const skip = new URL(request.url).searchParams.get('skip') || 0;
-  const take = new URL(request.url).searchParams.get('take') || 10;
-
-  try {
-    const response1 = await fetch(`${import.meta.env.VITE_API_URL}/role/all`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ skip, take }),
-    });
-    const response2 = await fetch(
-      `${import.meta.env.VITE_API_URL}/role/count`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (response1.ok && response2.ok) {
-      const all = await response1.json();
-      const count = await response2.json();
-      return { count, all };
-    }
-  } catch {
-    return redirect('/');
-  }
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/role`,
+    +skip,
+    +take,
+  );
 };
 
 export const webhooksLoader: LoaderFunction = async ({ request }) => {
-  const skip = new URL(request.url).searchParams.get('skip') || 0;
-  const take = new URL(request.url).searchParams.get('take') || 10;
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/webhook`,
+    +skip,
+    +take,
+  );
+};
 
-  try {
-    const response1 = await fetch(
-      `${import.meta.env.VITE_API_URL}/webhook/all`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ skip, take }),
-      },
-    );
-    const response2 = await fetch(
-      `${import.meta.env.VITE_API_URL}/webhook/count`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (response1.ok && response2.ok) {
-      const all = await response1.json();
-      const count = await response2.json();
-      return { count, all };
-    }
-  } catch {
-    return redirect('/');
-  }
+export const activityLogLoader: LoaderFunction = async ({ request }) => {
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/organization/log/activity`,
+    +skip,
+    +take,
+  );
+};
+
+export const securityAlertLoader: LoaderFunction = async ({ request }) => {
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/organization/log/security`,
+    +skip,
+    +take,
+  );
+};
+
+export const authorizationLogLoader: LoaderFunction = async ({ request }) => {
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/organization/log/authorization`,
+    +skip,
+    +take,
+  );
 };
 
 export const brandingLoginLoader: LoaderFunction = async () => {
-  return await fetch(`${import.meta.env.VITE_API_URL}/organization/branding`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const url = `${import.meta.env.VITE_API_URL}/organization/branding`;
+  return fetchApi(url);
 };
 
 export const oauth2AuthorizeLoader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-
-  const organizationId = url.searchParams.get('organization_id');
-
-  if (organizationId) {
-    return await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/organization/branding?organizationId=${organizationId}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-  } else {
-    return null;
-  }
+  const organizationId = new URL(request.url).searchParams.get(
+    'organization_id',
+  );
+  if (!organizationId) return null;
+  const url = `${
+    import.meta.env.VITE_API_URL
+  }/organization/branding?organizationId=${organizationId}`;
+  return fetchApi(url);
 };
 
 export const insightLoader: LoaderFunction = async () => {
-  const dashboardUrl = [
-    { url: `${import.meta.env.VITE_API_URL}/user/count`, method: 'GET' },
-    { url: `${import.meta.env.VITE_API_URL}/client/count`, method: 'GET' },
-    {
-      url: `${import.meta.env.VITE_API_URL}/organization/log/security/count`,
-      method: 'GET',
-    },
-    {
-      url: `${import.meta.env.VITE_API_URL}/organization/log/activity/data`,
-      method: 'GET',
-    },
+  const endpoints = [
+    `${import.meta.env.VITE_API_URL}/user/count`,
+    `${import.meta.env.VITE_API_URL}/client/count`,
+    `${import.meta.env.VITE_API_URL}/organization/log/security/count`,
+    `${import.meta.env.VITE_API_URL}/organization/log/activity/data`,
   ];
-  return await Promise.all(
-    dashboardUrl.map(async ({ url, method }) => {
-      try {
-        const response = await fetch(url, {
-          method,
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.redirected || !response.ok) {
-          throw new Error('Unauthorized');
-        } else {
-          return await response.json();
-        }
-      } catch {
-        return redirect('/auth/login');
-      }
-    }),
-  );
+
+  const data = await Promise.all(endpoints.map((url) => fetchApi(url)));
+  return data;
 };

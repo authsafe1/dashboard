@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import React, {
   createContext,
   FC,
@@ -5,6 +6,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Loader } from '../components';
@@ -52,36 +54,52 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRequestPending, setRequestPending] = useState(false);
   const isAuthenticated = useMemo(() => !!organization, [organization]);
 
-  const checkAuth = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/check`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
+  const debouncedCheckAuthRef = useRef(
+    debounce(async () => {
+      if (isRequestPending) return;
+      setRequestPending(true);
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/auth/check`,
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        },
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setOrganization(data);
-      } else {
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setOrganization(data);
+        } else {
+          setOrganization(null);
+        }
+      } catch {
         setOrganization(null);
+      } finally {
+        setLoading(false);
+        setRequestPending(false);
       }
-    } catch {
-      setOrganization(null);
-    } finally {
-      setLoading(false);
-    }
+    }, 300),
+  );
+
+  const checkAuth = useCallback(async () => {
+    debouncedCheckAuthRef.current();
   }, []);
 
   useEffect(() => {
+    const debouncedFetchVar = debouncedCheckAuthRef.current;
+
     checkAuth();
+
+    return () => {
+      debouncedFetchVar.cancel();
+    };
   }, [checkAuth]);
 
   return loading ? (
