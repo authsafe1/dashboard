@@ -112,6 +112,7 @@ const TwoFactorBackup = () => {
             sx={{
               border: (theme) => `2px solid ${theme.palette.primary.main}`,
               p: 4,
+              m: 4,
               maxWidth: 500,
             }}
           >
