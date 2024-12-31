@@ -32,7 +32,19 @@ type SecretManagerProps =
   | SecretManagerWithRotationProps
   | SecretManagerWithoutRotationProps;
 
+const hasRotation = (
+  props: SecretManagerProps,
+): props is SecretManagerWithRotationProps => props.rotateFunc;
+
 const SecretManager: React.FC<SecretManagerProps> = (props) => {
+  const {
+    copyFunc,
+    visibilityFunc,
+    rotateFunc,
+    loading,
+    onRotate,
+    ...textFieldProps
+  } = props as SecretManagerWithRotationProps;
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -46,19 +58,26 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
 
   return (
     <TextField
-      value={props.value}
-      type={props.visibilityFunc ? (visible ? 'text' : 'password') : 'text'}
+      {...textFieldProps}
+      type={visibilityFunc ? (visible ? 'text' : 'password') : 'text'}
       slotProps={{
         input: {
+          ...textFieldProps.slotProps?.input,
           endAdornment: (
             <InputAdornment position="end">
-              {props.rotateFunc ? (
-                props.loading ? (
+              {rotateFunc &&
+              hasRotation({
+                copyFunc,
+                visibilityFunc,
+                rotateFunc,
+                loading,
+                onRotate,
+                ...textFieldProps,
+              }) ? (
+                loading ? (
                   <Refresh
                     sx={{
-                      animation: props.loading
-                        ? 'rotate 1s linear infinite'
-                        : 'none',
+                      animation: loading ? 'rotate 1s linear infinite' : 'none',
                       '@keyframes rotate': {
                         '0%': { transform: 'rotate(0deg)' },
                         '100%': { transform: 'rotate(360deg)' },
@@ -67,10 +86,10 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
                   />
                 ) : (
                   <GeneralTooltip title="Rotate" arrow>
-                    <IconButton onClick={props.onRotate}>
+                    <IconButton onClick={onRotate}>
                       <Refresh
                         sx={{
-                          animation: props.loading
+                          animation: loading
                             ? 'rotate 1s linear infinite'
                             : 'none',
                           '@keyframes rotate': {
@@ -83,16 +102,18 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
                   </GeneralTooltip>
                 )
               ) : null}
-              {props.visibilityFunc ? (
+              {visibilityFunc ? (
                 <GeneralTooltip title="Reveal" arrow>
                   <IconButton onClick={() => setVisible(!visible)}>
                     {visible ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </GeneralTooltip>
               ) : null}
-              {props.copyFunc ? (
+              {copyFunc ? (
                 <GeneralTooltip title="Copy" arrow>
-                  <IconButton onClick={() => handleCopy(props.value as string)}>
+                  <IconButton
+                    onClick={() => handleCopy(textFieldProps.value as string)}
+                  >
                     {copied ? <CheckCircle color="success" /> : <ContentCopy />}
                   </IconButton>
                 </GeneralTooltip>
@@ -102,7 +123,6 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
           readOnly: true,
         },
       }}
-      {...props}
     />
   );
 };
