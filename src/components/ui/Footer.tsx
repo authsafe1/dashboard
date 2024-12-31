@@ -4,13 +4,7 @@ import AuthSafeIcon from '../icons/AuthSafeIcon';
 
 const Footer: FC = () => {
   return (
-    <Container
-      sx={{
-        px: 4,
-        py: 8,
-      }}
-      component="footer"
-    >
+    <Container maxWidth="md" sx={{ py: 2 }} component="footer">
       <Grid container width="100%" justifyContent="space-evenly">
         <Grid>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
