@@ -111,13 +111,18 @@ const ForgotPassword = () => {
           }}
         >
           <Card
-            variant="outlined"
             sx={{
-              border: (theme) => `2px solid ${theme.palette.primary.main}`,
               p: 4,
               m: 4,
               maxWidth: 500,
+              borderRadius: 5,
+              boxShadow: `
+      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
+      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
+      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
+    `,
             }}
+            elevation={5}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <IconButton
