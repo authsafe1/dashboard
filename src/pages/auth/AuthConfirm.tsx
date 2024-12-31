@@ -1,8 +1,8 @@
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
-  Grid2 as Grid,
   Link as MuiLink,
   Typography,
 } from '@mui/material';
@@ -12,28 +12,34 @@ const AuthConfirm = () => {
   const loaderData: any = useLoaderData();
 
   return (
-    <Grid
-      container
-      height="100vh"
-      justifyContent="center"
-      alignItems="center"
-      py={6}
-      px={4}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100dvh',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        px: 2,
+      }}
     >
-      <Grid>
+      <Box
+        sx={{
+          flex: '1 1 auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          p: 2,
+        }}
+      >
         <Card
           sx={{
             p: 4,
-            m: 4,
             maxWidth: 500,
             minHeight: 200,
             textAlign: 'center',
             borderRadius: 5,
-            boxShadow: `
-    0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-    0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-    0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-  `,
+            boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
           }}
           elevation={5}
         >
@@ -50,8 +56,8 @@ const AuthConfirm = () => {
             </MuiLink>
           </CardActions>
         </Card>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

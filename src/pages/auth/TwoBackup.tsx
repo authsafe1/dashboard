@@ -9,7 +9,7 @@ import {
   IconButton,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { Alert, AuthSafeIcon, Loader } from '../../components';
 import constants from '../../config/constants';
@@ -33,7 +33,7 @@ const TwoFactorBackup = () => {
     message: '',
   });
 
-  const handleTwoFABackup = async () => {
+  const handleTwoFABackup: FormEventHandler<HTMLFormElement> = async () => {
     setApiResponse({ ...apiResponse, loading: true });
     const body = { code };
     try {
@@ -92,74 +92,76 @@ const TwoFactorBackup = () => {
           });
         }}
       />
-      <Grid
-        container
-        height="100vh"
-        justifyContent="center"
-        alignItems="center"
-        py={6}
-        px={4}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100dvh',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+        }}
       >
-        <Grid
-          component="form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleTwoFABackup();
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
           }}
         >
-          <Card
-            sx={{
-              p: 4,
-              m: 4,
-              maxWidth: 500,
-              borderRadius: 5,
-              boxShadow: `
-      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-    `,
-            }}
-            elevation={5}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton
-                href={`${import.meta.env.VITE_BASE_URL}`}
-                size="large"
-              >
-                <AuthSafeIcon fontSize="large" theme={theme} />
-              </IconButton>
-            </Box>
-            <CardHeader
-              title="2FA Backup"
-              subheader="Enter Backup Code to continue!"
-              sx={{ textAlign: 'center' }}
-            />
-            <CardContent>
-              <TextField
-                label="Code"
-                fullWidth
-                autoFocus
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
+          <form onSubmit={handleTwoFABackup}>
+            <Card
+              sx={{
+                p: 4,
+                maxWidth: 500,
+                borderRadius: 5,
+                boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
+              }}
+              elevation={5}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <IconButton
+                  href={`${import.meta.env.VITE_BASE_URL}`}
+                  size="large"
+                >
+                  <AuthSafeIcon fontSize="large" theme={theme} />
+                </IconButton>
+              </Box>
+              <CardHeader
+                title="2FA Backup"
+                subheader="Enter Backup Code to continue!"
+                sx={{ textAlign: 'center' }}
               />
-            </CardContent>
-            <CardActions>
-              <Grid container width="100%" justifyContent="center">
-                <Grid>
-                  <LoadingButton
-                    loading={apiResponse.loading}
-                    size="large"
-                    variant="contained"
-                    type="submit"
-                  >
-                    Submit
-                  </LoadingButton>
+              <CardContent>
+                <TextField
+                  label="Code"
+                  fullWidth
+                  autoFocus
+                  value={code}
+                  onChange={(event) => setCode(event.target.value)}
+                />
+              </CardContent>
+              <CardActions>
+                <Grid container width="100%" justifyContent="center">
+                  <Grid>
+                    <LoadingButton
+                      loading={apiResponse.loading}
+                      size="large"
+                      variant="contained"
+                      type="submit"
+                    >
+                      Submit
+                    </LoadingButton>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              </CardActions>
+            </Card>
+          </form>
+        </Box>
+      </Box>
     </>
   );
 };

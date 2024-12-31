@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { Alert, AuthSafeIcon } from '../../components';
 import constants from '../../config/constants';
@@ -39,7 +39,10 @@ const ResetPassword = () => {
     message: '',
   });
 
-  const handleResetPassword = async () => {
+  const handleResetPassword: FormEventHandler<HTMLFormElement> = async (
+    event,
+  ) => {
+    event.preventDefault();
     const tempError = { password: false };
     if (body.password.length < 6) {
       tempError.password = true;
@@ -99,105 +102,107 @@ const ResetPassword = () => {
           });
         }}
       />
-      <Grid
-        container
-        height="100vh"
-        justifyContent="center"
-        alignItems="center"
-        py={6}
-        px={4}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100dvh',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+        }}
       >
-        <Grid
-          component="form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleResetPassword();
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
           }}
         >
-          <Card
-            sx={{
-              p: 4,
-              m: 4,
-              maxWidth: 500,
-              borderRadius: 5,
-              boxShadow: `
-      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-    `,
-            }}
-            elevation={5}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton
-                href={`${import.meta.env.VITE_BASE_URL}`}
-                size="large"
-              >
-                <AuthSafeIcon fontSize="large" theme={theme} />
-              </IconButton>
-            </Box>
-            <CardHeader
-              title="Reset Password"
-              subheader="Please reset your password!"
-              sx={{ textAlign: 'center' }}
-            />
-            <CardContent>
-              <Grid container>
-                <Grid width="100%">
-                  <TextField
-                    label="New Password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    error={error.password}
-                    helperText={
-                      error.password
-                        ? 'Must be a greater than 6 characters'
-                        : null
-                    }
-                    value={body.password}
-                    onChange={(event) =>
-                      setBody({ ...body, password: event.target.value })
-                    }
-                    required
-                    fullWidth
-                  />
+          <form onSubmit={handleResetPassword}>
+            <Card
+              sx={{
+                p: 4,
+                maxWidth: 500,
+                borderRadius: 5,
+                boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
+              }}
+              elevation={5}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <IconButton
+                  href={`${import.meta.env.VITE_BASE_URL}`}
+                  size="large"
+                >
+                  <AuthSafeIcon fontSize="large" theme={theme} />
+                </IconButton>
+              </Box>
+              <CardHeader
+                title="Reset Password"
+                subheader="Please reset your password!"
+                sx={{ textAlign: 'center' }}
+              />
+              <CardContent>
+                <Grid container>
+                  <Grid width="100%">
+                    <TextField
+                      label="New Password"
+                      name="password"
+                      type="password"
+                      autoComplete="new-password"
+                      error={error.password}
+                      helperText={
+                        error.password
+                          ? 'Must be a greater than 6 characters'
+                          : null
+                      }
+                      value={body.password}
+                      onChange={(event) =>
+                        setBody({ ...body, password: event.target.value })
+                      }
+                      required
+                      fullWidth
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-            <CardActions>
-              <Grid
-                container
-                width="100%"
-                justifyContent="center"
-                rowSpacing={3}
-              >
-                <Grid>
-                  <LoadingButton
-                    variant="contained"
-                    size="large"
-                    loading={apiResponse.loading}
-                    type="submit"
-                  >
-                    Submit
-                  </LoadingButton>
+              </CardContent>
+              <CardActions>
+                <Grid
+                  container
+                  width="100%"
+                  justifyContent="center"
+                  rowSpacing={3}
+                >
+                  <Grid>
+                    <LoadingButton
+                      variant="contained"
+                      size="large"
+                      loading={apiResponse.loading}
+                      type="submit"
+                    >
+                      Submit
+                    </LoadingButton>
+                  </Grid>
+                  <Grid width="100%">
+                    <Divider />
+                  </Grid>
+                  <Grid>
+                    <Typography component="span" variant="body2">
+                      Back to?{` `}
+                      <MuiLink component={Link} to="/auth/register">
+                        Login
+                      </MuiLink>
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid width="100%">
-                  <Divider />
-                </Grid>
-                <Grid>
-                  <Typography component="span" variant="body2">
-                    Back to?{` `}
-                    <MuiLink component={Link} to="/auth/register">
-                      Login
-                    </MuiLink>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              </CardActions>
+            </Card>
+          </form>
+        </Box>
+      </Box>
     </Box>
   );
 };
