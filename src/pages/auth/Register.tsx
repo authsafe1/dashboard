@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon, Loader } from '../../components';
@@ -54,7 +54,8 @@ const Register = () => {
 
   const { theme } = useThemeToggle();
 
-  const handleRegister = async () => {
+  const handleRegister: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
     const tempError = {
       name: false,
       domain: false,
@@ -157,173 +158,175 @@ const Register = () => {
           });
         }}
       />
-      <Grid
-        container
-        height="100vh"
-        justifyContent="center"
-        alignItems="center"
-        py={6}
-        px={4}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100dvh',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+        }}
       >
-        <Grid
-          component="form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleRegister();
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
           }}
         >
-          <Card
-            sx={{
-              p: 4,
-              m: 4,
-              maxWidth: 500,
-              borderRadius: 5,
-              boxShadow: `
-      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-    `,
-            }}
-            elevation={5}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton
-                href={`${import.meta.env.VITE_BASE_URL}`}
-                size="large"
-              >
-                <AuthSafeIcon fontSize="large" theme={theme} />
-              </IconButton>
-            </Box>
-            <CardHeader
-              title="Register"
-              subheader="Please enter your registration details!"
-              sx={{ textAlign: 'center' }}
-            />
-            <CardContent>
-              <Grid container rowSpacing={3}>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      startIcon={<Google />}
-                      onClick={handleGoogleRegister}
-                    >
-                      Google
-                    </Button>
+          <form onSubmit={handleRegister}>
+            <Card
+              sx={{
+                p: 4,
+                maxWidth: 500,
+                borderRadius: 5,
+                boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
+              }}
+              elevation={5}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <IconButton
+                  href={`${import.meta.env.VITE_BASE_URL}`}
+                  size="large"
+                >
+                  <AuthSafeIcon fontSize="large" theme={theme} />
+                </IconButton>
+              </Box>
+              <CardHeader
+                title="Register"
+                subheader="Please enter your registration details!"
+                sx={{ textAlign: 'center' }}
+              />
+              <CardContent>
+                <Grid container rowSpacing={3}>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<Google />}
+                        onClick={handleGoogleRegister}
+                      >
+                        Google
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%">
+                    <Grid width="100%">
+                      <Divider>or</Divider>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={3}>
+                    <Grid width="100%">
+                      <TextField
+                        label="Name"
+                        name="name"
+                        type="text"
+                        autoComplete="name"
+                        error={error.name}
+                        helperText={error.name ? 'Must not be empty' : null}
+                        value={body.name}
+                        onChange={(event) =>
+                          setBody({ ...body, name: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid width="100%">
+                      <TextField
+                        label="Domain"
+                        name="domain"
+                        error={error.domain}
+                        helperText={
+                          error.domain ? 'Must be a valid domain' : null
+                        }
+                        value={body.domain}
+                        onChange={(event) =>
+                          setBody({ ...body, domain: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid width="100%">
+                      <TextField
+                        label="Email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        error={error.email}
+                        helperText={error.email ? 'Must be a email' : null}
+                        value={body.email}
+                        onChange={(event) =>
+                          setBody({ ...body, email: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid width="100%">
+                      <TextField
+                        label="Password"
+                        name="password"
+                        type="password"
+                        autoComplete="new-password"
+                        error={error.password}
+                        helperText={
+                          error.password
+                            ? 'Must be a greater than 6 characters'
+                            : null
+                        }
+                        value={body.password}
+                        onChange={(event) =>
+                          setBody({ ...body, password: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid container width="100%">
-                  <Grid width="100%">
-                    <Divider>or</Divider>
+              </CardContent>
+              <CardActions>
+                <Grid container width="100%" rowSpacing={5}>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <LoadingButton
+                        variant="contained"
+                        size="large"
+                        loading={apiResponse.loading}
+                        type="submit"
+                      >
+                        Register
+                      </LoadingButton>
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%">
+                    <Grid width="100%">
+                      <Divider />
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <Typography component="span" variant="body2">
+                        Already have an account?{` `}
+                        <MuiLink component={Link} to="/auth/login">
+                          Login
+                        </MuiLink>
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid container spacing={3}>
-                  <Grid width="100%">
-                    <TextField
-                      label="Name"
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      error={error.name}
-                      helperText={error.name ? 'Must not be empty' : null}
-                      value={body.name}
-                      onChange={(event) =>
-                        setBody({ ...body, name: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Domain"
-                      name="domain"
-                      error={error.domain}
-                      helperText={
-                        error.domain ? 'Must be a valid domain' : null
-                      }
-                      value={body.domain}
-                      onChange={(event) =>
-                        setBody({ ...body, domain: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      error={error.email}
-                      helperText={error.email ? 'Must be a email' : null}
-                      value={body.email}
-                      onChange={(event) =>
-                        setBody({ ...body, email: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Password"
-                      name="password"
-                      type="password"
-                      autoComplete="new-password"
-                      error={error.password}
-                      helperText={
-                        error.password
-                          ? 'Must be a greater than 6 characters'
-                          : null
-                      }
-                      value={body.password}
-                      onChange={(event) =>
-                        setBody({ ...body, password: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-            <CardActions>
-              <Grid container width="100%" rowSpacing={5}>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <LoadingButton
-                      variant="contained"
-                      size="large"
-                      loading={apiResponse.loading}
-                      type="submit"
-                    >
-                      Register
-                    </LoadingButton>
-                  </Grid>
-                </Grid>
-                <Grid container width="100%">
-                  <Grid width="100%">
-                    <Divider />
-                  </Grid>
-                </Grid>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <Typography component="span" variant="body2">
-                      Already have an account?{` `}
-                      <MuiLink component={Link} to="/auth/login">
-                        Login
-                      </MuiLink>
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              </CardActions>
+            </Card>
+          </form>
+        </Box>
+      </Box>
     </Box>
   );
 };

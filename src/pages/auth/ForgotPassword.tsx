@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon } from '../../components';
@@ -46,7 +46,10 @@ const ForgotPassword = () => {
     }
   }, []);
 
-  const handleForgotPassword = async () => {
+  const handleForgotPassword: FormEventHandler<HTMLFormElement> = async (
+    event,
+  ) => {
+    event.preventDefault();
     const tempError = { email: false };
     if (!isEmail(body.email)) {
       tempError.email = true;
@@ -95,102 +98,104 @@ const ForgotPassword = () => {
           });
         }}
       />
-      <Grid
-        container
-        height="100vh"
-        justifyContent="center"
-        alignItems="center"
-        py={6}
-        px={4}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100dvh',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+        }}
       >
-        <Grid
-          component="form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleForgotPassword();
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
           }}
         >
-          <Card
-            sx={{
-              p: 4,
-              m: 4,
-              maxWidth: 500,
-              borderRadius: 5,
-              boxShadow: `
-      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-    `,
-            }}
-            elevation={5}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton
-                href={`${import.meta.env.VITE_BASE_URL}`}
-                size="large"
-              >
-                <AuthSafeIcon fontSize="large" theme={theme} />
-              </IconButton>
-            </Box>
-            <CardHeader
-              title="Forgot Password"
-              subheader="Please enter your email to continue!"
-              sx={{ textAlign: 'center' }}
-            />
-            <CardContent>
-              <Grid container spacing={3}>
-                <Grid width="100%">
-                  <TextField
-                    label="Email"
-                    name="email"
-                    type="email"
-                    autoComplete="new-password"
-                    error={error.email}
-                    helperText={error.email ? 'Must be a email' : null}
-                    value={body.email}
-                    onChange={(event) =>
-                      setBody({ ...body, email: event.target.value })
-                    }
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-            <CardActions>
-              <Grid container width="100%" rowSpacing={5}>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <LoadingButton
-                      variant="contained"
-                      size="large"
-                      loading={apiResponse.loading}
-                      type="submit"
-                    >
-                      Submit
-                    </LoadingButton>
-                  </Grid>
-                </Grid>
-                <Grid container width="100%">
+          <form onSubmit={handleForgotPassword}>
+            <Card
+              sx={{
+                p: 4,
+                maxWidth: 500,
+                borderRadius: 5,
+                boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
+              }}
+              elevation={5}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <IconButton
+                  href={`${import.meta.env.VITE_BASE_URL}`}
+                  size="large"
+                >
+                  <AuthSafeIcon fontSize="large" theme={theme} />
+                </IconButton>
+              </Box>
+              <CardHeader
+                title="Forgot Password"
+                subheader="Please enter your email to continue!"
+                sx={{ textAlign: 'center' }}
+              />
+              <CardContent>
+                <Grid container spacing={3}>
                   <Grid width="100%">
-                    <Divider />
+                    <TextField
+                      label="Email"
+                      name="email"
+                      type="email"
+                      autoComplete="new-password"
+                      error={error.email}
+                      helperText={error.email ? 'Must be a email' : null}
+                      value={body.email}
+                      onChange={(event) =>
+                        setBody({ ...body, email: event.target.value })
+                      }
+                      required
+                      fullWidth
+                    />
                   </Grid>
                 </Grid>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <Typography component="span" variant="body2">
-                      Back to{' '}
-                      <MuiLink component={Link} to="/auth/login">
-                        Login
-                      </MuiLink>
-                    </Typography>
+              </CardContent>
+              <CardActions>
+                <Grid container width="100%" rowSpacing={5}>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <LoadingButton
+                        variant="contained"
+                        size="large"
+                        loading={apiResponse.loading}
+                        type="submit"
+                      >
+                        Submit
+                      </LoadingButton>
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%">
+                    <Grid width="100%">
+                      <Divider />
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <Typography component="span" variant="body2">
+                        Back to{' '}
+                        <MuiLink component={Link} to="/auth/login">
+                          Login
+                        </MuiLink>
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              </CardActions>
+            </Card>
+          </form>
+        </Box>
+      </Box>
     </Box>
   );
 };

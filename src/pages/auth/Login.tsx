@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { FormEventHandler, Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon, Loader } from '../../components';
@@ -49,7 +49,8 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogin = async () => {
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
     const tempError = { email: false, password: false };
     if (!isEmail(body.email)) {
       tempError.email = true;
@@ -140,157 +141,159 @@ const Login = () => {
           }
         }}
       />
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
-        py={6}
-        height="100dvh"
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100dvh',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+        }}
       >
-        <Grid
-          component="form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleLogin();
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
           }}
         >
-          <Card
-            sx={{
-              p: 4,
-              m: 4,
-              maxWidth: 500,
-              borderRadius: 5,
-              boxShadow: `
-      0px 4px 6px rgba(91, 25, 145, 0.2), /* Subtle brand shadow for depth */
-      0px 1px 3px rgba(0, 0, 0, 0.12), /* Soft inner shadow for realism */
-      0px 10px 20px 4px rgba(177, 83, 254, 0.15) /* Vibrant glow effect */
-    `,
-            }}
-            elevation={5}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <IconButton
-                href={`${import.meta.env.VITE_BASE_URL}`}
-                size="large"
-              >
-                <AuthSafeIcon fontSize="large" theme={theme} />
-              </IconButton>
-            </Box>
-            <CardHeader
-              title="Welcome Back"
-              subheader="Please enter your details to continue!"
-              sx={{ textAlign: 'center' }}
-            />
-            <CardContent>
-              <Grid container rowSpacing={3}>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      startIcon={<Google />}
-                      onClick={handleGoogleSignIn}
-                    >
-                      Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid container width="100%">
-                  <Grid width="100%">
-                    <Divider>or</Divider>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                  <Grid width="100%">
-                    <TextField
-                      label="Email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      value={body.email}
-                      error={error.email}
-                      helperText={error.email ? 'Must be a email' : null}
-                      onChange={(event) =>
-                        setBody({ ...body, email: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      value={body.password}
-                      error={error.password}
-                      helperText={
-                        error.password
-                          ? 'Must be a greater than 6 characters'
-                          : null
-                      }
-                      onChange={(event) =>
-                        setBody({ ...body, password: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-            <CardActions>
-              <Grid container width="100%" rowSpacing={3}>
-                <Grid
-                  container
-                  width="100%"
-                  justifyContent="center"
-                  alignItems="center"
+          <form onSubmit={handleLogin}>
+            <Card
+              sx={{
+                p: 4,
+                maxWidth: 500,
+                borderRadius: 5,
+                boxShadow: `0px 4px 10px rgba(91, 25, 145, 0.2), 0px 1px 5px rgba(0, 0, 0, 0.12), 0px 10px 20px 5px rgba(177, 83, 254, 0.15)`,
+              }}
+              elevation={5}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <IconButton
+                  href={`${import.meta.env.VITE_BASE_URL}`}
+                  size="large"
                 >
-                  <Grid>
-                    <LoadingButton
-                      variant="contained"
-                      type="submit"
-                      loading={apiResponse.loading}
-                      size="large"
-                    >
-                      Login
-                    </LoadingButton>
+                  <AuthSafeIcon fontSize="large" theme={theme} />
+                </IconButton>
+              </Box>
+              <CardHeader
+                title="Welcome Back"
+                subheader="Please enter your details to continue!"
+                sx={{ textAlign: 'center' }}
+              />
+              <CardContent>
+                <Grid container spacing={3}>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<Google />}
+                        onClick={handleGoogleSignIn}
+                      >
+                        Google
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%">
+                    <Grid width="100%">
+                      <Divider>or</Divider>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={3}>
+                    <Grid width="100%">
+                      <TextField
+                        label="Email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        value={body.email}
+                        error={error.email}
+                        helperText={error.email ? 'Must be a email' : null}
+                        onChange={(event) =>
+                          setBody({ ...body, email: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid width="100%">
+                      <TextField
+                        label="Password"
+                        name="password"
+                        type="password"
+                        autoComplete="current-password"
+                        value={body.password}
+                        error={error.password}
+                        helperText={
+                          error.password
+                            ? 'Must be a greater than 6 characters'
+                            : null
+                        }
+                        onChange={(event) =>
+                          setBody({ ...body, password: event.target.value })
+                        }
+                        required
+                        fullWidth
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <MuiLink
-                      component={Link}
-                      to="/auth/forgot-password"
-                      variant="body2"
-                    >
-                      Forgot Password?
-                    </MuiLink>
+              </CardContent>
+              <CardActions>
+                <Grid container width="100%" rowSpacing={3}>
+                  <Grid
+                    container
+                    width="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Grid>
+                      <LoadingButton
+                        variant="contained"
+                        type="submit"
+                        loading={apiResponse.loading}
+                        size="large"
+                      >
+                        Login
+                      </LoadingButton>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container width="100%">
-                  <Grid width="100%">
-                    <Divider />
-                  </Grid>
-                </Grid>
-                <Grid container width="100%" justifyContent="center">
-                  <Grid>
-                    <Typography component="span" variant="body2">
-                      Don't have an account?{` `}
-                      <MuiLink component={Link} to="/auth/register">
-                        Register
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <MuiLink
+                        component={Link}
+                        to="/auth/forgot-password"
+                        variant="body2"
+                      >
+                        Forgot Password?
                       </MuiLink>
-                    </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%">
+                    <Grid width="100%">
+                      <Divider />
+                    </Grid>
+                  </Grid>
+                  <Grid container width="100%" justifyContent="center">
+                    <Grid>
+                      <Typography component="span" variant="body2">
+                        Don't have an account?{` `}
+                        <MuiLink component={Link} to="/auth/register">
+                          Register
+                        </MuiLink>
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              </CardActions>
+            </Card>
+          </form>
+        </Box>
+      </Box>
     </Fragment>
   );
 };
