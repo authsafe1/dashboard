@@ -1,5 +1,6 @@
 import {
   Card,
+  CardActionArea,
   CardContent,
   CardHeader,
   Divider,
@@ -76,41 +77,42 @@ const Insight = () => {
         </Typography>
       </Grid>
       <Grid width="100%">
-        <Card variant="outlined">
-          <CardContent>
-            <Grid container rowSpacing={2} textAlign="center">
-              <Grid
-                size={{ xs: 12, md: 4 }}
-                onClick={() => navigate('/users')}
-                sx={{ cursor: 'pointer' }}
+        <Card variant="outlined" sx={{ p: 1 }}>
+          <Grid container rowSpacing={2} textAlign="center">
+            <Grid size={{ xs: 12, md: 4 }}>
+              <CardActionArea
+                onClick={() => navigate('/users?skip=0&take=10')}
+                sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
                   Users
                 </Typography>
                 <Typography>{loaderData[0]}</Typography>
-              </Grid>
-              <Grid
-                size={{ xs: 12, md: 4 }}
-                onClick={() => navigate('/applications')}
-                sx={{ cursor: 'pointer' }}
+              </CardActionArea>
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <CardActionArea
+                onClick={() => navigate('/applications?skip=0&take=10')}
+                sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
                   Applications
                 </Typography>
                 <Typography>{loaderData[1]}</Typography>
-              </Grid>
-              <Grid
-                size={{ xs: 12, md: 4 }}
-                onClick={() => navigate('/log/security')}
-                sx={{ cursor: 'pointer' }}
+              </CardActionArea>
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <CardActionArea
+                onClick={() => navigate('/log/security?skip=0&take=10')}
+                sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
                   Security Alerts
                 </Typography>
                 <Typography color="error">{loaderData[2]}</Typography>
-              </Grid>
+              </CardActionArea>
             </Grid>
-          </CardContent>
+          </Grid>
         </Card>
       </Grid>
       <Grid width="100%">
