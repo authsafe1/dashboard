@@ -1,2 +1,10 @@
 User-agent: *
+Allow: /auth/login
+Allow: /auth/register
+Allow: /auth/google/create
+Allow: /forgot-password
+Allow: /auth/reset-password
+Allow: /auth/confirm
+Allow: /auth/2fa
+Allow: /auth/2fa/backup
 Disallow: /
