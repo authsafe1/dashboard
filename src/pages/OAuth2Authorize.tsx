@@ -16,33 +16,10 @@ import {
   useTheme,
 } from '@mui/material';
 import { useState } from 'react';
-import { LoaderFunction, useLoaderData, useLocation } from 'react-router';
+import { useLoaderData, useLocation } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon } from '../components';
 import constants from '../config/constants';
-
-export const dataLoader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-
-  const organizationId = url.searchParams.get('organization_id');
-
-  if (organizationId) {
-    return await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/organization/branding?organizationId=${organizationId}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-  } else {
-    return null;
-  }
-};
 
 const OAuth2Authorize = () => {
   const [body, setBody] = useState({
@@ -90,7 +67,9 @@ const OAuth2Authorize = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `/oauth2/authorize?${queryParams.toString()}`,
+          `${
+            import.meta.env.VITE_API_URL
+          }/oauth2/authorize?${queryParams.toString()}`,
           {
             method: 'POST',
             credentials: 'include',
@@ -109,7 +88,7 @@ const OAuth2Authorize = () => {
             message: 'Successfully logged in',
           });
           window.location.replace(
-            `${responseBody.redirect_uri}?code=${responseBody.authorization_code}&state=${responseBody.state}`,
+            `${responseBody.redirect_uri}?code=${responseBody.code}&state=${responseBody.state}`,
           );
         } else {
           constants.fetchError(response.status);
