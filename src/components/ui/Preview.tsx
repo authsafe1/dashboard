@@ -91,7 +91,7 @@ const Preview: FC<IPreviewProps> = ({
         >
           <Typography fontSize="small" noWrap>
             {`${
-              import.meta.env.VITE_API_URL
+              import.meta.env.VITE_APP_URL
             }/oauth2/authorize?organization_id=xxxxxx&client_id=xxxxxx`}
           </Typography>
         </Box>
