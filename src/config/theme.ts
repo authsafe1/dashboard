@@ -314,6 +314,13 @@ export const getTheme = (mode: PaletteMode) => {
           }),
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            borderRadius: 12,
+          },
+        },
+      },
       MuiCard: {
         styleOverrides: {
           root: ({ theme }) => ({
