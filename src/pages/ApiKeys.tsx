@@ -2,14 +2,12 @@ import { Add, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid2 as Grid,
   IconButton,
-  InputAdornment,
   Table,
   TableBody,
   TableCell,
@@ -19,35 +17,37 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert, GeneralTooltip } from '../components';
 import constants from '../config/constants';
 
-interface IPermissionLoaderData {
+interface IApiKeyLoaderData {
   count: number;
   all: {
     id: string;
     name: string;
-    key: string;
     description: string;
+    token: string;
     createdAt: string;
     updatedAt: string;
+    expiresAt: string;
   }[];
 }
 
-interface ICreatePermissionProps {
+interface ICreateApiKeyProps {
   open: boolean;
-  body: { name: string; key: string; description: string };
-  validation: { name: boolean; key: boolean };
+  body: { name: string; description: string; expiresAt: Date };
+  validation: { name: boolean; expiresAt: boolean };
   loading: boolean;
-  handleInputChange: (name: string, value: string) => void;
+  handleInputChange: (name: string, value: string | Date | undefined) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
 }
 
-const CreatePermission: FC<ICreatePermissionProps> = ({
+const CreateApiKey: FC<ICreateApiKeyProps> = ({
   open,
   body,
   validation,
@@ -58,7 +58,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create Permission</DialogTitle>
+      <DialogTitle>Create API Key</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -66,7 +66,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. System Access"
+              placeholder="e.g. CI/CD token"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -81,27 +81,22 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
             />
           </Grid>
           <Grid>
-            <TextField
-              label="Key"
-              fullWidth
-              required
-              placeholder="feature:permission"
-              error={validation.key}
-              helperText={
-                validation.key
-                  ? "Key must follow the pattern '[segment1]:[segment2]'"
-                  : ''
+            <DateTimePicker
+              label="Expires at"
+              value={dayjs(body.expiresAt)}
+              onChange={(value) =>
+                handleInputChange('expiresAt', value?.toDate())
               }
-              value={body.key}
-              onChange={(event) => handleInputChange('key', event.target.value)}
+              disablePast
               slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">org:</InputAdornment>
-                  ),
-                },
-                inputLabel: {
-                  shrink: true,
+                textField: {
+                  fullWidth: true,
+                  required: true,
+                  placeholder: 'Expiry Date',
+                  error: validation.expiresAt,
+                  helperText: validation.expiresAt
+                    ? 'Expiry date is required'
+                    : '',
                 },
               }}
             />
@@ -110,7 +105,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Permission to access all system resources"
+              placeholder="Describe the token's usage"
               value={body.description}
               multiline
               rows={3}
@@ -142,12 +137,12 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
   );
 };
 
-const Permissions = () => {
-  const [addPermission, setAddPermission] = useState(false);
+const ApiKeys = () => {
+  const [addApiKey, setAddApiKey] = useState(false);
   const [body, setBody] = useState({
     name: '',
-    key: '',
     description: '',
+    expiresAt: dayjs().add(1, 'hour').toDate(),
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -157,7 +152,7 @@ const Permissions = () => {
   });
   const [validation, setValidation] = useState({
     name: false,
-    key: false,
+    expiresAt: false,
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -196,17 +191,20 @@ const Permissions = () => {
     return 10;
   }, [searchParams]);
 
-  const loaderData = useLoaderData() as IPermissionLoaderData;
+  const loaderData = useLoaderData() as IApiKeyLoaderData;
 
-  const handleCreatePermission = async () => {
+  const handleCreateApiKey = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (!/^[a-z0-9_]+:[a-z0-9_]+$/.test(body.key)) {
-      tempValidation.key = true;
+    if (
+      !dayjs(body.expiresAt).isValid() &&
+      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+    ) {
+      tempValidation.expiresAt = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -214,8 +212,9 @@ const Permissions = () => {
     } else {
       setApiResponse({ ...apiResponse, loading: true });
       try {
+        console.log(body);
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/permission/create`,
+          `${import.meta.env.VITE_API_URL}/api-key/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -230,7 +229,7 @@ const Permissions = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new permission',
+            message: 'Created new api key',
           });
         } else {
           constants.fetchError(response.status);
@@ -238,22 +237,30 @@ const Permissions = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          error: true,
           success: false,
-          message: error.message || 'Error creating permission',
+          error: true,
+          message: error.message || 'Error creating api key',
         });
       }
     }
   };
 
-  const handleInputChange = (name: string, value: string) => {
+  const handleInputChange = (
+    name: string,
+    value: string | Date | undefined,
+  ) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
   };
 
-  const handlePermissionModalClose = () => {
-    setBody({ ...body, name: '', key: '', description: '' });
-    setAddPermission(false);
+  const handleApiKeyModalClose = () => {
+    setBody({
+      ...body,
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+    });
+    setAddApiKey(false);
   };
 
   return (
@@ -270,25 +277,25 @@ const Permissions = () => {
             error: false,
           });
           revalidate();
-          handlePermissionModalClose();
+          handleApiKeyModalClose();
         }}
       />
-      <CreatePermission
-        open={addPermission}
+      <CreateApiKey
+        open={addApiKey}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handlePermissionModalClose}
+        handleClose={handleApiKeyModalClose}
         handleInputChange={handleInputChange}
-        handleSubmit={handleCreatePermission}
+        handleSubmit={handleCreateApiKey}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">Permissions</Typography>
+            <Typography variant="h4">API Keys</Typography>
             <Typography color="textSecondary">
-              Define and manage permissions to control access and privileges
-              across your applications.
+              Manage, secure, and create API keys to control access to your
+              applications and services effectively.
             </Typography>
           </Grid>
           <Grid>
@@ -296,9 +303,9 @@ const Permissions = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={() => setAddPermission(true)}
+              onClick={() => setAddApiKey(true)}
             >
-              Create Permission
+              Create API Key
             </Button>
           </Grid>
         </Grid>
@@ -316,13 +323,13 @@ const Permissions = () => {
                         {value.description}
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      <Chip label={value.key} />
-                    </TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
+                    <TableCell>{`ExpiresAt At: ${dayjs(value.expiresAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
@@ -364,4 +371,4 @@ const Permissions = () => {
   );
 };
 
-export default Permissions;
+export default ApiKeys;

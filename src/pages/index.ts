@@ -1,5 +1,6 @@
+import ApiKeys from './ApiKeys';
 import Applications from './Applications';
-import { default as AuthConfirm, default as Confirm } from './auth/AuthConfirm';
+import AuthConfirm from './auth/AuthConfirm';
 import ForgotPassword from './auth/ForgotPassword';
 import GoogleCreate from './auth/GoogleCreate';
 import Login from './auth/Login';
@@ -24,12 +25,12 @@ import Webhooks from './Webhooks';
 
 export {
   ActivityLog,
+  ApiKeys,
   Applications,
   AuthConfirm,
   AuthorizationLog,
   BillingPlan,
   BrandingLogin,
-  Confirm,
   ForgotPassword,
   GoogleCreate,
   Insight,
