@@ -1,13 +1,16 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import { Add, Close, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid2 as Grid,
   IconButton,
+  Menu,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +24,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, GeneralTooltip } from '../components';
+import { Alert, GeneralTooltip, SecretManager } from '../components';
 import constants from '../config/constants';
 
 interface IApiKeyLoaderData {
@@ -45,6 +48,37 @@ interface ICreateApiKeyProps {
   handleInputChange: (name: string, value: string | Date | undefined) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
+}
+
+interface ITokensModalProps {
+  open: boolean;
+  body: { token: string };
+  handleClose: () => void;
+}
+
+interface IMoreMenuProps {
+  anchorEl: HTMLElement | null;
+  handleClose: () => void;
+  handleTokenOpen: () => void;
+  handleDeletionOpen: () => void;
+}
+
+interface IDeleteApplicationProps {
+  open: boolean;
+  loading: boolean;
+  handleClose: () => void;
+  handleDelete: () => void;
+}
+
+interface MoreOpenState {
+  open: HTMLElement | null;
+  state: {
+    id: string;
+    name: string;
+    description: string;
+    expiresAt: Date;
+    token: string;
+  };
 }
 
 const CreateApiKey: FC<ICreateApiKeyProps> = ({
@@ -137,6 +171,98 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
   );
 };
 
+const TokensModal: FC<ITokensModalProps> = ({ open, body, handleClose }) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Token</DialogTitle>
+      <IconButton
+        sx={(theme) => ({
+          position: 'absolute',
+          right: 8,
+          top: 12,
+          color: theme.palette.grey[500],
+        })}
+        aria-label="close"
+        onClick={handleClose}
+      >
+        <Close />
+      </IconButton>
+      <DialogContent>
+        <Grid container spacing={2} p={1} width="100%" direction="column">
+          <Grid>
+            <SecretManager
+              label="Key"
+              value={body.token}
+              fullWidth
+              copyFunc={true}
+              visibilityFunc={true}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const DeletionModal: FC<IDeleteApplicationProps> = ({
+  open,
+  loading,
+  handleClose,
+  handleDelete,
+}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={() => {
+        handleClose();
+      }}
+      fullWidth
+    >
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete API Key?</DialogTitle>
+      <DialogContent>
+        <DialogContentText gutterBottom>
+          Are you sure you want to delete this API Key? This is irreversible and
+          all apps using this will stop working.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={() => {
+            handleClose();
+          }}
+          color="inherit"
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          loading={loading}
+          color="error"
+          variant="contained"
+          onClick={handleDelete}
+        >
+          Delete
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const MoreMenu: FC<IMoreMenuProps> = ({
+  anchorEl,
+  handleTokenOpen,
+  handleDeletionOpen,
+  handleClose,
+}) => {
+  return (
+    <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
+      <MenuItem onClick={handleTokenOpen}>Token</MenuItem>
+      <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
+        Delete
+      </MenuItem>
+    </Menu>
+  );
+};
+
 const ApiKeys = () => {
   const [addApiKey, setAddApiKey] = useState(false);
   const [body, setBody] = useState({
@@ -144,6 +270,18 @@ const ApiKeys = () => {
     description: '',
     expiresAt: dayjs().add(1, 'hour').toDate(),
   });
+  const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
+    open: null,
+    state: {
+      id: '',
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+      token: '',
+    },
+  });
+  const [tokenOpen, setTokenOpen] = useState(false);
+  const [deletionOpen, setDeletionOpen] = useState(false);
   const [apiResponse, setApiResponse] = useState({
     error: false,
     loading: false,
@@ -245,12 +383,80 @@ const ApiKeys = () => {
     }
   };
 
+  const handleDeleteApiKey = async (token: string) => {
+    setApiResponse({ ...apiResponse, loading: true });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api-key/delete/${token}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (response.ok) {
+        setApiResponse({
+          ...apiResponse,
+          success: true,
+          error: false,
+          message: 'Deleted API Key',
+        });
+        setDeletionOpen(false);
+        handleMoreMenuClose();
+        revalidate();
+      } else {
+        constants.fetchError(response.status);
+      }
+    } catch (error: any) {
+      setApiResponse({
+        ...apiResponse,
+        success: false,
+        error: true,
+        message: error.message || 'Error deleting API key',
+      });
+    }
+  };
+
   const handleInputChange = (
     name: string,
     value: string | Date | undefined,
   ) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
+  };
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  };
+
+  const handleTokenModalOpen = () => {
+    setTokenOpen(true);
+    handleMoreMenuClose();
+  };
+
+  const handleDeletionModalOpen = () => {
+    setDeletionOpen(true);
+    handleMoreMenuClose();
+  };
+
+  const handleTokenModalClose = () => {
+    setTokenOpen(false);
+    setMoreMenuOpen({
+      open: null,
+      state: {
+        id: '',
+        token: '',
+        name: '',
+        description: '',
+        expiresAt: dayjs().toDate(),
+      },
+    });
+  };
+
+  const handleDeletionModalClose = () => {
+    setDeletionOpen(false);
   };
 
   const handleApiKeyModalClose = () => {
@@ -280,6 +486,12 @@ const ApiKeys = () => {
           handleApiKeyModalClose();
         }}
       />
+      <MoreMenu
+        anchorEl={moreMenuOpen.open}
+        handleTokenOpen={handleTokenModalOpen}
+        handleDeletionOpen={handleDeletionModalOpen}
+        handleClose={handleMoreMenuClose}
+      />
       <CreateApiKey
         open={addApiKey}
         body={body}
@@ -288,6 +500,17 @@ const ApiKeys = () => {
         handleClose={handleApiKeyModalClose}
         handleInputChange={handleInputChange}
         handleSubmit={handleCreateApiKey}
+      />
+      <TokensModal
+        open={tokenOpen}
+        body={{ token: moreMenuOpen.state.token }}
+        handleClose={handleTokenModalClose}
+      />
+      <DeletionModal
+        open={deletionOpen}
+        loading={apiResponse.loading}
+        handleClose={handleDeletionModalClose}
+        handleDelete={() => handleDeleteApiKey(moreMenuOpen.state.token)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
@@ -334,7 +557,21 @@ const ApiKeys = () => {
                     )}`}</TableCell>
                     <TableCell>
                       <GeneralTooltip title="More Info" arrow>
-                        <IconButton>
+                        <IconButton
+                          onClick={(event) =>
+                            setMoreMenuOpen({
+                              ...moreMenuOpen,
+                              open: event.currentTarget,
+                              state: {
+                                id: value.id,
+                                token: value.token,
+                                name: value.name,
+                                description: value.description,
+                                expiresAt: dayjs(value.expiresAt).toDate(),
+                              },
+                            })
+                          }
+                        >
                           <MoreHoriz />
                         </IconButton>
                       </GeneralTooltip>
