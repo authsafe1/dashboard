@@ -1,7 +1,6 @@
 import {
   CheckCircle,
   ContentCopy,
-  Refresh,
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
@@ -14,37 +13,16 @@ import {
 import React, { useState } from 'react';
 import GeneralTooltip from '../reusable/GeneralTooltip';
 
-type SecretManagerWithRotationProps = TextFieldProps & {
-  copyFunc: boolean;
-  visibilityFunc: boolean;
-  rotateFunc: true;
-  onRotate: () => Promise<void>;
-  loading: boolean;
-};
-
-type SecretManagerWithoutRotationProps = TextFieldProps & {
-  rotateFunc: false;
+type SecretManagerProps = TextFieldProps & {
   copyFunc: boolean;
   visibilityFunc: boolean;
 };
 
-type SecretManagerProps =
-  | SecretManagerWithRotationProps
-  | SecretManagerWithoutRotationProps;
-
-const hasRotation = (
-  props: SecretManagerProps,
-): props is SecretManagerWithRotationProps => props.rotateFunc;
-
-const SecretManager: React.FC<SecretManagerProps> = (props) => {
-  const {
-    copyFunc,
-    visibilityFunc,
-    rotateFunc,
-    loading,
-    onRotate,
-    ...textFieldProps
-  } = props as SecretManagerWithRotationProps;
+const SecretManager: React.FC<SecretManagerProps> = ({
+  copyFunc,
+  visibilityFunc,
+  ...textFieldProps
+}) => {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -65,43 +43,6 @@ const SecretManager: React.FC<SecretManagerProps> = (props) => {
           ...textFieldProps.slotProps?.input,
           endAdornment: (
             <InputAdornment position="end">
-              {rotateFunc &&
-              hasRotation({
-                copyFunc,
-                visibilityFunc,
-                rotateFunc,
-                loading,
-                onRotate,
-                ...textFieldProps,
-              }) ? (
-                loading ? (
-                  <Refresh
-                    sx={{
-                      animation: loading ? 'rotate 1s linear infinite' : 'none',
-                      '@keyframes rotate': {
-                        '0%': { transform: 'rotate(0deg)' },
-                        '100%': { transform: 'rotate(360deg)' },
-                      },
-                    }}
-                  />
-                ) : (
-                  <GeneralTooltip title="Rotate" arrow>
-                    <IconButton onClick={onRotate}>
-                      <Refresh
-                        sx={{
-                          animation: loading
-                            ? 'rotate 1s linear infinite'
-                            : 'none',
-                          '@keyframes rotate': {
-                            '0%': { transform: 'rotate(0deg)' },
-                            '100%': { transform: 'rotate(360deg)' },
-                          },
-                        }}
-                      />
-                    </IconButton>
-                  </GeneralTooltip>
-                )
-              ) : null}
               {visibilityFunc ? (
                 <GeneralTooltip title="Reveal" arrow>
                   <IconButton onClick={() => setVisible(!visible)}>
