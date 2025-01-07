@@ -214,6 +214,7 @@ const Layout = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       checkAuth();
+      navigate('/auth/login', { replace: true });
     } catch {
       checkAuth();
     }
