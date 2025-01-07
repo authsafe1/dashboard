@@ -204,7 +204,6 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               fullWidth
               copyFunc={true}
               visibilityFunc={false}
-              rotateFunc={false}
             />
           </Grid>
           <Grid>
@@ -214,7 +213,6 @@ const CredentialsModal: FC<ICredentialsModalProps> = ({
               fullWidth
               copyFunc={true}
               visibilityFunc
-              rotateFunc={false}
             />
           </Grid>
         </Grid>
