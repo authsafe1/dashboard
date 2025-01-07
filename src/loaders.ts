@@ -106,6 +106,17 @@ export const webhooksLoader: LoaderFunction = async ({ request }) => {
   );
 };
 
+export const apiKeysLoader: LoaderFunction = async ({ request }) => {
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/api-key`,
+    +skip,
+    +take,
+  );
+};
+
 export const activityLogLoader: LoaderFunction = async ({ request }) => {
   const { skip = 0, take = 10 } = Object.fromEntries(
     new URL(request.url).searchParams.entries(),

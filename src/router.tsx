@@ -3,6 +3,7 @@ import ErrorComponent from './error';
 import Layout from './layout';
 import {
   activityLogLoader,
+  apiKeysLoader,
   applicationsLoader,
   authConfirmLoader,
   authorizationLogLoader,
@@ -18,6 +19,7 @@ import {
 import NotFoundComponent from './not-found';
 import {
   ActivityLog,
+  ApiKeys,
   Applications,
   AuthConfirm,
   AuthorizationLog,
@@ -86,6 +88,11 @@ const router = createBrowserRouter([
             path: 'webhooks',
             loader: webhooksLoader,
             element: <Webhooks />,
+          },
+          {
+            path: 'api-keys',
+            loader: apiKeysLoader,
+            element: <ApiKeys />,
           },
           // {
           //   path: "plan",

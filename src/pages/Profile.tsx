@@ -143,7 +143,6 @@ const TwoFaModal: FC<ITwoFaProps> = ({
                   fullWidth
                   copyFunc={true}
                   visibilityFunc={false}
-                  rotateFunc={false}
                   value={backupCodes.join(' ')}
                 />
               </Grid>
@@ -504,40 +503,40 @@ const Profile = () => {
     }
   };
 
-  const handleRotateApiKey = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/organization/secret/rotate`,
-        {
-          method: 'PUT',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      if (response.ok) {
-        setApiKeyResponse({
-          ...apiKeyResponse,
-          success: true,
-          error: false,
-          loading: false,
-          message: 'API Key Rotated',
-        });
-        checkAuth();
-      } else {
-        constants.fetchError(response.status);
-      }
-    } catch (error: any) {
-      setApiKeyResponse({
-        ...apiKeyResponse,
-        success: false,
-        error: true,
-        loading: false,
-        message: error.message || 'Error rotating secret',
-      });
-    }
-  };
+  // const handleRotateApiKey = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${import.meta.env.VITE_API_URL}/organization/secret/rotate`,
+  //       {
+  //         method: 'PUT',
+  //         credentials: 'include',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       },
+  //     );
+  //     if (response.ok) {
+  //       setApiKeyResponse({
+  //         ...apiKeyResponse,
+  //         success: true,
+  //         error: false,
+  //         loading: false,
+  //         message: 'API Key Rotated',
+  //       });
+  //       checkAuth();
+  //     } else {
+  //       constants.fetchError(response.status);
+  //     }
+  //   } catch (error: any) {
+  //     setApiKeyResponse({
+  //       ...apiKeyResponse,
+  //       success: false,
+  //       error: true,
+  //       loading: false,
+  //       message: error.message || 'Error rotating secret',
+  //     });
+  //   }
+  // };
 
   const handleDeletionOpen = () => {
     setDeletionOpen(true);
@@ -767,19 +766,6 @@ const Profile = () => {
                     value={organization?.id}
                     copyFunc={true}
                     visibilityFunc={true}
-                    rotateFunc={false}
-                  />
-                </Grid>
-                <Grid>
-                  <SecretManager
-                    label="API Key"
-                    fullWidth
-                    value={organization?.Secret?.apiKey}
-                    copyFunc={true}
-                    loading={apiKeyResponse.loading}
-                    visibilityFunc={true}
-                    rotateFunc={true}
-                    onRotate={handleRotateApiKey}
                   />
                 </Grid>
                 <Grid>
@@ -791,7 +777,6 @@ const Profile = () => {
                     }/oauth2/.well-known/jwks`}
                     copyFunc={true}
                     visibilityFunc={false}
-                    rotateFunc={false}
                   />
                 </Grid>
                 <Grid>
@@ -802,7 +787,6 @@ const Profile = () => {
                     value={organization?.Secret?.publicKey}
                     copyFunc={true}
                     visibilityFunc={false}
-                    rotateFunc={false}
                   />
                 </Grid>
               </Grid>
