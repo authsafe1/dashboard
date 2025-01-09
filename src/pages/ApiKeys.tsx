@@ -50,6 +50,16 @@ interface ICreateApiKeyProps {
   handleClose: () => void;
 }
 
+interface IEditApiKeyProps {
+  open: boolean;
+  body: { name: string; description: string; expiresAt: Date };
+  validation: { name: boolean; expiresAt: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string | Date | undefined) => void;
+  handleSubmit: () => Promise<void>;
+  handleClose: () => void;
+}
+
 interface ITokensModalProps {
   open: boolean;
   body: { token: string };
@@ -59,6 +69,7 @@ interface ITokensModalProps {
 interface IMoreMenuProps {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
+  handleEditOpen: () => void;
   handleTokenOpen: () => void;
   handleDeletionOpen: () => void;
 }
@@ -171,6 +182,96 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
   );
 };
 
+const EditApiKey: FC<IEditApiKeyProps> = ({
+  open,
+  body,
+  validation,
+  loading,
+  handleInputChange,
+  handleSubmit,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle>Update API Key</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2} p={1} width="100%" direction="column">
+          <Grid>
+            <TextField
+              label="Name"
+              fullWidth
+              required
+              placeholder="e.g. CI/CD token"
+              error={validation.name}
+              helperText={validation.name ? 'Must not be blank' : ''}
+              value={body.name}
+              onChange={(event) =>
+                handleInputChange('name', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <DateTimePicker
+              label="Expires at"
+              value={dayjs(body.expiresAt)}
+              onChange={(value) =>
+                handleInputChange('expiresAt', value?.toDate())
+              }
+              disablePast
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  required: true,
+                  placeholder: 'Expiry Date',
+                  error: validation.expiresAt,
+                  helperText: validation.expiresAt
+                    ? 'Expiry date is required'
+                    : '',
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <TextField
+              label="Description"
+              fullWidth
+              placeholder="Describe the token's usage"
+              value={body.description}
+              multiline
+              rows={3}
+              onChange={(event) =>
+                handleInputChange('description', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          variant="contained"
+          loading={loading}
+          onClick={handleSubmit}
+        >
+          Update
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const TokensModal: FC<ITokensModalProps> = ({ open, body, handleClose }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
@@ -249,12 +350,14 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
 
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
+  handleEditOpen,
   handleTokenOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
+      <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
       <MenuItem onClick={handleTokenOpen}>Token</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
@@ -265,6 +368,7 @@ const MoreMenu: FC<IMoreMenuProps> = ({
 
 const ApiKeys = () => {
   const [addApiKey, setAddApiKey] = useState(false);
+  const [editApiKey, setEditApiKey] = useState(false);
   const [body, setBody] = useState({
     name: '',
     description: '',
@@ -383,6 +487,60 @@ const ApiKeys = () => {
     }
   };
 
+  const handleEditApiKey = async () => {
+    const tempValidation = { ...validation };
+    let validationCount = 0;
+    if (body.name.length < 1) {
+      tempValidation.name = true;
+      validationCount++;
+    }
+    if (
+      !dayjs(body.expiresAt).isValid() &&
+      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+    ) {
+      tempValidation.expiresAt = true;
+      validationCount++;
+    }
+    if (validationCount > 0) {
+      setValidation(tempValidation);
+    } else {
+      setApiResponse({ ...apiResponse, loading: true });
+      try {
+        console.log(body);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api-key/update/${
+            moreMenuOpen.state.token
+          }`,
+          {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        if (response.ok) {
+          setApiResponse({
+            ...apiResponse,
+            success: true,
+            error: false,
+            message: 'Updated api key',
+          });
+        } else {
+          constants.fetchError(response.status);
+        }
+      } catch (error: any) {
+        setApiResponse({
+          ...apiResponse,
+          success: false,
+          error: true,
+          message: error.message || 'Error updating api key',
+        });
+      }
+    }
+  };
+
   const handleDeleteApiKey = async (token: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
@@ -431,6 +589,17 @@ const ApiKeys = () => {
     setMoreMenuOpen({ ...moreMenuOpen, open: null });
   };
 
+  const handleEditModalOpen = () => {
+    setEditApiKey(true);
+    setBody({
+      ...body,
+      name: moreMenuOpen.state.name,
+      description: moreMenuOpen.state.description,
+      expiresAt: dayjs(moreMenuOpen.state.expiresAt).toDate(),
+    });
+    handleMoreMenuClose();
+  };
+
   const handleTokenModalOpen = () => {
     setTokenOpen(true);
     handleMoreMenuClose();
@@ -459,7 +628,17 @@ const ApiKeys = () => {
     setDeletionOpen(false);
   };
 
-  const handleApiKeyModalClose = () => {
+  const handleEditApiKeyModalClose = () => {
+    setBody({
+      ...body,
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+    });
+    setEditApiKey(false);
+  };
+
+  const handleCreateApiKeyModalClose = () => {
     setBody({
       ...body,
       name: '',
@@ -483,11 +662,14 @@ const ApiKeys = () => {
             error: false,
           });
           revalidate();
-          handleApiKeyModalClose();
+          handleCreateApiKeyModalClose();
+          handleEditApiKeyModalClose();
+          handleDeletionModalClose();
         }}
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
+        handleEditOpen={handleEditModalOpen}
         handleTokenOpen={handleTokenModalOpen}
         handleDeletionOpen={handleDeletionModalOpen}
         handleClose={handleMoreMenuClose}
@@ -497,9 +679,18 @@ const ApiKeys = () => {
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleApiKeyModalClose}
+        handleClose={handleCreateApiKeyModalClose}
         handleInputChange={handleInputChange}
         handleSubmit={handleCreateApiKey}
+      />
+      <EditApiKey
+        open={editApiKey}
+        body={body}
+        validation={validation}
+        loading={apiResponse.loading}
+        handleClose={handleEditApiKeyModalClose}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleEditApiKey}
       />
       <TokensModal
         open={tokenOpen}

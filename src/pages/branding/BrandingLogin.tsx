@@ -46,6 +46,9 @@ const BrandingLogin = () => {
     if (tempBody.logo.length === 0) {
       tempBody.logo = undefined;
     }
+    if (tempBody.backgroundImage.length === 0) {
+      tempBody.backgroundImage = undefined;
+    }
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/organization/branding/update`,
