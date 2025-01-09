@@ -134,7 +134,7 @@ const RolePicker: React.FC<RolePickerProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Roles"
+          label={multiple ? 'Roles' : 'Role'}
           variant="outlined"
           required={required}
           placeholder={params.InputProps.startAdornment ? '' : 'Select options'}

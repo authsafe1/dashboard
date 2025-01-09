@@ -66,7 +66,7 @@ interface IDeletePermissionProps {
 
 interface IEditPermissionProps {
   open: boolean;
-  body: { name: string; key: string; description: string };
+  body: { name: string; description: string };
   validation: { name: boolean; key: boolean };
   loading: boolean;
   handleInputChange: (name: string, value: string) => void;
@@ -79,7 +79,6 @@ interface MoreOpenState {
   state: {
     id: string;
     name: string;
-    key: string;
     description: string;
   };
 }
@@ -111,32 +110,6 @@ const EditPermission: FC<IEditPermissionProps> = ({
                 handleInputChange('name', event.target.value)
               }
               slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
-            <TextField
-              label="Key"
-              fullWidth
-              required
-              placeholder="feature:permission"
-              error={validation.key}
-              helperText={
-                validation.key
-                  ? "Key must follow the pattern '[segment1]:[segment2]'"
-                  : ''
-              }
-              value={body.key}
-              onChange={(event) => handleInputChange('key', event.target.value)}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">org:</InputAdornment>
-                  ),
-                },
                 inputLabel: {
                   shrink: true,
                 },
@@ -282,7 +255,7 @@ const DeletionModal: FC<IDeletePermissionProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete application?</DialogTitle>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete permission?</DialogTitle>
       <DialogContent>
         <DialogContentText gutterBottom>
           Are you sure you want to delete this permission? This is irreversible
@@ -333,7 +306,7 @@ const Permissions = () => {
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: { id: '', name: '', key: '', description: '' },
+    state: { id: '', name: '', description: '' },
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -520,7 +493,6 @@ const Permissions = () => {
     setBody({
       ...body,
       name: moreMenuOpen.state.name,
-      key: moreMenuOpen.state.key.replace('org:', ''),
       description: moreMenuOpen.state.description,
     });
     setEditPermission(true);
@@ -529,6 +501,7 @@ const Permissions = () => {
 
   const handleDeletionModalOpen = () => {
     setDeletionOpen(true);
+    handleMoreMenuClose();
   };
 
   const handleInputChange = (name: string, value: string) => {
@@ -655,7 +628,6 @@ const Permissions = () => {
                               open: event.currentTarget,
                               state: {
                                 id: value.id,
-                                key: value.key,
                                 name: value.name,
                                 description: value.description,
                               },

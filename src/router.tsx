@@ -26,7 +26,7 @@ import {
   BrandingLogin,
   ForgotPassword,
   GoogleCreate,
-  Insight,
+  Insights,
   Login,
   OAuth2Authorize,
   Permissions,
@@ -61,8 +61,8 @@ const router = createBrowserRouter([
           { path: 'profile', element: <Profile /> },
           {
             path: 'insights',
-            element: <Insight />,
             loader: insightLoader,
+            element: <Insights />,
           },
           {
             path: 'applications',

@@ -35,6 +35,7 @@ const GrantSelector: FC<IGrantSelectorProps> = ({
                 cursor: 'pointer',
                 borderColor:
                   selected === value ? theme.palette.primary.main : undefined,
+                transition: 'border-color 0.4s ease-in-out',
               };
             }}
           >

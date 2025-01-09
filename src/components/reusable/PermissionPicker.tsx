@@ -22,6 +22,7 @@ interface PermissionPickerProps {
   error?: boolean;
   helperText?: ReactNode;
   multiple?: boolean;
+  value?: any;
 }
 
 const PermissionPicker: React.FC<PermissionPickerProps> = ({
@@ -30,6 +31,7 @@ const PermissionPicker: React.FC<PermissionPickerProps> = ({
   error,
   helperText,
   multiple,
+  value,
 }) => {
   const [options, setOptions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
@@ -122,6 +124,7 @@ const PermissionPicker: React.FC<PermissionPickerProps> = ({
     <Autocomplete
       open={open}
       multiple={multiple}
+      value={value}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
       onInputChange={handleInputChange as any}
@@ -136,7 +139,7 @@ const PermissionPicker: React.FC<PermissionPickerProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Permissions"
+          label={multiple ? 'Permissions' : 'Permission'}
           variant="outlined"
           required={required}
           placeholder={params.InputProps.startAdornment ? '' : 'Select options'}

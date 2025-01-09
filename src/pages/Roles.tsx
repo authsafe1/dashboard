@@ -6,10 +6,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid2 as Grid,
   IconButton,
   InputAdornment,
+  Menu,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -34,6 +37,7 @@ interface IRoleLoaderData {
     description: string;
     createdAt: string;
     updatedAt: string;
+    Permissions: [];
   }[];
 }
 
@@ -45,6 +49,40 @@ interface ICreateRoleProps {
   handleInputChange: (name: string, value: any) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
+}
+
+interface IEditRoleProps {
+  open: boolean;
+  body: { name: string; key: string; description: string; permissions: any[] };
+  validation: { name: boolean; key: boolean; permissions: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: any) => void;
+  handleSubmit: () => Promise<void>;
+  handleClose: () => void;
+}
+
+interface IDeleteRoleProps {
+  open: boolean;
+  loading: boolean;
+  handleClose: () => void;
+  handleDelete: () => void;
+}
+
+interface MoreOpenState {
+  open: HTMLElement | null;
+  state: {
+    id: string;
+    name: string;
+    description: string;
+    permissions: [];
+  };
+}
+
+interface IMoreMenuProps {
+  anchorEl: HTMLElement | null;
+  handleClose: () => void;
+  handleEditOpen: () => void;
+  handleDeletionOpen: () => void;
 }
 
 const CreateRole: FC<ICreateRoleProps> = ({
@@ -146,13 +184,148 @@ const CreateRole: FC<ICreateRoleProps> = ({
   );
 };
 
+const EditRole: FC<IEditRoleProps> = ({
+  open,
+  body,
+  validation,
+  loading,
+  handleInputChange,
+  handleSubmit,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle>Update Role</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2} p={1} width="100%" direction="column">
+          <Grid>
+            <TextField
+              label="Name"
+              fullWidth
+              required
+              placeholder="e.g. Sys Admin"
+              error={validation.name}
+              helperText={validation.name ? 'Must not be blank' : ''}
+              value={body.name}
+              onChange={(event) =>
+                handleInputChange('name', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <TextField
+              label="Description"
+              fullWidth
+              placeholder="e.g. User allowed to configure system resources"
+              value={body.description}
+              multiline
+              rows={3}
+              onChange={(event) =>
+                handleInputChange('description', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <PermissionPicker
+              multiple
+              required
+              value={body.permissions}
+              error={validation.permissions}
+              helperText="Atleast one permission must be selected"
+              onPermissionSelect={(permissions) =>
+                handleInputChange('permissions', permissions)
+              }
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          variant="contained"
+          loading={loading}
+          onClick={handleSubmit}
+        >
+          Update
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const DeletionModal: FC<IDeleteRoleProps> = ({
+  open,
+  loading,
+  handleClose,
+  handleDelete,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete role?</DialogTitle>
+      <DialogContent>
+        <DialogContentText gutterBottom>
+          Are you sure you want to delete this role? This is irreversible and
+          all permissions associated with this role will be unlinked.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          loading={loading}
+          color="error"
+          variant="contained"
+          onClick={handleDelete}
+        >
+          Delete
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const MoreMenu: FC<IMoreMenuProps> = ({
+  anchorEl,
+  handleEditOpen,
+  handleDeletionOpen,
+  handleClose,
+}) => {
+  return (
+    <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
+      <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
+      <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
+        Delete
+      </MenuItem>
+    </Menu>
+  );
+};
+
 const Roles = () => {
   const [addRole, setAddRole] = useState(false);
+  const [editRole, setEditRole] = useState(false);
+  const [deletionOpen, setDeletionOpen] = useState(false);
   const [body, setBody] = useState({
     name: '',
     key: '',
     description: '',
     permissions: [],
+  });
+  const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
+    open: null,
+    state: { id: '', name: '', description: '', permissions: [] },
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -256,14 +429,128 @@ const Roles = () => {
     }
   };
 
+  const handleEditRole = async (id: string) => {
+    const tempValidation = { ...validation };
+    const tempBody = { ...body, key: undefined };
+    let validationCount = 0;
+    if (tempBody.name.length < 1) {
+      tempValidation.name = true;
+      validationCount++;
+    }
+    if (tempBody.permissions.length < 1) {
+      tempValidation.permissions = true;
+      validationCount++;
+    }
+    if (validationCount > 0) {
+      setValidation(tempValidation);
+    } else {
+      setApiResponse({ ...apiResponse, loading: true });
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/role/update/${id}`,
+          {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(tempBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        if (response.ok) {
+          setApiResponse({
+            ...apiResponse,
+            success: true,
+            error: false,
+            message: 'Updated role',
+          });
+        } else {
+          constants.fetchError(response.status);
+        }
+      } catch (error: any) {
+        setApiResponse({
+          ...apiResponse,
+          error: true,
+          success: false,
+          message: error.message || 'Error updating role',
+        });
+      }
+    }
+  };
+
+  const handleDeleteRole = async (id: string) => {
+    setApiResponse({ ...apiResponse, loading: true });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/role/delete/${id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (response.ok) {
+        setApiResponse({
+          ...apiResponse,
+          success: true,
+          error: false,
+          message: 'Deleted role',
+        });
+        setDeletionOpen(false);
+        handleMoreMenuClose();
+        revalidate();
+      } else {
+        constants.fetchError(response.status);
+      }
+    } catch (error: any) {
+      setApiResponse({
+        ...apiResponse,
+        success: false,
+        error: true,
+        message: error.message || 'Error deleting role',
+      });
+    }
+  };
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  };
+
+  const handleDeletionModalOpen = () => {
+    setDeletionOpen(true);
+    handleMoreMenuClose();
+  };
+
+  const handleEditModalOpen = () => {
+    setBody({
+      ...body,
+      name: moreMenuOpen.state.name,
+      description: moreMenuOpen.state.description,
+      permissions: moreMenuOpen.state.permissions,
+    });
+    setEditRole(true);
+    handleMoreMenuClose();
+  };
+
   const handleInputChange = (name: string, value: any) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
   };
 
-  const handleRoleModalClose = () => {
+  const handleCreateRoleModalClose = () => {
     setBody({ ...body, name: '', key: '', description: '', permissions: [] });
     setAddRole(false);
+  };
+
+  const handleEditRoleModalClose = () => {
+    setBody({ ...body, name: '', key: '', description: '', permissions: [] });
+    setEditRole(false);
+  };
+
+  const handleDeletionModalClose = () => {
+    setDeletionOpen(false);
   };
 
   return (
@@ -280,17 +567,39 @@ const Roles = () => {
             error: false,
           });
           revalidate();
-          handleRoleModalClose();
+          handleCreateRoleModalClose();
+          handleEditRoleModalClose();
         }}
+      />
+      <MoreMenu
+        anchorEl={moreMenuOpen.open}
+        handleEditOpen={handleEditModalOpen}
+        handleDeletionOpen={handleDeletionModalOpen}
+        handleClose={handleMoreMenuClose}
       />
       <CreateRole
         open={addRole}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleRoleModalClose}
+        handleClose={handleCreateRoleModalClose}
         handleSubmit={handleCreateRole}
         handleInputChange={handleInputChange}
+      />
+      <EditRole
+        open={editRole}
+        body={body}
+        validation={validation}
+        loading={apiResponse.loading}
+        handleClose={handleEditRoleModalClose}
+        handleSubmit={() => handleEditRole(moreMenuOpen.state.id)}
+        handleInputChange={handleInputChange}
+      />
+      <DeletionModal
+        open={deletionOpen}
+        loading={apiResponse.loading}
+        handleClose={handleDeletionModalClose}
+        handleDelete={() => handleDeleteRole(moreMenuOpen.state.id)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
@@ -327,7 +636,7 @@ const Roles = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Chip label={value.key} />
+                      Key: <Chip label={value.key} />
                     </TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
@@ -337,7 +646,20 @@ const Roles = () => {
                     )}`}</TableCell>
                     <TableCell>
                       <GeneralTooltip title="More Info" arrow>
-                        <IconButton>
+                        <IconButton
+                          onClick={(event) =>
+                            setMoreMenuOpen({
+                              ...moreMenuOpen,
+                              open: event.currentTarget,
+                              state: {
+                                id: value.id,
+                                name: value.name,
+                                description: value.description,
+                                permissions: value.Permissions,
+                              },
+                            })
+                          }
+                        >
                           <MoreHoriz />
                         </IconButton>
                       </GeneralTooltip>

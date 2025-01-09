@@ -98,6 +98,21 @@ interface IDeleteUserProps {
   handleDelete: () => void;
 }
 
+interface UserBody {
+  name: string;
+  email: string;
+  password?: string;
+}
+
+interface MoreOpenState {
+  open: HTMLElement | null;
+  state: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
 const DeletionModal: FC<IDeleteUserProps> = ({
   open,
   loading,
@@ -462,21 +477,6 @@ const MoreMenu: FC<IMoreMenuProps> = ({
     </Menu>
   );
 };
-
-interface UserBody {
-  name: string;
-  email: string;
-  password?: string;
-}
-
-interface MoreOpenState {
-  open: HTMLElement | null;
-  state: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
 
 const Users = () => {
   const [addUser, setAddUser] = useState(false);

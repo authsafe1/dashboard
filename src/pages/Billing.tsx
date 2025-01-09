@@ -299,7 +299,7 @@ function getStepContent(step: number) {
       throw new Error('Unknown step');
   }
 }
-export default function BillingPlan() {
+const BillingPlan = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -382,4 +382,6 @@ export default function BillingPlan() {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default BillingPlan;

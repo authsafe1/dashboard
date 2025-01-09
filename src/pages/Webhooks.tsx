@@ -508,12 +508,7 @@ const Webhooks = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Grid
-                        container
-                        spacing={1}
-                        alignItems="center"
-                        maxWidth={500}
-                      >
+                      <Grid container spacing={1} alignItems="center">
                         <Grid>
                           <Typography variant="body2">Events: </Typography>
                         </Grid>
