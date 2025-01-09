@@ -1,27 +1,31 @@
-import ApiKeys from './ApiKeys';
-import Applications from './Applications';
-import AuthConfirm from './auth/AuthConfirm';
-import ForgotPassword from './auth/ForgotPassword';
-import GoogleCreate from './auth/GoogleCreate';
-import Login from './auth/Login';
-import Register from './auth/Register';
-import ResetPassword from './auth/ResetPassword';
-import TwoFactorBackup from './auth/TwoBackup';
-import TwoFactorAuthentication from './auth/TwoFactorAuthentication';
-import BillingPlan from './Billing';
-import BrandingLogin from './branding/BrandingLogin';
-import Insight from './Insights';
-import ActivityLog from './log/Activity';
-import AuthorizationLog from './log/Authorization';
-import SecurityLog from './log/Security';
-import OAuth2Authorize from './OAuth2Authorize';
-import Permissions from './Permissions';
-import Profile from './Profile';
-import QuickStart from './QuickStart';
-import Roles from './Roles';
-import UserConfirm from './UserConfirm';
-import Users from './Users';
-import Webhooks from './Webhooks';
+import { lazy } from 'react';
+
+const ApiKeys = lazy(() => import('./ApiKeys'));
+const Applications = lazy(() => import('./Applications'));
+const AuthConfirm = lazy(() => import('./auth/AuthConfirm'));
+const ForgotPassword = lazy(() => import('./auth/ForgotPassword'));
+const GoogleCreate = lazy(() => import('./auth/GoogleCreate'));
+const Login = lazy(() => import('./auth/Login'));
+const Register = lazy(() => import('./auth/Register'));
+const ResetPassword = lazy(() => import('./auth/ResetPassword'));
+const TwoFactorBackup = lazy(() => import('./auth/TwoBackup'));
+const TwoFactorAuthentication = lazy(
+  () => import('./auth/TwoFactorAuthentication'),
+);
+const BillingPlan = lazy(() => import('./Billing'));
+const BrandingLogin = lazy(() => import('./branding/BrandingLogin'));
+const Insights = lazy(() => import('./Insights'));
+const ActivityLog = lazy(() => import('./log/Activity'));
+const AuthorizationLog = lazy(() => import('./log/Authorization'));
+const SecurityLog = lazy(() => import('./log/Security'));
+const OAuth2Authorize = lazy(() => import('./OAuth2Authorize'));
+const Permissions = lazy(() => import('./Permissions'));
+const Profile = lazy(() => import('./Profile'));
+const QuickStart = lazy(() => import('./QuickStart'));
+const Roles = lazy(() => import('./Roles'));
+const UserConfirm = lazy(() => import('./UserConfirm'));
+const Users = lazy(() => import('./Users'));
+const Webhooks = lazy(() => import('./Webhooks'));
 
 export {
   ActivityLog,
@@ -33,7 +37,7 @@ export {
   BrandingLogin,
   ForgotPassword,
   GoogleCreate,
-  Insight,
+  Insights,
   Login,
   OAuth2Authorize,
   Permissions,
