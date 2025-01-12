@@ -468,7 +468,7 @@ const Profile = () => {
     setPhotoApiResponse({ ...photoApiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/organization/upload/photo`,
+        `${import.meta.env.VITE_API_URL}/profile/upload/photo`,
         {
           method: 'POST',
           credentials: 'include',

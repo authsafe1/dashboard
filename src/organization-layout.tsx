@@ -1,46 +1,31 @@
-import {
-  ChevronLeft,
-  Logout,
-  MenuBook,
-  Menu as MenuIcon,
-  Palette,
-  Person,
-} from '@mui/icons-material';
+import { Logout, MenuBook, Palette, Person } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
   Box,
   Collapse,
   Divider,
-  Drawer,
   Grid2 as Grid,
   IconButton,
-  List,
   ListItem,
   ListItemAvatar,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   Menu,
   MenuItem,
   AppBar as MuiAppBar,
-  AppBarProps as MuiAppBarProps,
   styled,
   Switch,
   Toolbar,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { yellow } from '@mui/material/colors';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router';
+import { useRef, useState } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar } from './components';
 import constants from './config/constants';
 import { useAuth } from './context/AuthContext';
 import { useThemeToggle } from './context/ThemeContext';
-
-const drawerWidth = 240;
 
 const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 55,
@@ -98,61 +83,20 @@ const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const Main = styled(Grid, { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme }) => ({
+const Main = styled(Grid)(({ theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(4),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: `-${drawerWidth}px`,
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        transition: theme.transitions.create('margin', {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-        [theme.breakpoints.down('md')]: {
-          marginLeft: `-${drawerWidth}px`,
-        },
-      },
-    },
-  ],
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme }) => ({
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
   transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        [theme.breakpoints.down('md')]: {
-          width: '100%',
-          marginLeft: 0,
-        },
-      },
-    },
-  ],
 }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -163,47 +107,26 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const Layout = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const OrganizationLayout = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const defaultTheme = useTheme();
-  const isMobile = useMediaQuery(defaultTheme.breakpoints.down('md'));
 
   const profileMenuAnchor = useRef<HTMLButtonElement | null>(null);
 
-  const { organization, checkAuth } = useAuth();
+  const { profile, checkAuth } = useAuth();
   const { theme, toggleTheme } = useThemeToggle();
 
-  const [alertOpen, setAlertOpen] = useState(!organization?.isVerified);
-
-  const { navigation } = constants;
+  const [alertOpen, setAlertOpen] = useState(!profile?.isVerified);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const handleMenuOpen = () => {
+  const handleProfileMenuOpen = () => {
     setProfileMenuOpen(true);
   };
 
-  const handleMenuClose = () => {
+  const handleProfileMenuClose = () => {
     setProfileMenuOpen(false);
-  };
-
-  useEffect(() => {
-    if (isMobile) {
-      setDrawerOpen(false);
-    } else {
-      setDrawerOpen(true);
-    }
-  }, [isMobile]);
-
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
   };
 
   const handleLogout = () => {
@@ -213,6 +136,7 @@ const Layout = () => {
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
       });
+      localStorage.removeItem('organizationId');
       checkAuth();
       navigate('/auth/login', { replace: true });
     } catch {
@@ -229,19 +153,13 @@ const Layout = () => {
       <Menu
         anchorEl={profileMenuAnchor.current}
         open={profileMenuOpen}
-        onClose={handleMenuClose}
+        onClose={handleProfileMenuClose}
       >
         <ListItem>
           <ListItemAvatar>
-            <ProfileAvatar
-              url={organization?.photo}
-              name={organization?.name}
-            />
+            <ProfileAvatar url={profile?.photo} name={profile?.name} />
           </ListItemAvatar>
-          <ListItemText
-            primary={organization?.name}
-            secondary={organization?.email}
-          />
+          <ListItemText primary={profile?.name} secondary={profile?.email} />
         </ListItem>
         <Divider />
         <ListItem sx={{ px: 3 }}>
@@ -278,26 +196,10 @@ const Layout = () => {
           Log out
         </MenuItem>
       </Menu>
-      <AppBar open={drawerOpen}>
+      <AppBar>
         <Toolbar>
           <Box flex={1}>
-            <IconButton
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={[
-                {
-                  mr: 1,
-                },
-                drawerOpen && { display: 'none' },
-              ]}
-            >
-              <MenuIcon />
-            </IconButton>
-            <IconButton
-              href={import.meta.env.VITE_BASE_URL}
-              sx={[drawerOpen && { display: 'none' }]}
-            >
+            <IconButton component={Link} to="/">
               <AuthSafeIcon
                 theme={defaultTheme.palette.mode}
                 fontSize="large"
@@ -305,61 +207,17 @@ const Layout = () => {
             </IconButton>
           </Box>
           <Box>
-            <IconButton ref={profileMenuAnchor} onClick={handleMenuOpen}>
+            <IconButton ref={profileMenuAnchor} onClick={handleProfileMenuOpen}>
               <ProfileAvatar
-                name={organization?.name}
-                url={organization?.photo}
+                name={profile?.name}
+                url={profile?.photo}
                 style={{ width: 30, height: 30 }}
               />
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={drawerOpen}
-      >
-        <DrawerHeader>
-          <Box sx={{ ml: 1 }}>
-            <IconButton href={import.meta.env.VITE_BASE_URL}>
-              <AuthSafeIcon theme={theme} fontSize="large" />
-            </IconButton>
-          </Box>
-          <IconButton onClick={handleDrawerClose} color="inherit">
-            <ChevronLeft />
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        {navigation.map(({ subheader, routes }, indexTop) => (
-          <Fragment key={`list-header-${indexTop}`}>
-            <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
-              {routes.map(({ to, text, Icon }, indexBottom) => (
-                <ListItemButton
-                  key={`list-button-${indexBottom}`}
-                  onClick={() => navigate(to)}
-                  selected={location.pathname === to.split('?')[0]}
-                >
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Divider />
-          </Fragment>
-        ))}
-      </Drawer>
-      <Main container open={drawerOpen}>
+      <Main container>
         <DrawerHeader />
         <Box sx={{ width: '100%', mb: alertOpen ? 4 : 0 }}>
           <Collapse in={alertOpen} unmountOnExit>
@@ -375,4 +233,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default OrganizationLayout;

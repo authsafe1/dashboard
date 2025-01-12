@@ -41,7 +41,6 @@ const UserConfirm = () => {
   const { theme } = useThemeToggle();
 
   const handleConfirmUser = async () => {
-    console.log(body);
     let validationCount = 0;
     const tempError = { name: false, password: false };
     if (!body.name) {

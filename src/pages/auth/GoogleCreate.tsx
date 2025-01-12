@@ -45,7 +45,7 @@ const GoogleCreate = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const { isAuthenticated, organization, checkAuth } = useAuth();
+  const { isAuthenticated, checkAuth } = useAuth();
 
   const { theme } = useThemeToggle();
 
@@ -78,7 +78,7 @@ const GoogleCreate = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/organization/google/create`,
+          `${import.meta.env.VITE_API_URL}/profile/google/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -126,7 +126,7 @@ const GoogleCreate = () => {
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, organization, location, navigate]);
+  }, [isAuthenticated, location, navigate]);
 
   return loading ? (
     <Loader loading={true} />

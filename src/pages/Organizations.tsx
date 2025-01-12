@@ -1,4 +1,4 @@
-import { Add, Close, MoreHoriz } from '@mui/icons-material';
+import { Add, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
@@ -20,61 +20,64 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
-import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, GeneralTooltip, SecretManager } from '../components';
+import {
+  useLoaderData,
+  useNavigate,
+  useRevalidator,
+  useSearchParams,
+} from 'react-router';
+import { Alert, GeneralTooltip } from '../components';
 import constants from '../config/constants';
+import { useOrganization } from '../context/OrganizationContext';
 
-interface IApiKeyLoaderData {
+interface IOrganizationLoaderData {
   count: number;
   all: {
     id: string;
     name: string;
-    description: string;
-    token: string;
+    domain: string;
     createdAt: string;
     updatedAt: string;
-    expiresAt: string;
   }[];
-}
-
-interface ICreateApiKeyProps {
-  open: boolean;
-  body: { name: string; description: string; expiresAt: Date };
-  validation: { name: boolean; expiresAt: boolean };
-  loading: boolean;
-  handleInputChange: (name: string, value: string | Date | undefined) => void;
-  handleSubmit: () => Promise<void>;
-  handleClose: () => void;
-}
-
-interface IEditApiKeyProps {
-  open: boolean;
-  body: { name: string; description: string; expiresAt: Date };
-  validation: { name: boolean; expiresAt: boolean };
-  loading: boolean;
-  handleInputChange: (name: string, value: string | Date | undefined) => void;
-  handleSubmit: () => Promise<void>;
-  handleClose: () => void;
-}
-
-interface ITokensModalProps {
-  open: boolean;
-  body: { token: string };
-  handleClose: () => void;
 }
 
 interface IMoreMenuProps {
   anchorEl: HTMLElement | null;
+  handleChangeOrganization: () => void;
   handleClose: () => void;
   handleEditOpen: () => void;
-  handleTokenOpen: () => void;
   handleDeletionOpen: () => void;
 }
 
-interface IDeleteApplicationProps {
+interface ICreateOrganizationProps {
+  open: boolean;
+  body: {
+    name: string;
+    domain: string;
+  };
+  validation: { name: boolean; domain: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string) => void;
+  handleCreate: () => Promise<void>;
+  handleClose: () => void;
+}
+
+interface IEditOrganizationProps {
+  open: boolean;
+  body: {
+    name: string;
+    domain: string;
+  };
+  validation: { name: boolean; domain: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string) => void;
+  handleSubmit: () => Promise<void>;
+  handleClose: () => void;
+}
+
+interface IDeleteOrganizationProps {
   open: boolean;
   loading: boolean;
   handleClose: () => void;
@@ -86,24 +89,54 @@ interface MoreOpenState {
   state: {
     id: string;
     name: string;
-    description: string;
-    expiresAt: Date;
-    token: string;
+    domain: string;
   };
 }
 
-const CreateApiKey: FC<ICreateApiKeyProps> = ({
+const DeletionModal: FC<IDeleteOrganizationProps> = ({
+  open,
+  loading,
+  handleClose,
+  handleDelete,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete user?</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Are you sure you want to delete this user? This is irreversible and
+          all associated roles and permissions would be unlinked
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          loading={loading}
+          color="error"
+          variant="contained"
+          onClick={handleDelete}
+        >
+          Delete
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const CreateOrganization: FC<ICreateOrganizationProps> = ({
   open,
   body,
   validation,
   loading,
   handleInputChange,
-  handleSubmit,
+  handleCreate,
   handleClose,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create API Key</DialogTitle>
+      <DialogTitle>Create Organization</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -111,7 +144,8 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. CI/CD token"
+              autoComplete="name"
+              placeholder="e.g. Acme Ltd."
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -126,36 +160,16 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
             />
           </Grid>
           <Grid>
-            <DateTimePicker
-              label="Expires at"
-              value={dayjs(body.expiresAt)}
-              onChange={(value) =>
-                handleInputChange('expiresAt', value?.toDate())
-              }
-              disablePast
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  required: true,
-                  placeholder: 'Expiry Date',
-                  error: validation.expiresAt,
-                  helperText: validation.expiresAt
-                    ? 'Expiry date is required'
-                    : '',
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
             <TextField
-              label="Description"
+              label="Domain"
               fullWidth
-              placeholder="Describe the token's usage"
-              value={body.description}
-              multiline
-              rows={3}
+              required
+              placeholder="e.g. acme.com"
+              error={validation.domain}
+              helperText={validation.domain ? 'Must be a domain' : ''}
+              value={body.domain}
               onChange={(event) =>
-                handleInputChange('description', event.target.value)
+                handleInputChange('domain', event.target.value)
               }
               slotProps={{
                 inputLabel: {
@@ -173,7 +187,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
         <LoadingButton
           variant="contained"
           loading={loading}
-          onClick={handleSubmit}
+          onClick={handleCreate}
         >
           Create
         </LoadingButton>
@@ -182,7 +196,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
   );
 };
 
-const EditApiKey: FC<IEditApiKeyProps> = ({
+const EditOrganization: FC<IEditOrganizationProps> = ({
   open,
   body,
   validation,
@@ -193,7 +207,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Update API Key</DialogTitle>
+      <DialogTitle>Update User</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -201,7 +215,8 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. CI/CD token"
+              autoComplete="name"
+              placeholder="e.g. John Doe"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -216,36 +231,18 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
             />
           </Grid>
           <Grid>
-            <DateTimePicker
-              label="Expires at"
-              value={dayjs(body.expiresAt)}
-              onChange={(value) =>
-                handleInputChange('expiresAt', value?.toDate())
-              }
-              disablePast
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  required: true,
-                  placeholder: 'Expiry Date',
-                  error: validation.expiresAt,
-                  helperText: validation.expiresAt
-                    ? 'Expiry date is required'
-                    : '',
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
             <TextField
-              label="Description"
+              label="Domain"
               fullWidth
-              placeholder="Describe the token's usage"
-              value={body.description}
-              multiline
-              rows={3}
+              required
+              type="email"
+              autoComplete="email"
+              placeholder="e.g. john.doe@example.com"
+              error={validation.domain}
+              helperText={validation.domain ? 'Must be an email' : ''}
+              value={body.domain}
               onChange={(event) =>
-                handleInputChange('description', event.target.value)
+                handleInputChange('domain', event.target.value)
               }
               slotProps={{
                 inputLabel: {
@@ -272,93 +269,17 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
   );
 };
 
-const TokensModal: FC<ITokensModalProps> = ({ open, body, handleClose }) => {
-  return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Token</DialogTitle>
-      <IconButton
-        sx={(theme) => ({
-          position: 'absolute',
-          right: 8,
-          top: 12,
-          color: theme.palette.grey[500],
-        })}
-        aria-label="close"
-        onClick={handleClose}
-      >
-        <Close />
-      </IconButton>
-      <DialogContent>
-        <Grid container spacing={2} p={1} width="100%" direction="column">
-          <Grid>
-            <SecretManager
-              label="Key"
-              value={body.token}
-              fullWidth
-              copyFunc={true}
-              visibilityFunc={true}
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const DeletionModal: FC<IDeleteApplicationProps> = ({
-  open,
-  loading,
-  handleClose,
-  handleDelete,
-}) => {
-  return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        handleClose();
-      }}
-      fullWidth
-    >
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete API Key?</DialogTitle>
-      <DialogContent>
-        <DialogContentText gutterBottom>
-          Are you sure you want to delete this API Key? This is irreversible and
-          all apps using this will stop working.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => {
-            handleClose();
-          }}
-          color="inherit"
-        >
-          Cancel
-        </Button>
-        <LoadingButton
-          loading={loading}
-          color="error"
-          variant="contained"
-          onClick={handleDelete}
-        >
-          Delete
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
+  handleChangeOrganization,
   handleEditOpen,
-  handleTokenOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
+      <MenuItem onClick={handleChangeOrganization}>Activate</MenuItem>
       <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
-      <MenuItem onClick={handleTokenOpen}>Token</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
       </MenuItem>
@@ -366,26 +287,21 @@ const MoreMenu: FC<IMoreMenuProps> = ({
   );
 };
 
-const ApiKeys = () => {
-  const [addApiKey, setAddApiKey] = useState(false);
-  const [editApiKey, setEditApiKey] = useState(false);
+const Organizations = () => {
+  const [addUser, setAddUser] = useState(false);
+  const [editUser, setEditUser] = useState(false);
+  const [deleteUser, setDeleteUser] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [body, setBody] = useState({
     name: '',
-    description: '',
-    expiresAt: dayjs().add(1, 'hour').toDate(),
+    domain: '',
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: {
-      id: '',
-      name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
-      token: '',
-    },
+    state: { id: '', name: '', domain: '' },
   });
-  const [tokenOpen, setTokenOpen] = useState(false);
-  const [deletionOpen, setDeletionOpen] = useState(false);
   const [apiResponse, setApiResponse] = useState({
     error: false,
     loading: false,
@@ -394,12 +310,14 @@ const ApiKeys = () => {
   });
   const [validation, setValidation] = useState({
     name: false,
-    expiresAt: false,
+    domain: false,
   });
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const { revalidate } = useRevalidator();
+
+  const { changeOrganization } = useOrganization();
+
+  const navigate = useNavigate();
 
   const page = useMemo(() => {
     const skip = searchParams.get('skip');
@@ -433,9 +351,7 @@ const ApiKeys = () => {
     return 10;
   }, [searchParams]);
 
-  const loaderData = useLoaderData() as IApiKeyLoaderData;
-
-  const handleCreateApiKey = async () => {
+  const handleCreateOrganization = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
@@ -443,10 +359,12 @@ const ApiKeys = () => {
       validationCount++;
     }
     if (
-      !dayjs(body.expiresAt).isValid() &&
-      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+      body.domain.length > 1 &&
+      !/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g.test(
+        body.domain,
+      )
     ) {
-      tempValidation.expiresAt = true;
+      tempValidation.domain = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -455,7 +373,7 @@ const ApiKeys = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api-key/create`,
+          `${import.meta.env.VITE_API_URL}/organization/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -470,7 +388,7 @@ const ApiKeys = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new api key',
+            message: 'Created new organization',
           });
         } else {
           constants.fetchError(response.status);
@@ -480,24 +398,27 @@ const ApiKeys = () => {
           ...apiResponse,
           success: false,
           error: true,
-          message: error.message || 'Error creating api key',
+          message: error.message || 'Error creating organization',
         });
       }
     }
   };
 
-  const handleEditApiKey = async () => {
+  const handleUpdateOrganization = async (id: string) => {
     const tempValidation = { ...validation };
+    const tempBody = { ...body };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
     if (
-      !dayjs(body.expiresAt).isValid() &&
-      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+      body.domain.length > 1 &&
+      !/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g.test(
+        body.domain,
+      )
     ) {
-      tempValidation.expiresAt = true;
+      tempValidation.domain = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -506,13 +427,11 @@ const ApiKeys = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api-key/update/${
-            moreMenuOpen.state.token
-          }`,
+          `${import.meta.env.VITE_API_URL}/organization/update/${id}`,
           {
             method: 'PUT',
             credentials: 'include',
-            body: JSON.stringify(body),
+            body: JSON.stringify(tempBody),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -523,7 +442,7 @@ const ApiKeys = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Updated api key',
+            message: 'Updated organization',
           });
         } else {
           constants.fetchError(response.status);
@@ -531,19 +450,19 @@ const ApiKeys = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: false,
-          error: true,
-          message: error.message || 'Error updating api key',
+          success: true,
+          error: false,
+          message: error.message || 'Error updating organization',
         });
       }
     }
   };
 
-  const handleDeleteApiKey = async (token: string) => {
+  const handleDeleteOrganization = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api-key/delete/${token}`,
+        `${import.meta.env.VITE_API_URL}/organization/delete/${id}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -557,11 +476,8 @@ const ApiKeys = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: 'Deleted API Key',
+          message: 'Deleted organization',
         });
-        setDeletionOpen(false);
-        handleMoreMenuClose();
-        revalidate();
       } else {
         constants.fetchError(response.status);
       }
@@ -570,81 +486,62 @@ const ApiKeys = () => {
         ...apiResponse,
         success: false,
         error: true,
-        message: error.message || 'Error deleting API key',
+        message: error.message || 'Error deleting organization',
       });
     }
   };
 
-  const handleInputChange = (
-    name: string,
-    value: string | Date | undefined,
-  ) => {
+  const handleInputChange = (name: string, value: string) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
+  };
+
+  const handleCreateOrganizationModalClose = () => {
+    setBody({ ...body, name: '', domain: '' });
+    setValidation({
+      ...validation,
+      name: false,
+      domain: false,
+    });
+    setAddUser(false);
   };
 
   const handleMoreMenuClose = () => {
     setMoreMenuOpen({ ...moreMenuOpen, open: null });
   };
 
-  const handleEditModalOpen = () => {
-    setEditApiKey(true);
+  const handleEditUserModalOpen = () => {
     setBody({
       ...body,
       name: moreMenuOpen.state.name,
-      description: moreMenuOpen.state.description,
-      expiresAt: dayjs(moreMenuOpen.state.expiresAt).toDate(),
+      domain: moreMenuOpen.state.domain,
     });
-    handleMoreMenuClose();
+    setEditUser(true);
   };
 
-  const handleTokenModalOpen = () => {
-    setTokenOpen(true);
-    handleMoreMenuClose();
-  };
-
-  const handleDeletionModalOpen = () => {
-    setDeletionOpen(true);
-    handleMoreMenuClose();
-  };
-
-  const handleTokenModalClose = () => {
-    setTokenOpen(false);
-    setMoreMenuOpen({
-      open: null,
-      state: {
-        id: '',
-        token: '',
-        name: '',
-        description: '',
-        expiresAt: dayjs().toDate(),
-      },
-    });
-  };
-
-  const handleDeletionModalClose = () => {
-    setDeletionOpen(false);
-  };
-
-  const handleEditApiKeyModalClose = () => {
+  const handleEditOrganizationModalClose = () => {
     setBody({
       ...body,
       name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
+      domain: '',
     });
-    setEditApiKey(false);
+    setValidation({
+      ...validation,
+      name: false,
+      domain: false,
+    });
+    setEditUser(false);
   };
 
-  const handleCreateApiKeyModalClose = () => {
-    setBody({
-      ...body,
-      name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
-    });
-    setAddApiKey(false);
+  const handleDeletionOpen = () => {
+    setDeleteUser(true);
   };
+
+  const handleDeletionClose = () => {
+    setDeleteUser(false);
+  };
+
+  const loaderData = useLoaderData() as IOrganizationLoaderData;
 
   return (
     <>
@@ -660,54 +557,53 @@ const ApiKeys = () => {
             error: false,
           });
           revalidate();
-          handleCreateApiKeyModalClose();
-          handleEditApiKeyModalClose();
-          handleDeletionModalClose();
+          handleCreateOrganizationModalClose();
+          handleEditOrganizationModalClose();
+          handleDeletionClose();
+          handleMoreMenuClose();
         }}
+      />
+      <CreateOrganization
+        open={addUser}
+        body={body}
+        validation={validation}
+        loading={apiResponse.loading}
+        handleClose={handleCreateOrganizationModalClose}
+        handleCreate={handleCreateOrganization}
+        handleInputChange={handleInputChange}
+      />
+      <EditOrganization
+        open={editUser}
+        body={body}
+        validation={validation}
+        loading={apiResponse.loading}
+        handleClose={handleEditOrganizationModalClose}
+        handleSubmit={() => handleUpdateOrganization(moreMenuOpen.state.id)}
+        handleInputChange={handleInputChange}
+      />
+      <DeletionModal
+        open={deleteUser}
+        loading={apiResponse.loading}
+        handleClose={handleDeletionClose}
+        handleDelete={() => handleDeleteOrganization(moreMenuOpen.state.id)}
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
-        handleEditOpen={handleEditModalOpen}
-        handleTokenOpen={handleTokenModalOpen}
-        handleDeletionOpen={handleDeletionModalOpen}
+        handleChangeOrganization={() => {
+          changeOrganization(moreMenuOpen.state.id);
+          navigate('/');
+        }}
+        handleEditOpen={handleEditUserModalOpen}
+        handleDeletionOpen={handleDeletionOpen}
         handleClose={handleMoreMenuClose}
-      />
-      <CreateApiKey
-        open={addApiKey}
-        body={body}
-        validation={validation}
-        loading={apiResponse.loading}
-        handleClose={handleCreateApiKeyModalClose}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleCreateApiKey}
-      />
-      <EditApiKey
-        open={editApiKey}
-        body={body}
-        validation={validation}
-        loading={apiResponse.loading}
-        handleClose={handleEditApiKeyModalClose}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleEditApiKey}
-      />
-      <TokensModal
-        open={tokenOpen}
-        body={{ token: moreMenuOpen.state.token }}
-        handleClose={handleTokenModalClose}
-      />
-      <DeletionModal
-        open={deletionOpen}
-        loading={apiResponse.loading}
-        handleClose={handleDeletionModalClose}
-        handleDelete={() => handleDeleteApiKey(moreMenuOpen.state.token)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">API Keys</Typography>
+            <Typography variant="h4">Organizations</Typography>
             <Typography color="textSecondary">
-              Manage, secure, and create API keys to control access to your
-              applications and services effectively.
+              Setup and manage users and identities, including password resets,
+              assigning permissions and roles.
             </Typography>
           </Grid>
           <Grid>
@@ -715,9 +611,9 @@ const ApiKeys = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={() => setAddApiKey(true)}
+              onClick={() => setAddUser(true)}
             >
-              Create API Key
+              Create Organization
             </Button>
           </Grid>
         </Grid>
@@ -725,23 +621,15 @@ const ApiKeys = () => {
           <Table>
             <TableBody>
               {loaderData &&
-                loaderData?.all.map((value) => (
+                loaderData?.all &&
+                loaderData.all.map((value) => (
                   <TableRow key={value.id}>
-                    <TableCell>
-                      <Typography gutterBottom fontWeight="bold">
-                        {value.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {value.description}
-                      </Typography>
-                    </TableCell>
+                    <TableCell>{value.name}</TableCell>
+                    <TableCell>{value.domain}</TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                      'D MMM YYYY',
-                    )}`}</TableCell>
-                    <TableCell>{`ExpiresAt At: ${dayjs(value.expiresAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
@@ -753,10 +641,8 @@ const ApiKeys = () => {
                               open: event.currentTarget,
                               state: {
                                 id: value.id,
-                                token: value.token,
                                 name: value.name,
-                                description: value.description,
-                                expiresAt: dayjs(value.expiresAt).toDate(),
+                                domain: value.domain,
                               },
                             })
                           }
@@ -797,4 +683,4 @@ const ApiKeys = () => {
   );
 };
 
-export default ApiKeys;
+export default Organizations;

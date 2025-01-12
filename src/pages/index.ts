@@ -26,6 +26,7 @@ const Roles = lazy(() => import('./Roles'));
 const UserConfirm = lazy(() => import('./UserConfirm'));
 const Users = lazy(() => import('./Users'));
 const Webhooks = lazy(() => import('./Webhooks'));
+const Organizations = lazy(() => import('./Organizations'));
 
 export {
   ActivityLog,
@@ -40,6 +41,7 @@ export {
   Insights,
   Login,
   OAuth2Authorize,
+  Organizations,
   Permissions,
   Profile,
   QuickStart,

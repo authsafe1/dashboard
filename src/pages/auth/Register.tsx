@@ -50,7 +50,7 @@ const Register = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const { isAuthenticated, organization } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const { theme } = useThemeToggle();
 
@@ -83,7 +83,7 @@ const Register = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/organization/create`,
+          `${import.meta.env.VITE_API_URL}/profile/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -135,7 +135,7 @@ const Register = () => {
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, organization, location, navigate]);
+  }, [isAuthenticated, location, navigate]);
 
   return loading ? (
     <Loader loading={true} />

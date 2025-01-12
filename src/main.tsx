@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import { Loader } from './components';
 import { AuthProvider } from './context/AuthContext';
+import { OrganizationProvider } from './context/OrganizationContext';
 import { ThemeProvider } from './context/ThemeContext';
 import router from './router';
 
@@ -20,11 +21,13 @@ root.render(
   <StrictMode>
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <AuthProvider>
-          <Suspense fallback={<Loader loading={true} />}>
-            <RouterProvider router={router} />
-          </Suspense>
-        </AuthProvider>
+        <OrganizationProvider>
+          <AuthProvider>
+            <Suspense fallback={<Loader loading={true} />}>
+              <RouterProvider router={router} />
+            </Suspense>
+          </AuthProvider>
+        </OrganizationProvider>
       </LocalizationProvider>
     </ThemeProvider>
   </StrictMode>,

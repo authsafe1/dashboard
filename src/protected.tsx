@@ -1,9 +1,9 @@
-import { FC, ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
 import { Loader } from './components';
 import { useAuth } from './context/AuthContext';
+import { useOrganization } from './context/OrganizationContext';
 
-const ProtectedRoute: FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProtectedRoute = () => {
   const location = useLocation();
   const { isAuthenticated, loading } = useAuth();
 
@@ -13,8 +13,19 @@ const ProtectedRoute: FC<{ children: ReactNode }> = ({ children }) => {
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace state={{ from: location }} />;
   } else {
-    return children;
+    return <Outlet />;
   }
 };
 
-export default ProtectedRoute;
+export const OrganizationProtectedRoute = () => {
+  const { organization, loading } = useOrganization();
+
+  if (loading) {
+    return <Loader loading={true} />;
+  }
+  if (!organization) {
+    return <Navigate to="/organizations" replace />;
+  } else {
+    return <Outlet />;
+  }
+};
