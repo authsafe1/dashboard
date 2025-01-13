@@ -24,7 +24,6 @@ const GoogleCreate = () => {
 
   const [body, setBody] = useState({
     name: '',
-    domain: '',
     email: searchParams.get('email') || '',
     password: '',
   });
@@ -62,13 +61,6 @@ const GoogleCreate = () => {
     }
     if (!isEmail(body.email)) {
       tempError.email = true;
-    }
-    if (
-      !/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g.test(
-        body.domain,
-      )
-    ) {
-      tempError.domain = true;
     }
     if (body.password.length < 6) {
       tempError.password = true;
@@ -206,22 +198,6 @@ const GoogleCreate = () => {
                       value={body.name}
                       onChange={(event) =>
                         setBody({ ...body, name: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Domain"
-                      name="domain"
-                      error={error.domain}
-                      helperText={
-                        error.domain ? 'Must be a valid domain' : null
-                      }
-                      value={body.domain}
-                      onChange={(event) =>
-                        setBody({ ...body, domain: event.target.value })
                       }
                       required
                       fullWidth

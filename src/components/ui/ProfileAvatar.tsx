@@ -5,10 +5,17 @@ interface IProfileAvatarProps {
   name?: string;
   url?: string;
   style?: AvatarProps['style'];
+  variant?: AvatarProps['variant'];
   sx?: Omit<AvatarProps['sx'], 'bgcolor'>;
 }
 
-const ProfileAvatar: FC<IProfileAvatarProps> = ({ name, url, style, sx }) => {
+const ProfileAvatar: FC<IProfileAvatarProps> = ({
+  name,
+  url,
+  style,
+  variant,
+  sx,
+}) => {
   const stringToColor = (string: string) => {
     let hash = 0;
     let i: number;
@@ -35,9 +42,16 @@ const ProfileAvatar: FC<IProfileAvatarProps> = ({ name, url, style, sx }) => {
   };
 
   return url ? (
-    <Avatar src={url} style={style} alt={`${name} logo`} sx={sx} />
+    <Avatar
+      src={url}
+      style={style}
+      alt={`${name} logo`}
+      variant={variant}
+      sx={sx}
+    />
   ) : (
     <Avatar
+      variant={variant}
       style={style}
       alt={`${name} logo`}
       children={stringAvatar(name as string).children}

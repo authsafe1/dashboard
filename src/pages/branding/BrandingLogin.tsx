@@ -51,7 +51,7 @@ const BrandingLogin = () => {
     }
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/organization/branding/update`,
+        `${import.meta.env.VITE_API_URL}/branding/update`,
         {
           method: 'PUT',
           credentials: 'include',

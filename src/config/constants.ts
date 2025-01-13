@@ -5,6 +5,7 @@ import {
   BarChart,
   Bolt,
   Brush,
+  Business,
   GroupAdd,
   History,
   IntegrationInstructions,
@@ -84,7 +85,7 @@ export default {
       Icon: Link,
     },
   ],
-  navigation: [
+  dashboardNavigation: [
     {
       subheader: 'Overview',
       routes: [
@@ -122,11 +123,6 @@ export default {
           text: 'Login',
           Icon: Login,
         },
-        // {
-        //   to: "/dashboard/branding/email",
-        //   text: "Email",
-        //   Icon: Email,
-        // },
       ],
     },
     {
@@ -144,21 +140,33 @@ export default {
         },
       ],
     },
+  ],
+  organizationNavigation: [
+    {
+      subHeader: 'Organizations',
+      routes: [
+        {
+          to: '/organizations?skip=0&take=10',
+          text: 'All',
+          Icon: Business,
+        },
+      ],
+    },
     {
       subheader: 'Analytics and Monitoring',
       routes: [
         {
-          to: '/log/activity?skip=0&take=10',
+          to: '/profile/log/activity?skip=0&take=10',
           text: 'Activity Logs',
           Icon: History,
         },
         {
-          to: '/log/authorization?skip=0&take=10',
+          to: '/profile/log/authorization?skip=0&take=10',
           text: 'Authorization Logs',
           Icon: LockPerson,
         },
         {
-          to: '/log/security?skip=0&take=10',
+          to: '/profile/log/security?skip=0&take=10',
           text: 'Security Logs',
           Icon: Shield,
         },

@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Dialog,
@@ -20,22 +19,21 @@ import {
   useTheme,
 } from '@mui/material';
 import imageCompression from 'browser-image-compression';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Alert,
   FileUploader,
   GeneralTooltip,
-  MetadataTable,
   SecretManager,
 } from '../components';
 import constants from '../config/constants';
 import { useAuth } from '../context/AuthContext';
 
-interface KeyValue {
-  key: string;
-  value: string;
-}
+// interface KeyValue {
+//   key: string;
+//   value: string;
+// }
 
 interface IDeleteOrganizationProps {
   open: boolean;
@@ -160,13 +158,13 @@ const TwoFaModal: FC<ITwoFaProps> = ({
 };
 
 const Profile = () => {
-  const { organization, checkAuth } = useAuth();
+  const { profile, checkAuth } = useAuth();
 
-  const [metadata, setMetadata] = useState<KeyValue[]>([]);
-  const [isMetadataEditable, setIsMetadataEditable] = useState(false);
-  const [metadataErrors, setMetadataErrors] = useState<{
-    [index: number]: { key?: boolean; value?: boolean; message?: string };
-  }>({});
+  //const [metadata, setMetadata] = useState<KeyValue[]>([]);
+  // const [isMetadataEditable, _setIsMetadataEditable] = useState(false);
+  // const [metadataErrors, _setMetadataErrors] = useState<{
+  //   [index: number]: { key?: boolean; value?: boolean; message?: string };
+  // }>({});
   const [deletionOpen, setDeletionOpen] = useState(false);
   const [qrCode, setQrCode] = useState('');
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
@@ -209,124 +207,124 @@ const Profile = () => {
 
   const { maxProfilePhotoSize } = constants;
 
-  const parseMetadata = (metadata?: object): KeyValue[] => {
-    return Object.entries(metadata as object).map(([key, value]) => ({
-      key,
-      value: value as string,
-    }));
-  };
+  // const parseMetadata = (metadata?: object): KeyValue[] => {
+  //   return Object.entries(metadata as object).map(([key, value]) => ({
+  //     key,
+  //     value: value as string,
+  //   }));
+  // };
 
-  const metadataToObject = (parsedMetadata: KeyValue[]) => {
-    let tempObject = {};
-    parsedMetadata.forEach(({ key, value }) => {
-      tempObject = { ...tempObject, [key]: value };
-    });
-    return tempObject;
-  };
+  // const metadataToObject = (parsedMetadata: KeyValue[]) => {
+  //   let tempObject = {};
+  //   parsedMetadata.forEach(({ key, value }) => {
+  //     tempObject = { ...tempObject, [key]: value };
+  //   });
+  //   return tempObject;
+  // };
 
-  useEffect(() => {
-    setMetadata(parseMetadata(organization?.metadata));
-  }, [organization?.metadata]);
+  // useEffect(() => {
+  //   setMetadata(parseMetadata(organization?.metadata));
+  // }, [organization?.metadata]);
 
-  const handleMetadataChange = (value: KeyValue[]) => {
-    setMetadata(value);
-  };
+  // const handleMetadataChange = (value: KeyValue[]) => {
+  //   setMetadata(value);
+  // };
 
-  const handleMetadataEdit = () => {
-    setIsMetadataEditable(true);
-  };
+  // const handleMetadataEdit = () => {
+  //   setIsMetadataEditable(true);
+  // };
 
-  const handleMetadataCancel = () => {
-    setIsMetadataEditable(false);
-    setMetadata(parseMetadata(organization?.metadata));
-    setMetadataErrors({});
-  };
+  // const handleMetadataCancel = () => {
+  //   setIsMetadataEditable(false);
+  //   setMetadata(parseMetadata(organization?.metadata));
+  //   setMetadataErrors({});
+  // };
 
-  const handleMetadataUpdate = async () => {
-    const newErrors: {
-      [index: number]: { key?: boolean; value?: boolean; message?: string };
-    } = {};
-    const keysSet = new Set();
+  // const handleMetadataUpdate = async () => {
+  //   const newErrors: {
+  //     [index: number]: { key?: boolean; value?: boolean; message?: string };
+  //   } = {};
+  //   const keysSet = new Set();
 
-    metadata.forEach((item, index) => {
-      if (!item.key.trim()) {
-        newErrors[index] = {
-          ...newErrors[index],
-          key: true,
-          message: 'Key is required',
-        };
-      } else if (keysSet.has(item.key)) {
-        newErrors[index] = {
-          ...newErrors[index],
-          key: true,
-          message: 'Key must be unique',
-        };
-      } else {
-        keysSet.add(item.key);
-      }
+  //   metadata.forEach((item, index) => {
+  //     if (!item.key.trim()) {
+  //       newErrors[index] = {
+  //         ...newErrors[index],
+  //         key: true,
+  //         message: 'Key is required',
+  //       };
+  //     } else if (keysSet.has(item.key)) {
+  //       newErrors[index] = {
+  //         ...newErrors[index],
+  //         key: true,
+  //         message: 'Key must be unique',
+  //       };
+  //     } else {
+  //       keysSet.add(item.key);
+  //     }
 
-      if (!item.value.trim()) {
-        newErrors[index] = {
-          ...newErrors[index],
-          value: true,
-          message: 'Value is required',
-        };
-      }
-    });
+  //     if (!item.value.trim()) {
+  //       newErrors[index] = {
+  //         ...newErrors[index],
+  //         value: true,
+  //         message: 'Value is required',
+  //       };
+  //     }
+  //   });
 
-    if (Object.keys(newErrors).length === 0) {
-      const metadataObject = { metadata: metadataToObject(metadata) };
-      setMetadataApiResponse({ ...metadataApiResponse, loading: true });
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/organization/update`,
-          {
-            method: 'PUT',
-            credentials: 'include',
-            body: JSON.stringify(metadataObject),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-        if (response.ok) {
-          setMetadataApiResponse({
-            ...metadataApiResponse,
-            success: true,
-            error: false,
-            loading: false,
-            message: 'Updated metadata',
-          });
-          setIsMetadataEditable(false);
-          setMetadataErrors({});
-        } else if (response.status === 401) {
-          setMetadataApiResponse({
-            ...metadataApiResponse,
-            success: false,
-            error: true,
-            loading: false,
-            message: 'Not authenticated',
-          });
-        }
-      } catch {
-        setMetadataApiResponse({
-          ...metadataApiResponse,
-          success: false,
-          error: true,
-          loading: false,
-          message: 'Error updating metadata',
-        });
-      }
-    } else {
-      setMetadataErrors(newErrors);
-    }
-  };
+  //   if (Object.keys(newErrors).length === 0) {
+  //     const metadataObject = { metadata: metadataToObject(metadata) };
+  //     setMetadataApiResponse({ ...metadataApiResponse, loading: true });
+  //     try {
+  //       const response = await fetch(
+  //         `${import.meta.env.VITE_API_URL}/organization/update`,
+  //         {
+  //           method: 'PUT',
+  //           credentials: 'include',
+  //           body: JSON.stringify(metadataObject),
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //         },
+  //       );
+  //       if (response.ok) {
+  //         setMetadataApiResponse({
+  //           ...metadataApiResponse,
+  //           success: true,
+  //           error: false,
+  //           loading: false,
+  //           message: 'Updated metadata',
+  //         });
+  //         setIsMetadataEditable(false);
+  //         setMetadataErrors({});
+  //       } else if (response.status === 401) {
+  //         setMetadataApiResponse({
+  //           ...metadataApiResponse,
+  //           success: false,
+  //           error: true,
+  //           loading: false,
+  //           message: 'Not authenticated',
+  //         });
+  //       }
+  //     } catch {
+  //       setMetadataApiResponse({
+  //         ...metadataApiResponse,
+  //         success: false,
+  //         error: true,
+  //         loading: false,
+  //         message: 'Error updating metadata',
+  //       });
+  //     }
+  //   } else {
+  //     setMetadataErrors(newErrors);
+  //   }
+  // };
 
-  const handleDeleteOrganization = async () => {
+  const handleDeleteProfile = async () => {
     setDeletionApiResponse({ ...deletionApiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/organization/delete`,
+        `${import.meta.env.VITE_API_URL}/profile/delete`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -623,9 +621,9 @@ const Profile = () => {
       <DeletionModal
         open={deletionOpen}
         loading={deletionApiResponse.loading}
-        email={organization?.email}
+        email={profile?.email}
         handleClose={handleDeletionClose}
-        handleDelete={handleDeleteOrganization}
+        handleDelete={handleDeleteProfile}
       />
       <TwoFaModal
         open={qrCodeOpen}
@@ -645,8 +643,8 @@ const Profile = () => {
               }}
             >
               <FileUploader
-                image={organization?.photo}
-                name={organization?.name}
+                image={profile?.photo}
+                name={profile?.name}
                 loading={photoApiResponse.loading}
                 onFileSelect={(file) => handleImageUpload(file)}
                 sx={{
@@ -661,20 +659,20 @@ const Profile = () => {
                   <Typography variant="h6" color="textSecondary">
                     Name
                   </Typography>
-                  <Typography noWrap>{organization?.name}</Typography>
+                  <Typography noWrap>{profile?.name}</Typography>
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" color="textSecondary">
                     Email
                   </Typography>
-                  <Typography noWrap>{organization?.email}</Typography>
+                  <Typography noWrap>{profile?.email}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
+                {/* <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" color="textSecondary">
                     Domain
                   </Typography>
-                  <Typography noWrap>{organization?.domain}</Typography>
-                </Grid>
+                  <Typography noWrap>{profile?.domain}</Typography>
+                </Grid> */}
               </Grid>
             </CardContent>
           </Card>
@@ -682,7 +680,7 @@ const Profile = () => {
         <Grid>
           <Divider />
         </Grid>
-        <Grid>
+        {/* <Grid>
           <Card variant="outlined">
             <CardHeader title="Metadata" />
             <CardContent>
@@ -714,7 +712,7 @@ const Profile = () => {
               )}
             </CardActions>
           </Card>
-        </Grid>
+        </Grid> */}
         <Grid>
           <Card variant="outlined">
             <CardHeader title="Enable Two-Factor Authentication (2FA)" />
@@ -731,7 +729,7 @@ const Profile = () => {
                   </Typography>
                 </Grid>
                 <Grid>
-                  {organization?.isTwoFactorAuthEnabled ? (
+                  {profile?.isTwoFactorAuthEnabled ? (
                     <LoadingButton
                       variant="contained"
                       color="error"
@@ -759,15 +757,15 @@ const Profile = () => {
             <CardHeader title="Secrets" />
             <CardContent>
               <Grid container width="100%" spacing={2} direction="column">
-                <Grid>
+                {/* <Grid>
                   <SecretManager
-                    label="Organization ID"
+                    label="Profile ID"
                     fullWidth
-                    value={organization?.id}
+                    value={Profile?.id}
                     copyFunc={true}
                     visibilityFunc={true}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid>
                   <SecretManager
                     label="JWKS URL"
@@ -779,31 +777,31 @@ const Profile = () => {
                     visibilityFunc={false}
                   />
                 </Grid>
-                <Grid>
+                {/* <Grid>
                   <SecretManager
                     multiline
                     fullWidth
                     label="Public Key"
-                    value={organization?.Secret?.publicKey}
+                    value={Profile?.Secret?.publicKey}
                     copyFunc={true}
                     visibilityFunc={false}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
             </CardContent>
           </Card>
         </Grid>
         <Grid>
           <Card variant="outlined">
-            <CardHeader title="Delete Organization" />
+            <CardHeader title="Delete Profile" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid>
                   <Typography>
-                    Deleting your organization account is permanent and cannot
-                    be undone. All your data and settings will be removed, and
-                    you will no longer be able to access any associated
-                    services. Please confirm if you wish to proceed.
+                    Deleting your profile is permanent and cannot be undone. All
+                    your data and settings will be removed, and you will no
+                    longer be able to access any associated services. Please
+                    confirm if you wish to proceed.
                   </Typography>
                 </Grid>
                 <Grid>

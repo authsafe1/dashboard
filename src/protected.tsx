@@ -24,7 +24,7 @@ export const OrganizationProtectedRoute = () => {
     return <Loader loading={true} />;
   }
   if (!organization) {
-    return <Navigate to="/organizations" replace />;
+    return <Navigate to="'/organizations?skip=0&take=10'" replace />;
   } else {
     return <Outlet />;
   }

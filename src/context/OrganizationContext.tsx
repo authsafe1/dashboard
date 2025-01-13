@@ -1,11 +1,9 @@
-import debounce from 'lodash/debounce';
 import React, {
   createContext,
   FC,
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { Loader } from '../components';
@@ -26,14 +24,14 @@ interface Organization {
 interface AuthContextType {
   organization: Organization | null;
   loading: boolean;
-  changeOrganization: (id: string) => void;
+  changeOrganization: (id: string) => Promise<void>;
   checkOrganization: () => Promise<void>;
 }
 
 const OrganizationContext = createContext<AuthContextType>({
   organization: null,
   loading: true,
-  changeOrganization: () => {},
+  changeOrganization: async () => {},
   checkOrganization: async () => {},
 });
 
@@ -43,65 +41,60 @@ export const OrganizationProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [organization, setOrganization] = useState<Organization | null>(null);
-  const [organizationId, setOrganizationId] = useState(
+  const [organizationId, setOrganizationId] = useState<string | null>(
     localStorage.getItem('organization-id'),
   );
   const [loading, setLoading] = useState(false);
-  const [isRequestPending, setRequestPending] = useState(false);
 
-  const debouncedCheckOrganizationRef = useRef(
-    debounce(async () => {
-      if (isRequestPending) return;
-      if (!organizationId) return;
-      setRequestPending(true);
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/organization/${organizationId}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+  const fetchOrganization = useCallback(async (id: string | null) => {
+    if (!id) {
+      setOrganization(null);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/organization/switch/${id}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setOrganization(data);
-        } else {
-          setOrganization(null);
-        }
-      } catch {
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setOrganization(data);
+      } else {
         setOrganization(null);
-      } finally {
-        setLoading(false);
-        setRequestPending(false);
       }
-    }, 300),
-  );
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+      setOrganization(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const changeOrganization = useCallback(
-    (id: string) => {
+    async (id: string) => {
       setOrganizationId(id);
       localStorage.setItem('organization-id', id);
+      await fetchOrganization(id);
     },
-    [organizationId],
+    [fetchOrganization],
   );
 
   const checkOrganization = useCallback(async () => {
-    debouncedCheckOrganizationRef.current();
-  }, [organizationId]);
+    await fetchOrganization(organizationId);
+  }, [fetchOrganization, organizationId]);
 
   useEffect(() => {
-    const debouncedFetchVar = debouncedCheckOrganizationRef.current;
-
     checkOrganization();
-
-    return () => {
-      debouncedFetchVar.cancel();
-    };
-  }, [checkOrganization, organizationId]);
+  }, [checkOrganization]);
 
   return loading ? (
     <Loader loading={true} />

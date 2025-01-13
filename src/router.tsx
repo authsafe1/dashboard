@@ -122,6 +122,26 @@ const router = createBrowserRouter([
                 loader: organizationsLoader,
                 element: <Organizations />,
               },
+              {
+                path: 'log',
+                children: [
+                  {
+                    path: 'authorization',
+                    loader: authorizationLogLoader,
+                    element: <AuthorizationLog />,
+                  },
+                  {
+                    path: 'activity',
+                    loader: activityLogLoader,
+                    element: <ActivityLog />,
+                  },
+                  {
+                    path: 'security',
+                    loader: securityAlertLoader,
+                    element: <SecurityLog />,
+                  },
+                ],
+              },
             ],
           },
           {
@@ -178,26 +198,6 @@ const router = createBrowserRouter([
                   //     },
                   //   ],
                   // },
-                  {
-                    path: 'log',
-                    children: [
-                      {
-                        path: 'authorization',
-                        loader: authorizationLogLoader,
-                        element: <AuthorizationLog />,
-                      },
-                      {
-                        path: 'activity',
-                        loader: activityLogLoader,
-                        element: <ActivityLog />,
-                      },
-                      {
-                        path: 'security',
-                        loader: securityAlertLoader,
-                        element: <SecurityLog />,
-                      },
-                    ],
-                  },
                   {
                     path: 'branding',
                     children: [

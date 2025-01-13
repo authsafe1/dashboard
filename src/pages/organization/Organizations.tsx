@@ -21,16 +21,16 @@ import {
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import {
   useLoaderData,
   useNavigate,
   useRevalidator,
   useSearchParams,
 } from 'react-router';
-import { Alert, GeneralTooltip } from '../components';
-import constants from '../config/constants';
-import { useOrganization } from '../context/OrganizationContext';
+import { Alert, GeneralTooltip, MetadataTable } from '../../components';
+import constants from '../../config/constants';
+import { useOrganization } from '../../context/OrganizationContext';
 
 interface IOrganizationLoaderData {
   count: number;
@@ -50,6 +50,15 @@ interface IMoreMenuProps {
   handleEditOpen: () => void;
   handleDeletionOpen: () => void;
 }
+
+type KeyValue = {
+  key: string;
+  value: string;
+};
+
+type MetadataError = {
+  [index: number]: { key?: boolean; value?: boolean; message?: string };
+};
 
 interface ICreateOrganizationProps {
   open: boolean;
@@ -72,6 +81,10 @@ interface IEditOrganizationProps {
   };
   validation: { name: boolean; domain: boolean };
   loading: boolean;
+  isEdit: boolean;
+  metadata: KeyValue[];
+  errors: MetadataError;
+  onMetadataChange: (updatedMetadata: KeyValue[]) => void;
   handleInputChange: (name: string, value: string) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
@@ -101,11 +114,12 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete user?</DialogTitle>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete Organization?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete this user? This is irreversible and
-          all associated roles and permissions would be unlinked
+          Are you sure you want to delete this organization? This is
+          irreversible and all associated users, applications, roles and
+          permissions would be deleted.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -201,13 +215,17 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
   body,
   validation,
   loading,
+  isEdit,
+  metadata,
+  errors,
+  onMetadataChange,
   handleInputChange,
   handleSubmit,
   handleClose,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Update User</DialogTitle>
+      <DialogTitle>Update Organization</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -251,6 +269,15 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
               }}
             />
           </Grid>
+          <Grid>
+            <Typography>Metadata</Typography>
+            <MetadataTable
+              isEdit={isEdit}
+              metadata={metadata}
+              errors={errors}
+              onMetadataChange={onMetadataChange}
+            />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -291,12 +318,17 @@ const Organizations = () => {
   const [addUser, setAddUser] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [deleteUser, setDeleteUser] = useState(false);
-
+  const [metadata, setMetadata] = useState<KeyValue[]>([]);
+  const [isMetadataEditable, setIsMetadataEditable] = useState(false);
+  const [metadataErrors, setMetadataErrors] = useState<{
+    [index: number]: { key?: boolean; value?: boolean; message?: string };
+  }>({});
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [body, setBody] = useState({
     name: '',
     domain: '',
+    metadata: {},
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
@@ -350,6 +382,46 @@ const Organizations = () => {
     }
     return 10;
   }, [searchParams]);
+
+  const handleMetadataUpdate = () => {
+    const newErrors: {
+      [index: number]: { key?: boolean; value?: boolean; message?: string };
+    } = {};
+    const keysSet = new Set();
+
+    metadata.forEach((item, index) => {
+      if (!item.key.trim()) {
+        newErrors[index] = {
+          ...newErrors[index],
+          key: true,
+          message: 'Key is required',
+        };
+      } else if (keysSet.has(item.key)) {
+        newErrors[index] = {
+          ...newErrors[index],
+          key: true,
+          message: 'Key must be unique',
+        };
+      } else {
+        keysSet.add(item.key);
+      }
+
+      if (!item.value.trim()) {
+        newErrors[index] = {
+          ...newErrors[index],
+          value: true,
+          message: 'Value is required',
+        };
+      }
+    });
+
+    if (Object.keys(newErrors).length === 0) {
+      const metadataObject = { metadata: metadataToObject(metadata) };
+      return metadataObject;
+    } else {
+      setMetadataErrors(() => newErrors);
+    }
+  };
 
   const handleCreateOrganization = async () => {
     const tempValidation = { ...validation };
@@ -408,6 +480,12 @@ const Organizations = () => {
     const tempValidation = { ...validation };
     const tempBody = { ...body };
     let validationCount = 0;
+    const metadata = handleMetadataUpdate();
+    console.log(Object.keys(metadataErrors).length);
+    console.log(metadataErrors);
+    if (metadata) {
+      tempBody.metadata = metadata;
+    }
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
@@ -421,9 +499,13 @@ const Organizations = () => {
       tempValidation.domain = true;
       validationCount++;
     }
+    if (Object.keys(metadataErrors).length > 0) {
+      validationCount++;
+    }
     if (validationCount > 0) {
       setValidation(tempValidation);
     } else {
+      console.log(validationCount);
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
@@ -496,6 +578,31 @@ const Organizations = () => {
     setBody({ ...body, [name]: value });
   };
 
+  const { organization } = useOrganization();
+
+  const parseMetadata = (metadata?: object): KeyValue[] => {
+    return Object.entries(metadata as object).map(([key, value]) => ({
+      key,
+      value: value as string,
+    }));
+  };
+
+  const metadataToObject = (parsedMetadata: KeyValue[]) => {
+    let tempObject = {};
+    parsedMetadata.forEach(({ key, value }) => {
+      tempObject = { ...tempObject, [key]: value };
+    });
+    return tempObject;
+  };
+
+  useEffect(() => {
+    //setMetadata(parseMetadata(organization?.metadata));
+  }, [organization?.metadata]);
+
+  const handleMetadataChange = (value: KeyValue[]) => {
+    setMetadata(value);
+  };
+
   const handleCreateOrganizationModalClose = () => {
     setBody({ ...body, name: '', domain: '' });
     setValidation({
@@ -516,6 +623,7 @@ const Organizations = () => {
       name: moreMenuOpen.state.name,
       domain: moreMenuOpen.state.domain,
     });
+    setIsMetadataEditable(true);
     setEditUser(true);
   };
 
@@ -531,6 +639,9 @@ const Organizations = () => {
       domain: false,
     });
     setEditUser(false);
+    setIsMetadataEditable(false);
+    setMetadata(parseMetadata(organization?.metadata));
+    setMetadataErrors({});
   };
 
   const handleDeletionOpen = () => {
@@ -577,6 +688,10 @@ const Organizations = () => {
         body={body}
         validation={validation}
         loading={apiResponse.loading}
+        isEdit={isMetadataEditable}
+        metadata={metadata}
+        errors={metadataErrors}
+        onMetadataChange={handleMetadataChange}
         handleClose={handleEditOrganizationModalClose}
         handleSubmit={() => handleUpdateOrganization(moreMenuOpen.state.id)}
         handleInputChange={handleInputChange}

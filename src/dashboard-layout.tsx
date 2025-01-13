@@ -32,6 +32,7 @@ import {
   styled,
   Switch,
   Toolbar,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -183,7 +184,7 @@ const DashboardLayout = () => {
   const [alertOpen, setAlertOpen] = useState(!profile?.isVerified);
   const [organizationMenuOpen, setOrganizationMenuOpen] = useState(false);
 
-  const { navigation } = constants;
+  const { dashboardNavigation } = constants;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -295,15 +296,31 @@ const DashboardLayout = () => {
       >
         <ListItem>
           <ListItemAvatar>
-            <ProfileAvatar name={organization?.name} />
+            <ProfileAvatar name={organization?.name} variant="square" />
           </ListItemAvatar>
           <ListItemText
             primary={organization?.name}
-            secondary={organization?.domain}
+            slotProps={{
+              primary: {
+                fontSize: 'larger',
+                fontWeight: 'bold',
+              },
+              secondary: {
+                component: 'div',
+              },
+            }}
+            secondary={
+              <>
+                <Typography fontSize="medium">
+                  Domain: {organization?.domain}
+                </Typography>
+                <Typography fontSize="small">ID: {organization?.id}</Typography>
+              </>
+            }
           />
         </ListItem>
         <Divider />
-        <MenuItem component={Link} to="/organizations">
+        <MenuItem component={Link} to="/organizations?skip=0&take=10">
           <ListItemIcon>
             <Settings />
           </ListItemIcon>
@@ -388,7 +405,7 @@ const DashboardLayout = () => {
           </Box>
         </DrawerHeader>
         <Divider />
-        {navigation.map(({ subheader, routes }, indexTop) => (
+        {dashboardNavigation.map(({ subheader, routes }, indexTop) => (
           <Fragment key={`list-header-${indexTop}`}>
             <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
               {routes.map(({ to, text, Icon }, indexBottom) => (

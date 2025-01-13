@@ -15,9 +15,9 @@ const TwoFactorAuthentication = lazy(
 const BillingPlan = lazy(() => import('./Billing'));
 const BrandingLogin = lazy(() => import('./branding/BrandingLogin'));
 const Insights = lazy(() => import('./Insights'));
-const ActivityLog = lazy(() => import('./log/Activity'));
-const AuthorizationLog = lazy(() => import('./log/Authorization'));
-const SecurityLog = lazy(() => import('./log/Security'));
+const ActivityLog = lazy(() => import('./organization/log/Activity'));
+const AuthorizationLog = lazy(() => import('./organization/log/Authorization'));
+const SecurityLog = lazy(() => import('./organization/log/Security'));
 const OAuth2Authorize = lazy(() => import('./OAuth2Authorize'));
 const Permissions = lazy(() => import('./Permissions'));
 const Profile = lazy(() => import('./Profile'));
@@ -26,7 +26,7 @@ const Roles = lazy(() => import('./Roles'));
 const UserConfirm = lazy(() => import('./UserConfirm'));
 const Users = lazy(() => import('./Users'));
 const Webhooks = lazy(() => import('./Webhooks'));
-const Organizations = lazy(() => import('./Organizations'));
+const Organizations = lazy(() => import('./organization/Organizations'));
 
 export {
   ActivityLog,

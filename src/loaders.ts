@@ -131,7 +131,7 @@ export const activityLogLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/activity`,
+    `${import.meta.env.VITE_API_URL}/profile/log/activity`,
     +skip,
     +take,
   );
@@ -142,7 +142,7 @@ export const securityAlertLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/security`,
+    `${import.meta.env.VITE_API_URL}/profile/log/security`,
     +skip,
     +take,
   );
@@ -153,14 +153,14 @@ export const authorizationLogLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/authorization`,
+    `${import.meta.env.VITE_API_URL}/profile/log/authorization`,
     +skip,
     +take,
   );
 };
 
 export const brandingLoginLoader: LoaderFunction = async () => {
-  const url = `${import.meta.env.VITE_API_URL}/organization/branding`;
+  const url = `${import.meta.env.VITE_API_URL}/branding`;
   return fetchApi(url);
 };
 
