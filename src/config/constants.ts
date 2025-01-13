@@ -156,17 +156,17 @@ export default {
       subheader: 'Analytics and Monitoring',
       routes: [
         {
-          to: '/profile/log/activity?skip=0&take=10',
+          to: '/log/activity?skip=0&take=10',
           text: 'Activity Logs',
           Icon: History,
         },
         {
-          to: '/profile/log/authorization?skip=0&take=10',
+          to: '/log/authorization?skip=0&take=10',
           text: 'Authorization Logs',
           Icon: LockPerson,
         },
         {
-          to: '/profile/log/security?skip=0&take=10',
+          to: '/log/security?skip=0&take=10',
           text: 'Security Logs',
           Icon: Shield,
         },

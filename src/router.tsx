@@ -114,11 +114,11 @@ const router = createBrowserRouter([
         element: <AuthProtectedRoute />,
         children: [
           {
-            path: 'organizations',
+            path: '',
             element: <OrganizationLayout />,
             children: [
               {
-                path: '',
+                path: 'organizations',
                 loader: organizationsLoader,
                 element: <Organizations />,
               },
