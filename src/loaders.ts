@@ -45,10 +45,19 @@ const fetchPaginatedData = async (
 export const authConfirmLoader: LoaderFunction = async ({ request }) => {
   const token = new URL(request.url).searchParams.get('token');
   if (!token) throw new Error('Token is required');
-  const url = `${
-    import.meta.env.VITE_API_URL
-  }/organization/confirm?token=${token}`;
+  const url = `${import.meta.env.VITE_API_URL}/profile/confirm?token=${token}`;
   return fetchApi(url, { method: 'POST' });
+};
+
+export const organizationsLoader: LoaderFunction = async ({ request }) => {
+  const { skip = 0, take = 10 } = Object.fromEntries(
+    new URL(request.url).searchParams.entries(),
+  );
+  return fetchPaginatedData(
+    `${import.meta.env.VITE_API_URL}/organization`,
+    +skip,
+    +take,
+  );
 };
 
 export const applicationsLoader: LoaderFunction = async ({ request }) => {
@@ -122,7 +131,7 @@ export const activityLogLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/activity`,
+    `${import.meta.env.VITE_API_URL}/profile/log/activity`,
     +skip,
     +take,
   );
@@ -133,7 +142,7 @@ export const securityAlertLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/security`,
+    `${import.meta.env.VITE_API_URL}/profile/log/security`,
     +skip,
     +take,
   );
@@ -144,14 +153,14 @@ export const authorizationLogLoader: LoaderFunction = async ({ request }) => {
     new URL(request.url).searchParams.entries(),
   );
   return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/organization/log/authorization`,
+    `${import.meta.env.VITE_API_URL}/profile/log/authorization`,
     +skip,
     +take,
   );
 };
 
 export const brandingLoginLoader: LoaderFunction = async () => {
-  const url = `${import.meta.env.VITE_API_URL}/organization/branding`;
+  const url = `${import.meta.env.VITE_API_URL}/branding`;
   return fetchApi(url);
 };
 

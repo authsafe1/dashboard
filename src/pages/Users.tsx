@@ -585,8 +585,8 @@ const Users = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: true,
-          error: false,
+          success: false,
+          error: true,
           message: error.message || 'Error creating user',
         });
       }

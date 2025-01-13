@@ -17,31 +17,37 @@ enum Plan {
   ENTERPRISE = 'ENTERPRISE',
 }
 
-interface Organization {
+interface Profile {
   id: string;
   name: string;
   email: string;
   photo: string;
-  domain: string;
+  plan: Plan;
   isTwoFactorAuthEnabled: boolean;
   isVerified: boolean;
-  plan: Plan;
-  metadata: object;
-  Secret: {
-    publicKey: string;
-    apiKey: string;
-  };
+  Organizations: {
+    id: string;
+    name: string;
+    domain: string;
+    metadata: object;
+    Secret: {
+      publicKey: string;
+      ApiKeys: {
+        token: string;
+      }[];
+    };
+  }[];
 }
 
 interface AuthContextType {
-  organization: Organization | null;
+  profile: Profile | null;
   isAuthenticated: boolean;
   loading: boolean;
   checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  organization: null,
+  profile: null,
   isAuthenticated: false,
   loading: true,
   checkAuth: async () => {},
@@ -52,10 +58,10 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [organization, setOrganization] = useState<Organization | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRequestPending, setRequestPending] = useState(false);
-  const isAuthenticated = useMemo(() => !!organization, [organization]);
+  const isAuthenticated = useMemo(() => !!profile, [profile]);
 
   const debouncedCheckAuthRef = useRef(
     debounce(async () => {
@@ -75,12 +81,12 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         );
         if (response.ok) {
           const data = await response.json();
-          setOrganization(data);
+          setProfile(data);
         } else {
-          setOrganization(null);
+          setProfile(null);
         }
       } catch {
-        setOrganization(null);
+        setProfile(null);
       } finally {
         setLoading(false);
         setRequestPending(false);
@@ -106,7 +112,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     <Loader loading={true} />
   ) : (
     <AuthContext.Provider
-      value={{ organization, isAuthenticated, loading, checkAuth }}
+      value={{ profile, isAuthenticated, loading, checkAuth }}
     >
       {children}
     </AuthContext.Provider>

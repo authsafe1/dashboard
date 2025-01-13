@@ -52,7 +52,10 @@ const NotFoundComponent = () => {
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
           The page you are looking for does not exist or has been moved.
         </Typography>
-        <StyledBackButton text="Back to Home" onClick={() => navigate('/')} />
+        <StyledBackButton
+          text="Back to Home"
+          onClick={() => navigate('/organizations?skip=0&take=10')}
+        />
       </Box>
     </Container>
   );

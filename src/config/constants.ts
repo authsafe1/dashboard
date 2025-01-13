@@ -5,6 +5,7 @@ import {
   BarChart,
   Bolt,
   Brush,
+  Business,
   GroupAdd,
   History,
   IntegrationInstructions,
@@ -84,7 +85,7 @@ export default {
       Icon: Link,
     },
   ],
-  navigation: [
+  dashboardNavigation: [
     {
       subheader: 'Overview',
       routes: [
@@ -122,11 +123,6 @@ export default {
           text: 'Login',
           Icon: Login,
         },
-        // {
-        //   to: "/dashboard/branding/email",
-        //   text: "Email",
-        //   Icon: Email,
-        // },
       ],
     },
     {
@@ -141,6 +137,18 @@ export default {
           to: '/api-keys?skip=0&take=10',
           text: 'API Keys',
           Icon: Key,
+        },
+      ],
+    },
+  ],
+  organizationNavigation: [
+    {
+      subHeader: 'Organizations',
+      routes: [
+        {
+          to: '/organizations?skip=0&take=10',
+          text: 'All',
+          Icon: Business,
         },
       ],
     },

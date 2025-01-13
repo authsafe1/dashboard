@@ -1,15 +1,18 @@
 import {
   ChevronLeft,
+  KeyboardArrowDown,
   Logout,
   MenuBook,
   Menu as MenuIcon,
   Palette,
   Person,
+  Settings,
 } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
   Box,
+  Button,
   Collapse,
   Divider,
   Drawer,
@@ -29,6 +32,7 @@ import {
   styled,
   Switch,
   Toolbar,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -38,9 +42,10 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar } from './components';
 import constants from './config/constants';
 import { useAuth } from './context/AuthContext';
+import { useOrganization } from './context/OrganizationContext';
 import { useThemeToggle } from './context/ThemeContext';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 55,
@@ -163,7 +168,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const Layout = () => {
+const DashboardLayout = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
@@ -171,23 +176,33 @@ const Layout = () => {
   const isMobile = useMediaQuery(defaultTheme.breakpoints.down('md'));
 
   const profileMenuAnchor = useRef<HTMLButtonElement | null>(null);
+  const organizationMenuAnchor = useRef<HTMLButtonElement | null>(null);
 
-  const { organization, checkAuth } = useAuth();
+  const { profile, checkAuth } = useAuth();
   const { theme, toggleTheme } = useThemeToggle();
 
-  const [alertOpen, setAlertOpen] = useState(!organization?.isVerified);
+  const [alertOpen, setAlertOpen] = useState(!profile?.isVerified);
+  const [organizationMenuOpen, setOrganizationMenuOpen] = useState(false);
 
-  const { navigation } = constants;
+  const { dashboardNavigation } = constants;
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleMenuOpen = () => {
+  const handleProfileMenuOpen = () => {
     setProfileMenuOpen(true);
   };
 
-  const handleMenuClose = () => {
+  const handleProfileMenuClose = () => {
     setProfileMenuOpen(false);
+  };
+
+  const handleOrganizationMenuOpen = () => {
+    setOrganizationMenuOpen(true);
+  };
+
+  const handleOrganizationMenuClose = () => {
+    setOrganizationMenuOpen(false);
   };
 
   useEffect(() => {
@@ -220,6 +235,8 @@ const Layout = () => {
     }
   };
 
+  const { organization } = useOrganization();
+
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
@@ -229,19 +246,13 @@ const Layout = () => {
       <Menu
         anchorEl={profileMenuAnchor.current}
         open={profileMenuOpen}
-        onClose={handleMenuClose}
+        onClose={handleProfileMenuClose}
       >
         <ListItem>
           <ListItemAvatar>
-            <ProfileAvatar
-              url={organization?.photo}
-              name={organization?.name}
-            />
+            <ProfileAvatar url={profile?.photo} name={profile?.name} />
           </ListItemAvatar>
-          <ListItemText
-            primary={organization?.name}
-            secondary={organization?.email}
-          />
+          <ListItemText primary={profile?.name} secondary={profile?.email} />
         </ListItem>
         <Divider />
         <ListItem sx={{ px: 3 }}>
@@ -278,9 +289,47 @@ const Layout = () => {
           Log out
         </MenuItem>
       </Menu>
+      <Menu
+        anchorEl={organizationMenuAnchor.current}
+        open={organizationMenuOpen}
+        onClose={handleOrganizationMenuClose}
+      >
+        <ListItem>
+          <ListItemAvatar>
+            <ProfileAvatar name={organization?.name} variant="square" />
+          </ListItemAvatar>
+          <ListItemText
+            primary={organization?.name}
+            slotProps={{
+              primary: {
+                fontSize: 'larger',
+                fontWeight: 'bold',
+              },
+              secondary: {
+                component: 'div',
+              },
+            }}
+            secondary={
+              <>
+                <Typography fontSize="medium">
+                  Domain: {organization?.domain}
+                </Typography>
+                <Typography fontSize="small">ID: {organization?.id}</Typography>
+              </>
+            }
+          />
+        </ListItem>
+        <Divider />
+        <MenuItem component={Link} to="/organizations?skip=0&take=10">
+          <ListItemIcon>
+            <Settings />
+          </ListItemIcon>
+          <ListItemText primary="Settings" />
+        </MenuItem>
+      </Menu>
       <AppBar open={drawerOpen}>
         <Toolbar>
-          <Box flex={1}>
+          <Box flex={1} gap={2}>
             <IconButton
               aria-label="open drawer"
               onClick={handleDrawerOpen}
@@ -305,10 +354,10 @@ const Layout = () => {
             </IconButton>
           </Box>
           <Box>
-            <IconButton ref={profileMenuAnchor} onClick={handleMenuOpen}>
+            <IconButton ref={profileMenuAnchor} onClick={handleProfileMenuOpen}>
               <ProfileAvatar
-                name={organization?.name}
-                url={organization?.photo}
+                name={profile?.name}
+                url={profile?.photo}
                 style={{ width: 30, height: 30 }}
               />
             </IconButton>
@@ -329,17 +378,34 @@ const Layout = () => {
         open={drawerOpen}
       >
         <DrawerHeader>
-          <Box sx={{ ml: 1 }}>
+          <Box sx={{ m: 1 }}>
             <IconButton href={import.meta.env.VITE_BASE_URL}>
               <AuthSafeIcon theme={theme} fontSize="large" />
             </IconButton>
           </Box>
-          <IconButton onClick={handleDrawerClose} color="inherit">
-            <ChevronLeft />
-          </IconButton>
+          <Button
+            ref={organizationMenuAnchor}
+            id="organization-menu-button"
+            aria-controls={
+              organizationMenuOpen ? 'ororganization-menu' : undefined
+            }
+            aria-haspopup="true"
+            aria-expanded={organizationMenuOpen ? 'true' : undefined}
+            variant="outlined"
+            fullWidth
+            onClick={handleOrganizationMenuOpen}
+            endIcon={<KeyboardArrowDown />}
+          >
+            {organization?.name}
+          </Button>
+          <Box sx={{ m: 1 }}>
+            <IconButton onClick={handleDrawerClose} color="inherit">
+              <ChevronLeft />
+            </IconButton>
+          </Box>
         </DrawerHeader>
         <Divider />
-        {navigation.map(({ subheader, routes }, indexTop) => (
+        {dashboardNavigation.map(({ subheader, routes }, indexTop) => (
           <Fragment key={`list-header-${indexTop}`}>
             <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
               {routes.map(({ to, text, Icon }, indexBottom) => (
@@ -375,4 +441,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default DashboardLayout;

@@ -1,4 +1,4 @@
-import { AddCircle, Delete } from "@mui/icons-material";
+import { AddCircle, Delete } from '@mui/icons-material';
 import {
   IconButton,
   Paper,
@@ -9,9 +9,9 @@ import {
   TableHead,
   TableRow,
   TextField,
-} from "@mui/material";
-import React from "react";
-import GeneralTooltip from "../reusable/GeneralTooltip";
+} from '@mui/material';
+import React from 'react';
+import GeneralTooltip from '../reusable/GeneralTooltip';
 
 interface KeyValue {
   key: string;
@@ -34,7 +34,7 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
   onMetadataChange,
 }) => {
   const handleAddRow = () => {
-    onMetadataChange([...metadata, { key: "", value: "" }]);
+    onMetadataChange([...metadata, { key: '', value: '' }]);
   };
 
   const handleDeleteRow = (index: number) => {
@@ -71,14 +71,15 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
                 <TableCell>
                   <TextField
                     fullWidth
+                    variant="standard"
                     value={item.key}
-                    onChange={e => handleKeyChange(index, e.target.value)}
+                    onChange={(e) => handleKeyChange(index, e.target.value)}
                     placeholder="Enter key"
                     disabled={!isEdit}
                     error={!!errors[index]?.key}
                     helperText={
                       errors[index]?.key
-                        ? errors[index]?.message || "Key is required"
+                        ? errors[index]?.message || 'Key is required'
                         : null
                     }
                   />
@@ -86,14 +87,15 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
                 <TableCell>
                   <TextField
                     fullWidth
+                    variant="standard"
                     value={item.value}
-                    onChange={e => handleValueChange(index, e.target.value)}
+                    onChange={(e) => handleValueChange(index, e.target.value)}
                     placeholder="Enter value"
                     disabled={!isEdit}
                     error={!!errors[index]?.value}
                     helperText={
                       errors[index]?.value
-                        ? errors[index]?.message || "Value is required"
+                        ? errors[index]?.message || 'Value is required'
                         : null
                     }
                   />
@@ -119,7 +121,7 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
           {isEdit && (
             <TableRow>
               <TableCell colSpan={3} align="center">
-                <GeneralTooltip arrow title="Add Key-Value pair">
+                <GeneralTooltip arrow title="Add key value pair">
                   <IconButton onClick={handleAddRow}>
                     <AddCircle />
                   </IconButton>

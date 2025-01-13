@@ -24,7 +24,6 @@ const GoogleCreate = () => {
 
   const [body, setBody] = useState({
     name: '',
-    domain: '',
     email: searchParams.get('email') || '',
     password: '',
   });
@@ -45,7 +44,7 @@ const GoogleCreate = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const { isAuthenticated, organization, checkAuth } = useAuth();
+  const { isAuthenticated, checkAuth } = useAuth();
 
   const { theme } = useThemeToggle();
 
@@ -63,13 +62,6 @@ const GoogleCreate = () => {
     if (!isEmail(body.email)) {
       tempError.email = true;
     }
-    if (
-      !/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g.test(
-        body.domain,
-      )
-    ) {
-      tempError.domain = true;
-    }
     if (body.password.length < 6) {
       tempError.password = true;
     }
@@ -78,7 +70,7 @@ const GoogleCreate = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/organization/google/create`,
+          `${import.meta.env.VITE_API_URL}/profile/google/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -126,7 +118,7 @@ const GoogleCreate = () => {
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, organization, location, navigate]);
+  }, [isAuthenticated, location, navigate]);
 
   return loading ? (
     <Loader loading={true} />
@@ -206,22 +198,6 @@ const GoogleCreate = () => {
                       value={body.name}
                       onChange={(event) =>
                         setBody({ ...body, name: event.target.value })
-                      }
-                      required
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid width="100%">
-                    <TextField
-                      label="Domain"
-                      name="domain"
-                      error={error.domain}
-                      helperText={
-                        error.domain ? 'Must be a valid domain' : null
-                      }
-                      value={body.domain}
-                      onChange={(event) =>
-                        setBody({ ...body, domain: event.target.value })
                       }
                       required
                       fullWidth
