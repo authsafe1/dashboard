@@ -22,7 +22,7 @@ import {
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import {
   useLoaderData,
   useNavigate,
@@ -592,10 +592,6 @@ const Organizations = () => {
     });
     return tempObject;
   };
-
-  useEffect(() => {
-    setMetadata(parseMetadata(organization?.metadata));
-  }, [organization?.metadata]);
 
   const handleMetadataChange = (value: KeyValue[]) => {
     setMetadata(value);
