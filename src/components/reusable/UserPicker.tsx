@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useOrganization } from '../../context/OrganizationContext';
 
 interface User {
   id: string;
@@ -36,7 +36,7 @@ const UserPicker: React.FC<UserPickerProps> = ({
   const [hasMore, setHasMore] = useState(true);
   const [query, setQuery] = useState('');
 
-  const { organization } = useAuth();
+  const { organization } = useOrganization();
 
   const fetchUsers = useCallback(
     async (query: string, page: number) => {

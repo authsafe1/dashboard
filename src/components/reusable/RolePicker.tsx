@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useOrganization } from '../../context/OrganizationContext';
 
 export interface Role {
   id: string;
@@ -38,7 +38,7 @@ const RolePicker: React.FC<RolePickerProps> = ({
   const [hasMore, setHasMore] = useState(true);
   const [query, setQuery] = useState('');
 
-  const { organization } = useAuth();
+  const { organization } = useOrganization();
 
   const fetchPermissions = useCallback(
     async (query: string, page: number) => {
