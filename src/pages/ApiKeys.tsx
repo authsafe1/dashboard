@@ -18,13 +18,14 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, GeneralTooltip, SecretManager } from '../components';
+import { Alert, SecretManager } from '../components';
 import constants from '../config/constants';
 
 interface IApiKeyLoaderData {
@@ -745,7 +746,7 @@ const ApiKeys = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info" arrow>
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -763,7 +764,7 @@ const ApiKeys = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

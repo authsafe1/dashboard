@@ -18,6 +18,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
@@ -28,7 +29,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from 'react-router';
-import { Alert, GeneralTooltip, MetadataTable } from '../../components';
+import { Alert, MetadataTable } from '../../components';
 import constants from '../../config/constants';
 import { useOrganization } from '../../context/OrganizationContext';
 
@@ -481,10 +482,8 @@ const Organizations = () => {
     const tempBody = { ...body };
     let validationCount = 0;
     const metadata = handleMetadataUpdate();
-    console.log(Object.keys(metadataErrors).length);
-    console.log(metadataErrors);
     if (metadata) {
-      tempBody.metadata = metadata;
+      tempBody.metadata = metadata.metadata;
     }
     if (body.name.length < 1) {
       tempValidation.name = true;
@@ -505,7 +504,6 @@ const Organizations = () => {
     if (validationCount > 0) {
       setValidation(tempValidation);
     } else {
-      console.log(validationCount);
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
@@ -596,7 +594,7 @@ const Organizations = () => {
   };
 
   useEffect(() => {
-    //setMetadata(parseMetadata(organization?.metadata));
+    setMetadata(parseMetadata(organization?.metadata));
   }, [organization?.metadata]);
 
   const handleMetadataChange = (value: KeyValue[]) => {
@@ -624,6 +622,7 @@ const Organizations = () => {
       domain: moreMenuOpen.state.domain,
     });
     setIsMetadataEditable(true);
+    setMetadata(parseMetadata(organization?.metadata));
     setEditUser(true);
   };
 
@@ -706,7 +705,7 @@ const Organizations = () => {
         anchorEl={moreMenuOpen.open}
         handleChangeOrganization={() => {
           changeOrganization(moreMenuOpen.state.id);
-          navigate('/');
+          navigate('/organizations/quick-start');
         }}
         handleEditOpen={handleEditUserModalOpen}
         handleDeletionOpen={handleDeletionOpen}
@@ -717,8 +716,8 @@ const Organizations = () => {
           <Grid rowSpacing={2}>
             <Typography variant="h4">Organizations</Typography>
             <Typography color="textSecondary">
-              Setup and manage users and identities, including password resets,
-              assigning permissions and roles.
+              Setup and manage organizations, each one comprises of it's own set
+              of users, applications, roles and permissions.
             </Typography>
           </Grid>
           <Grid>
@@ -748,7 +747,7 @@ const Organizations = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info">
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -764,7 +763,7 @@ const Organizations = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

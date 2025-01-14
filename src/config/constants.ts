@@ -89,16 +89,19 @@ export default {
     {
       subheader: 'Overview',
       routes: [
-        { to: '/', text: 'Quick Start', Icon: Bolt },
-        { to: '/insights', text: 'Insights', Icon: BarChart },
+        { to: '/organizations/quick-start', text: 'Quick Start', Icon: Bolt },
       ],
     },
     {
       subheader: 'Users and Applications',
       routes: [
-        { to: '/users?skip=0&take=10', text: 'Users', Icon: Person },
         {
-          to: '/applications?skip=0&take=10',
+          to: '/organizations/users?skip=0&take=10',
+          text: 'Users',
+          Icon: Person,
+        },
+        {
+          to: '/organizations/applications?skip=0&take=10',
           text: 'Applications',
           Icon: Apps,
         },
@@ -107,9 +110,13 @@ export default {
     {
       subheader: 'Access Management',
       routes: [
-        { to: '/roles?skip=0&take=10', text: 'Roles', Icon: Badge },
         {
-          to: '/permissions?skip=0&take=10',
+          to: '/organizations/roles?skip=0&take=10',
+          text: 'Roles',
+          Icon: Badge,
+        },
+        {
+          to: '/organizations/permissions?skip=0&take=10',
           text: 'Permissions',
           Icon: Verified,
         },
@@ -119,7 +126,7 @@ export default {
       subheader: 'Branding & Customization',
       routes: [
         {
-          to: '/branding/login',
+          to: '/organizations/branding/login',
           text: 'Login',
           Icon: Login,
         },
@@ -129,12 +136,12 @@ export default {
       subheader: 'Developers',
       routes: [
         {
-          to: '/webhooks?skip=0&take=10',
+          to: '/organizations/webhooks?skip=0&take=10',
           text: 'Webhooks',
           Icon: Webhook,
         },
         {
-          to: '/api-keys?skip=0&take=10',
+          to: '/organizations/api-keys?skip=0&take=10',
           text: 'API Keys',
           Icon: Key,
         },
@@ -143,11 +150,12 @@ export default {
   ],
   organizationNavigation: [
     {
-      subHeader: 'Organizations',
+      subheader: 'Overview',
       routes: [
+        { to: '/', text: 'Insights', Icon: BarChart },
         {
           to: '/organizations?skip=0&take=10',
-          text: 'All',
+          text: 'Organizations',
           Icon: Business,
         },
       ],

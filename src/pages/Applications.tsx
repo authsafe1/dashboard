@@ -18,18 +18,14 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
-import {
-  Alert,
-  GeneralTooltip,
-  GrantSelector,
-  SecretManager,
-} from '../components';
+import { Alert, GrantSelector, SecretManager } from '../components';
 import constants from '../config/constants';
 
 interface IApplicationLoaderData {
@@ -391,7 +387,7 @@ const Applications = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: 'Deleted client',
+          message: 'Deleted application',
         });
         setDeletionOpen(false);
         handleMoreMenuClose();
@@ -404,7 +400,7 @@ const Applications = () => {
         ...apiResponse,
         success: false,
         error: true,
-        message: error.message || 'Error deleting client',
+        message: error.message || 'Error deleting application',
       });
     }
   };
@@ -452,7 +448,7 @@ const Applications = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new client',
+            message: 'Created new application',
           });
         } else {
           constants.fetchError(response.status);
@@ -462,7 +458,7 @@ const Applications = () => {
           ...apiResponse,
           success: false,
           error: true,
-          message: error.message || 'Error creating client',
+          message: error.message || 'Error creating application',
         });
       }
     }
@@ -567,7 +563,7 @@ const Applications = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info">
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -583,7 +579,7 @@ const Applications = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

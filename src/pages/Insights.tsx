@@ -81,11 +81,11 @@ const Insight = () => {
           <Grid container rowSpacing={2} textAlign="center">
             <Grid size={{ xs: 12, md: 4 }}>
               <CardActionArea
-                onClick={() => navigate('/users?skip=0&take=10')}
+                onClick={() => navigate('/organizations?skip=0&take=10')}
                 sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
-                  Users
+                  Organizations
                 </Typography>
                 <Typography>{loaderData[0]}</Typography>
               </CardActionArea>
@@ -96,7 +96,7 @@ const Insight = () => {
                 sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
-                  Applications
+                  Authorization Logs
                 </Typography>
                 <Typography>{loaderData[1]}</Typography>
               </CardActionArea>

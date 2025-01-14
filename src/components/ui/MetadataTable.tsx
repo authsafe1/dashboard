@@ -1,7 +1,7 @@
 import { AddCircle, Delete } from '@mui/icons-material';
 import {
+  Card,
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -9,9 +9,9 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import React from 'react';
-import GeneralTooltip from '../reusable/GeneralTooltip';
 
 interface KeyValue {
   key: string;
@@ -55,7 +55,7 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
   };
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Card} variant="outlined">
       <Table>
         <TableHead>
           <TableRow>
@@ -101,14 +101,14 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
                   />
                 </TableCell>
                 <TableCell>
-                  <GeneralTooltip arrow title="Delete">
+                  <Tooltip title="Delete">
                     <IconButton
                       onClick={() => handleDeleteRow(index)}
                       color="error"
                     >
                       <Delete />
                     </IconButton>
-                  </GeneralTooltip>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ) : (
@@ -121,11 +121,11 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
           {isEdit && (
             <TableRow>
               <TableCell colSpan={3} align="center">
-                <GeneralTooltip arrow title="Add key value pair">
+                <Tooltip title="Add key value pair">
                   <IconButton onClick={handleAddRow}>
                     <AddCircle />
                   </IconButton>
-                </GeneralTooltip>
+                </Tooltip>
               </TableCell>
             </TableRow>
           )}

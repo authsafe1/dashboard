@@ -22,13 +22,14 @@ import {
   TableRow,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, GeneralTooltip, RolePicker } from '../components';
+import { Alert, RolePicker } from '../components';
 import { Role } from '../components/reusable/RolePicker';
 import constants from '../config/constants';
 
@@ -940,7 +941,7 @@ const Users = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info" arrow>
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -956,7 +957,7 @@ const Users = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -20,12 +20,13 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, GeneralTooltip, PermissionPicker } from '../components';
+import { Alert, PermissionPicker } from '../components';
 import constants from '../config/constants';
 
 interface IRoleLoaderData {
@@ -645,7 +646,7 @@ const Roles = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info">
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -662,7 +663,7 @@ const Roles = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
