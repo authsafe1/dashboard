@@ -9,9 +9,9 @@ import {
   InputAdornment,
   TextField,
   TextFieldProps,
+  Tooltip,
 } from '@mui/material';
 import React, { useState } from 'react';
-import GeneralTooltip from '../reusable/GeneralTooltip';
 
 type SecretManagerProps = TextFieldProps & {
   copyFunc: boolean;
@@ -44,20 +44,20 @@ const SecretManager: React.FC<SecretManagerProps> = ({
           endAdornment: (
             <InputAdornment position="end">
               {visibilityFunc ? (
-                <GeneralTooltip title="Reveal" arrow>
+                <Tooltip title="Reveal" arrow>
                   <IconButton onClick={() => setVisible(!visible)}>
                     {visible ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
-                </GeneralTooltip>
+                </Tooltip>
               ) : null}
               {copyFunc ? (
-                <GeneralTooltip title="Copy" arrow>
+                <Tooltip title="Copy" arrow>
                   <IconButton
                     onClick={() => handleCopy(textFieldProps.value as string)}
                   >
                     {copied ? <CheckCircle color="success" /> : <ContentCopy />}
                   </IconButton>
-                </GeneralTooltip>
+                </Tooltip>
               ) : null}
             </InputAdornment>
           ),

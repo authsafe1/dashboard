@@ -306,7 +306,7 @@ const DashboardLayout = () => {
                 fontWeight: 'bold',
               },
               secondary: {
-                component: 'div',
+                component: Box,
               },
             }}
             secondary={
@@ -324,7 +324,7 @@ const DashboardLayout = () => {
           <ListItemIcon>
             <Settings />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary="Manage" />
         </MenuItem>
       </Menu>
       <AppBar open={drawerOpen}>

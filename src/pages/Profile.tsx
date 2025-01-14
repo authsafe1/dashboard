@@ -14,6 +14,7 @@ import {
   Divider,
   Grid2 as Grid,
   TextField,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -21,19 +22,9 @@ import {
 import imageCompression from 'browser-image-compression';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router';
-import {
-  Alert,
-  FileUploader,
-  GeneralTooltip,
-  SecretManager,
-} from '../components';
+import { Alert, FileUploader, SecretManager } from '../components';
 import constants from '../config/constants';
 import { useAuth } from '../context/AuthContext';
-
-// interface KeyValue {
-//   key: string;
-//   value: string;
-// }
 
 interface IDeleteOrganizationProps {
   open: boolean;
@@ -60,11 +51,11 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
   const [typedEmail, setTypedEmail] = useState('');
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete organization?</DialogTitle>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete profile?</DialogTitle>
       <DialogContent>
         <DialogContentText gutterBottom>
-          Are you sure you want to delete your organization? This is
-          irreversible and all associated settings and data would be removed
+          Are you sure you want to delete your profile? This is irreversible and
+          all associated details and data would be removed
         </DialogContentText>
         <DialogContentText gutterBottom>
           Enter email to confirm.
@@ -125,12 +116,9 @@ const TwoFaModal: FC<ITwoFaProps> = ({
           <Grid width="100%">
             <Grid container spacing={1} direction="column">
               <Grid width="100%" display="flex" justifyContent="flex-end">
-                <GeneralTooltip
-                  arrow
-                  title="Recovery codes can be used to bypass 2FA in case the device is lost"
-                >
+                <Tooltip title="Recovery codes can be used to bypass 2FA in case the device is lost">
                   <InfoOutlined fontSize="small" />
-                </GeneralTooltip>
+                </Tooltip>
               </Grid>
               <Grid width="100%">
                 <SecretManager
@@ -159,12 +147,6 @@ const TwoFaModal: FC<ITwoFaProps> = ({
 
 const Profile = () => {
   const { profile, checkAuth } = useAuth();
-
-  //const [metadata, setMetadata] = useState<KeyValue[]>([]);
-  // const [isMetadataEditable, _setIsMetadataEditable] = useState(false);
-  // const [metadataErrors, _setMetadataErrors] = useState<{
-  //   [index: number]: { key?: boolean; value?: boolean; message?: string };
-  // }>({});
   const [deletionOpen, setDeletionOpen] = useState(false);
   const [qrCode, setQrCode] = useState('');
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
@@ -206,119 +188,6 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const { maxProfilePhotoSize } = constants;
-
-  // const parseMetadata = (metadata?: object): KeyValue[] => {
-  //   return Object.entries(metadata as object).map(([key, value]) => ({
-  //     key,
-  //     value: value as string,
-  //   }));
-  // };
-
-  // const metadataToObject = (parsedMetadata: KeyValue[]) => {
-  //   let tempObject = {};
-  //   parsedMetadata.forEach(({ key, value }) => {
-  //     tempObject = { ...tempObject, [key]: value };
-  //   });
-  //   return tempObject;
-  // };
-
-  // useEffect(() => {
-  //   setMetadata(parseMetadata(organization?.metadata));
-  // }, [organization?.metadata]);
-
-  // const handleMetadataChange = (value: KeyValue[]) => {
-  //   setMetadata(value);
-  // };
-
-  // const handleMetadataEdit = () => {
-  //   setIsMetadataEditable(true);
-  // };
-
-  // const handleMetadataCancel = () => {
-  //   setIsMetadataEditable(false);
-  //   setMetadata(parseMetadata(organization?.metadata));
-  //   setMetadataErrors({});
-  // };
-
-  // const handleMetadataUpdate = async () => {
-  //   const newErrors: {
-  //     [index: number]: { key?: boolean; value?: boolean; message?: string };
-  //   } = {};
-  //   const keysSet = new Set();
-
-  //   metadata.forEach((item, index) => {
-  //     if (!item.key.trim()) {
-  //       newErrors[index] = {
-  //         ...newErrors[index],
-  //         key: true,
-  //         message: 'Key is required',
-  //       };
-  //     } else if (keysSet.has(item.key)) {
-  //       newErrors[index] = {
-  //         ...newErrors[index],
-  //         key: true,
-  //         message: 'Key must be unique',
-  //       };
-  //     } else {
-  //       keysSet.add(item.key);
-  //     }
-
-  //     if (!item.value.trim()) {
-  //       newErrors[index] = {
-  //         ...newErrors[index],
-  //         value: true,
-  //         message: 'Value is required',
-  //       };
-  //     }
-  //   });
-
-  //   if (Object.keys(newErrors).length === 0) {
-  //     const metadataObject = { metadata: metadataToObject(metadata) };
-  //     setMetadataApiResponse({ ...metadataApiResponse, loading: true });
-  //     try {
-  //       const response = await fetch(
-  //         `${import.meta.env.VITE_API_URL}/organization/update`,
-  //         {
-  //           method: 'PUT',
-  //           credentials: 'include',
-  //           body: JSON.stringify(metadataObject),
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //         },
-  //       );
-  //       if (response.ok) {
-  //         setMetadataApiResponse({
-  //           ...metadataApiResponse,
-  //           success: true,
-  //           error: false,
-  //           loading: false,
-  //           message: 'Updated metadata',
-  //         });
-  //         setIsMetadataEditable(false);
-  //         setMetadataErrors({});
-  //       } else if (response.status === 401) {
-  //         setMetadataApiResponse({
-  //           ...metadataApiResponse,
-  //           success: false,
-  //           error: true,
-  //           loading: false,
-  //           message: 'Not authenticated',
-  //         });
-  //       }
-  //     } catch {
-  //       setMetadataApiResponse({
-  //         ...metadataApiResponse,
-  //         success: false,
-  //         error: true,
-  //         loading: false,
-  //         message: 'Error updating metadata',
-  //       });
-  //     }
-  //   } else {
-  //     setMetadataErrors(newErrors);
-  //   }
-  // };
 
   const handleDeleteProfile = async () => {
     setDeletionApiResponse({ ...deletionApiResponse, loading: true });
@@ -501,41 +370,6 @@ const Profile = () => {
     }
   };
 
-  // const handleRotateApiKey = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_API_URL}/organization/secret/rotate`,
-  //       {
-  //         method: 'PUT',
-  //         credentials: 'include',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       },
-  //     );
-  //     if (response.ok) {
-  //       setApiKeyResponse({
-  //         ...apiKeyResponse,
-  //         success: true,
-  //         error: false,
-  //         loading: false,
-  //         message: 'API Key Rotated',
-  //       });
-  //       checkAuth();
-  //     } else {
-  //       constants.fetchError(response.status);
-  //     }
-  //   } catch (error: any) {
-  //     setApiKeyResponse({
-  //       ...apiKeyResponse,
-  //       success: false,
-  //       error: true,
-  //       loading: false,
-  //       message: error.message || 'Error rotating secret',
-  //     });
-  //   }
-  // };
-
   const handleDeletionOpen = () => {
     setDeletionOpen(true);
   };
@@ -680,39 +514,6 @@ const Profile = () => {
         <Grid>
           <Divider />
         </Grid>
-        {/* <Grid>
-          <Card variant="outlined">
-            <CardHeader title="Metadata" />
-            <CardContent>
-              <MetadataTable
-                isEdit={isMetadataEditable}
-                metadata={metadata}
-                errors={metadataErrors}
-                onMetadataChange={handleMetadataChange}
-              />
-            </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {isMetadataEditable ? (
-                <>
-                  <Button color="inherit" onClick={handleMetadataCancel}>
-                    Cancel
-                  </Button>
-                  <LoadingButton
-                    loading={metadataApiResponse.loading}
-                    variant="contained"
-                    onClick={handleMetadataUpdate}
-                  >
-                    Update
-                  </LoadingButton>
-                </>
-              ) : (
-                <Button variant="contained" onClick={handleMetadataEdit}>
-                  Edit
-                </Button>
-              )}
-            </CardActions>
-          </Card>
-        </Grid> */}
         <Grid>
           <Card variant="outlined">
             <CardHeader title="Enable Two-Factor Authentication (2FA)" />

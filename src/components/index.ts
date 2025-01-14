@@ -2,7 +2,6 @@ import AuthSafeIcon from './icons/AuthSafeIcon';
 import Alert from './reusable/Alert';
 import ErrorTooltip from './reusable/ErrorTooltip';
 import FileUploader from './reusable/FileUploader';
-import GeneralTooltip from './reusable/GeneralTooltip';
 import Loader from './reusable/Loader';
 import PermissionPicker from './reusable/PermissionPicker';
 import RichTextEditor from './reusable/RichTextEditor';
@@ -24,7 +23,6 @@ export {
   FAQ,
   FileUploader,
   Footer,
-  GeneralTooltip,
   GrantSelector,
   Loader,
   MetadataTable,

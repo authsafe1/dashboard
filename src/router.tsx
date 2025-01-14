@@ -28,7 +28,6 @@ import {
   BrandingLogin,
   ForgotPassword,
   GoogleCreate,
-  Insights,
   Login,
   OAuth2Authorize,
   Organizations,
@@ -45,6 +44,7 @@ import {
   Users,
   Webhooks,
 } from './pages';
+import Insight from './pages/Insights';
 import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
 
 const router = createBrowserRouter([
@@ -118,6 +118,12 @@ const router = createBrowserRouter([
             element: <OrganizationLayout />,
             children: [
               {
+                index: true,
+                loader: insightLoader,
+                element: <Insight />,
+              },
+              { path: 'profile', element: <Profile /> },
+              {
                 path: 'organizations',
                 loader: organizationsLoader,
                 element: <Organizations />,
@@ -149,16 +155,11 @@ const router = createBrowserRouter([
             element: <OrganizationProtectedRoute />,
             children: [
               {
-                path: '',
+                path: 'organizations',
                 element: <DashboardLayout />,
                 children: [
-                  { index: true, element: <QuickStart /> },
+                  { path: 'quick-start', element: <QuickStart /> },
                   { path: 'profile', element: <Profile /> },
-                  {
-                    path: 'insights',
-                    loader: insightLoader,
-                    element: <Insights />,
-                  },
                   {
                     path: 'applications',
                     loader: applicationsLoader,

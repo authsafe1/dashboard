@@ -177,10 +177,10 @@ export const oauth2AuthorizeLoader: LoaderFunction = async ({ request }) => {
 
 export const insightLoader: LoaderFunction = async () => {
   const endpoints = [
-    `${import.meta.env.VITE_API_URL}/user/count`,
-    `${import.meta.env.VITE_API_URL}/client/count`,
-    `${import.meta.env.VITE_API_URL}/organization/log/security/count`,
-    `${import.meta.env.VITE_API_URL}/organization/log/activity/data`,
+    `${import.meta.env.VITE_API_URL}/organization/count`,
+    `${import.meta.env.VITE_API_URL}/profile/log/authorization/count`,
+    `${import.meta.env.VITE_API_URL}/profile/log/security/count`,
+    `${import.meta.env.VITE_API_URL}/profile/log/activity/data`,
   ];
 
   const data = await Promise.all(endpoints.map((url) => fetchApi(url)));

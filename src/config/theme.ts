@@ -1,3 +1,4 @@
+import { Fade } from '@mui/material';
 import { grey, red } from '@mui/material/colors';
 import { alpha, createTheme, PaletteMode } from '@mui/material/styles';
 
@@ -507,6 +508,14 @@ export const getTheme = (mode: PaletteMode) => {
               boxShadow: 'none',
               backgroundColor: brand[900],
             },
+          },
+        },
+      },
+      MuiTooltip: {
+        defaultProps: {
+          arrow: true,
+          slotProps: {
+            transition: Fade,
           },
         },
       },

@@ -20,13 +20,14 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
-import { Alert, GeneralTooltip } from '../components';
+import { Alert } from '../components';
 import constants from '../config/constants';
 
 interface ICreateWebhookProps {
@@ -526,7 +527,7 @@ const Webhooks = () => {
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
-                      <GeneralTooltip title="More Info" arrow>
+                      <Tooltip title="More Info">
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -542,7 +543,7 @@ const Webhooks = () => {
                         >
                           <MoreHoriz />
                         </IconButton>
-                      </GeneralTooltip>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

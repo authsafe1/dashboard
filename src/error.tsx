@@ -57,7 +57,7 @@ const ErrorComponent = () => {
         </Typography>
         <StyledBackButton
           text="Back to Dashboard"
-          handleClick={() => navigate('/organizations?skip=0&take=10')}
+          handleClick={() => navigate('/')}
         />
       </Box>
     </Container>
