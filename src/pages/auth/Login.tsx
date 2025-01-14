@@ -42,7 +42,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const { isAuthenticated, organization, checkAuth } = useAuth();
+  const { isAuthenticated, profile, checkAuth } = useAuth();
 
   const { theme } = useThemeToggle();
 
@@ -114,7 +114,7 @@ const Login = () => {
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, organization, location, navigate]);
+  }, [isAuthenticated, profile, location, navigate]);
 
   return loading ? (
     <Loader loading={true} />
