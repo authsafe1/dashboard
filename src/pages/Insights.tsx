@@ -9,12 +9,7 @@ import {
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts';
 import dayjs from 'dayjs';
-import {
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-  useNavigate,
-} from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import { brand } from '../config/theme';
 
 type ILoaderData = [
@@ -27,41 +22,6 @@ type ILoaderData = [
   },
   number[],
 ];
-
-export const dataLoader: LoaderFunction = async () => {
-  const dashboardUrl = [
-    { url: `${import.meta.env.VITE_API_URL}/user/count`, method: 'GET' },
-    { url: `${import.meta.env.VITE_API_URL}/client/count`, method: 'GET' },
-    {
-      url: `${import.meta.env.VITE_API_URL}/organization/log/security/count`,
-      method: 'GET',
-    },
-    {
-      url: `${import.meta.env.VITE_API_URL}/organization/log/activity/data`,
-      method: 'GET',
-    },
-  ];
-  return await Promise.all(
-    dashboardUrl.map(async ({ url, method }) => {
-      try {
-        const response = await fetch(url, {
-          method,
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.redirected || !response.ok) {
-          throw new Error('Unauthorized');
-        } else {
-          return await response.json();
-        }
-      } catch {
-        return redirect('/auth/login');
-      }
-    }),
-  );
-};
 
 const Insight = () => {
   const loaderData = useLoaderData() as ILoaderData;
