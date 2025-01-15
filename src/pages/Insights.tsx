@@ -92,7 +92,7 @@ const Insight = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <CardActionArea
-                onClick={() => navigate('/applications?skip=0&take=10')}
+                onClick={() => navigate('/log/authorization?skip=0&take=10')}
                 sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
