@@ -12,10 +12,7 @@ const ScreenLoader: FC = () => {
       open={true}
     >
       <Box style={{ position: 'relative', display: 'inline-flex' }}>
-        <CircularProgress
-          size={60}
-          sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
-        />
+        <CircularProgress size={60} sx={{ color: 'text.secondary' }} />
         <AuthSafeIcon
           theme={theme.palette.mode}
           fontSize="large"

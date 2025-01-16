@@ -8,10 +8,7 @@ const RouteLoader: FC = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-        <CircularProgress
-          size={60}
-          sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
-        />
+        <CircularProgress size={60} sx={{ color: 'text.secondary' }} />
         <AuthSafeIcon
           theme={theme.palette.mode}
           fontSize="large"
