@@ -74,7 +74,7 @@ const CreateUser: FC<ICreateUserProps> = ({
   return (
     <Card variant="outlined">
       <CardContent>
-        <Grid container spacing={4} p={1} width="100%" direction="column">
+        <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
             <TextField
               label="Name"
@@ -164,7 +164,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
   return (
     <Card variant="outlined">
       <CardContent>
-        <Grid container spacing={4} p={1} width="100%" direction="column">
+        <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid width="100%">
             <TextField
               label="Name"
@@ -261,7 +261,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
   return (
     <Card variant="outlined">
       <CardContent>
-        <Grid container spacing={4} p={1} width="100%" direction="column">
+        <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
             <TextField
               label="Name"
@@ -350,7 +350,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
   return (
     <Card variant="outlined">
       <CardContent>
-        <Grid container spacing={4} p={1} width="100%" direction="column">
+        <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
             <TextField
               label="Name"

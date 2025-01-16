@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Loader } from '../components';
+import { ScreenLoader } from '../components';
 
 enum Plan {
   FREE = 'FREE',
@@ -109,7 +109,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   }, [checkAuth]);
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <AuthContext.Provider
       value={{ profile, isAuthenticated, loading, checkAuth }}

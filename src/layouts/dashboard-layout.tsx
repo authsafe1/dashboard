@@ -1,15 +1,18 @@
 import {
   ChevronLeft,
+  KeyboardArrowDown,
   Logout,
   MenuBook,
   Menu as MenuIcon,
   Palette,
   Person,
+  Settings,
 } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
   Box,
+  Button,
   Collapse,
   Divider,
   Drawer,
@@ -29,16 +32,24 @@ import {
   styled,
   Switch,
   Toolbar,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router';
-import { AuthSafeIcon, ProfileAvatar } from './components';
-import constants from './config/constants';
-import { useAuth } from './context/AuthContext';
-import { useThemeToggle } from './context/ThemeContext';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from 'react-router';
+import { AuthSafeIcon, ProfileAvatar, RouteLoader } from '../components';
+import constants from '../config/constants';
+import { useAuth } from '../context/AuthContext';
+import { useOrganization } from '../context/OrganizationContext';
+import { useThemeToggle } from '../context/ThemeContext';
 
 const drawerWidth = 300;
 
@@ -163,7 +174,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const OrganizationLayout = () => {
+const DashboardLayout = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
@@ -171,13 +182,18 @@ const OrganizationLayout = () => {
   const isMobile = useMediaQuery(defaultTheme.breakpoints.down('md'));
 
   const profileMenuAnchor = useRef<HTMLButtonElement | null>(null);
+  const organizationMenuAnchor = useRef<HTMLButtonElement | null>(null);
 
   const { profile, checkAuth } = useAuth();
   const { theme, toggleTheme } = useThemeToggle();
 
   const [alertOpen, setAlertOpen] = useState(!profile?.isVerified);
+  const [organizationMenuOpen, setOrganizationMenuOpen] = useState(false);
 
-  const { organizationNavigation } = constants;
+  const navigation = useNavigation();
+  const loading = Boolean(navigation.location);
+
+  const { dashboardNavigation } = constants;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -188,6 +204,14 @@ const OrganizationLayout = () => {
 
   const handleProfileMenuClose = () => {
     setProfileMenuOpen(false);
+  };
+
+  const handleOrganizationMenuOpen = () => {
+    setOrganizationMenuOpen(true);
+  };
+
+  const handleOrganizationMenuClose = () => {
+    setOrganizationMenuOpen(false);
   };
 
   useEffect(() => {
@@ -219,6 +243,8 @@ const OrganizationLayout = () => {
       checkAuth();
     }
   };
+
+  const { organization } = useOrganization();
 
   const handleAlertClose = () => {
     setAlertOpen(false);
@@ -270,6 +296,44 @@ const OrganizationLayout = () => {
             <Logout />
           </ListItemIcon>
           Log out
+        </MenuItem>
+      </Menu>
+      <Menu
+        anchorEl={organizationMenuAnchor.current}
+        open={organizationMenuOpen}
+        onClose={handleOrganizationMenuClose}
+      >
+        <ListItem>
+          <ListItemAvatar>
+            <ProfileAvatar name={organization?.name} variant="square" />
+          </ListItemAvatar>
+          <ListItemText
+            primary={organization?.name}
+            slotProps={{
+              primary: {
+                fontSize: 'larger',
+                fontWeight: 'bold',
+              },
+              secondary: {
+                component: Box,
+              },
+            }}
+            secondary={
+              <>
+                <Typography fontSize="medium">
+                  Domain: {organization?.domain}
+                </Typography>
+                <Typography fontSize="small">ID: {organization?.id}</Typography>
+              </>
+            }
+          />
+        </ListItem>
+        <Divider />
+        <MenuItem component={Link} to="/organizations?skip=0&take=10">
+          <ListItemIcon>
+            <Settings />
+          </ListItemIcon>
+          <ListItemText primary="Manage" />
         </MenuItem>
       </Menu>
       <AppBar open={drawerOpen}>
@@ -328,6 +392,21 @@ const OrganizationLayout = () => {
               <AuthSafeIcon theme={theme} fontSize="large" />
             </IconButton>
           </Box>
+          <Button
+            ref={organizationMenuAnchor}
+            id="organization-menu-button"
+            aria-controls={
+              organizationMenuOpen ? 'ororganization-menu' : undefined
+            }
+            aria-haspopup="true"
+            aria-expanded={organizationMenuOpen ? 'true' : undefined}
+            variant="outlined"
+            fullWidth
+            onClick={handleOrganizationMenuOpen}
+            endIcon={<KeyboardArrowDown />}
+          >
+            {organization?.name}
+          </Button>
           <Box sx={{ m: 1 }}>
             <IconButton onClick={handleDrawerClose} color="inherit">
               <ChevronLeft />
@@ -335,25 +414,30 @@ const OrganizationLayout = () => {
           </Box>
         </DrawerHeader>
         <Divider />
-        {organizationNavigation.map(({ subheader, routes }, indexTop) => (
-          <Fragment key={`list-header-${indexTop}`}>
-            <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
-              {routes.map(({ to, text, Icon }, indexBottom) => (
-                <ListItemButton
-                  key={`list-button-${indexBottom}`}
-                  onClick={() => navigate(to)}
-                  selected={location.pathname === to.split('?')[0]}
-                >
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Divider />
-          </Fragment>
-        ))}
+        {dashboardNavigation(organization?.id).map(
+          ({ subheader, routes }, indexTop) => (
+            <Fragment key={`list-header-${indexTop}`}>
+              <List
+                dense
+                subheader={<ListSubheader>{subheader}</ListSubheader>}
+              >
+                {routes.map(({ to, text, Icon }, indexBottom) => (
+                  <ListItemButton
+                    key={`list-button-${indexBottom}`}
+                    onClick={() => navigate(to)}
+                    selected={location.pathname === to.split('?')[0]}
+                  >
+                    <ListItemIcon>
+                      <Icon />
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                ))}
+              </List>
+              <Divider />
+            </Fragment>
+          ),
+        )}
       </Drawer>
       <Main container open={drawerOpen}>
         <DrawerHeader />
@@ -365,10 +449,10 @@ const OrganizationLayout = () => {
             </Alert>
           </Collapse>
         </Box>
-        <Outlet />
+        {loading ? <RouteLoader /> : <Outlet />}
       </Main>
     </Box>
   );
 };
 
-export default OrganizationLayout;
+export default DashboardLayout;

@@ -12,7 +12,7 @@ import {
 import { FormEventHandler, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, Loader } from '../../components';
+import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -86,7 +86,7 @@ const GoogleCreate = () => {
             loading: false,
             success: true,
             error: false,
-            message: 'Organization Created',
+            message: 'Profile Created',
           });
         } else {
           constants.fetchError(response.status);
@@ -97,7 +97,7 @@ const GoogleCreate = () => {
           loading: false,
           success: false,
           error: true,
-          message: error.message || 'Error creating organization',
+          message: error.message || 'Error creating profile',
         });
       }
     }
@@ -121,7 +121,7 @@ const GoogleCreate = () => {
   }, [isAuthenticated, location, navigate]);
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <Box>
       <Alert
@@ -182,7 +182,7 @@ const GoogleCreate = () => {
               </Box>
               <CardHeader
                 title="Create"
-                subheader="Enter Details to create your organization"
+                subheader="Enter Details to create your profile"
                 sx={{ textAlign: 'center' }}
               />
               <CardContent>
