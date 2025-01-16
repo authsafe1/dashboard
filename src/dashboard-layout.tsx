@@ -405,25 +405,30 @@ const DashboardLayout = () => {
           </Box>
         </DrawerHeader>
         <Divider />
-        {dashboardNavigation.map(({ subheader, routes }, indexTop) => (
-          <Fragment key={`list-header-${indexTop}`}>
-            <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
-              {routes.map(({ to, text, Icon }, indexBottom) => (
-                <ListItemButton
-                  key={`list-button-${indexBottom}`}
-                  onClick={() => navigate(to)}
-                  selected={location.pathname === to.split('?')[0]}
-                >
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Divider />
-          </Fragment>
-        ))}
+        {dashboardNavigation(organization?.id).map(
+          ({ subheader, routes }, indexTop) => (
+            <Fragment key={`list-header-${indexTop}`}>
+              <List
+                dense
+                subheader={<ListSubheader>{subheader}</ListSubheader>}
+              >
+                {routes.map(({ to, text, Icon }, indexBottom) => (
+                  <ListItemButton
+                    key={`list-button-${indexBottom}`}
+                    onClick={() => navigate(to)}
+                    selected={location.pathname === to.split('?')[0]}
+                  >
+                    <ListItemIcon>
+                      <Icon />
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                ))}
+              </List>
+              <Divider />
+            </Fragment>
+          ),
+        )}
       </Drawer>
       <Main container open={drawerOpen}>
         <DrawerHeader />

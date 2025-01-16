@@ -18,8 +18,8 @@ import {
 import { useState } from 'react';
 import { useLoaderData, useLocation } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon } from '../components';
-import constants from '../config/constants';
+import { Alert, AuthSafeIcon } from '../../components';
+import constants from '../../config/constants';
 
 const OAuth2Authorize = () => {
   const [body, setBody] = useState({

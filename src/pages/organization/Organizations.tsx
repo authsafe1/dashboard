@@ -701,7 +701,7 @@ const Organizations = () => {
         anchorEl={moreMenuOpen.open}
         handleChangeOrganization={() => {
           changeOrganization(moreMenuOpen.state.id);
-          navigate('/organizations/quick-start');
+          navigate(`/organizations/${moreMenuOpen.state.id}`);
         }}
         handleEditOpen={handleEditUserModalOpen}
         handleDeletionOpen={handleDeletionOpen}

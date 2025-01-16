@@ -10,7 +10,7 @@ import {
 import { LineChart } from '@mui/x-charts';
 import dayjs from 'dayjs';
 import { useLoaderData, useNavigate } from 'react-router';
-import { brand } from '../config/theme';
+import { brand } from '../../config/theme';
 
 type ILoaderData = [
   number,

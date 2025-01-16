@@ -1,8 +1,7 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import { Add, Close, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,7 +9,6 @@ import {
   DialogTitle,
   Grid2 as Grid,
   IconButton,
-  InputAdornment,
   Menu,
   MenuItem,
   Table,
@@ -23,46 +21,61 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, PermissionPicker } from '../components';
-import constants from '../config/constants';
+import { Alert, SecretManager } from '../../components';
+import constants from '../../config/constants';
 
-interface IRoleLoaderData {
+interface IApiKeyLoaderData {
   count: number;
   all: {
     id: string;
     name: string;
-    key: string;
     description: string;
+    token: string;
     createdAt: string;
     updatedAt: string;
-    Permissions: [];
+    expiresAt: string;
   }[];
 }
 
-interface ICreateRoleProps {
+interface ICreateApiKeyProps {
   open: boolean;
-  body: { name: string; key: string; description: string; permissions: any[] };
-  validation: { name: boolean; key: boolean; permissions: boolean };
+  body: { name: string; description: string; expiresAt: Date };
+  validation: { name: boolean; expiresAt: boolean };
   loading: boolean;
-  handleInputChange: (name: string, value: any) => void;
+  handleInputChange: (name: string, value: string | Date | undefined) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
 }
 
-interface IEditRoleProps {
+interface IEditApiKeyProps {
   open: boolean;
-  body: { name: string; key: string; description: string; permissions: any[] };
-  validation: { name: boolean; key: boolean; permissions: boolean };
+  body: { name: string; description: string; expiresAt: Date };
+  validation: { name: boolean; expiresAt: boolean };
   loading: boolean;
-  handleInputChange: (name: string, value: any) => void;
+  handleInputChange: (name: string, value: string | Date | undefined) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
 }
 
-interface IDeleteRoleProps {
+interface ITokensModalProps {
+  open: boolean;
+  body: { token: string };
+  handleClose: () => void;
+}
+
+interface IMoreMenuProps {
+  anchorEl: HTMLElement | null;
+  handleClose: () => void;
+  handleEditOpen: () => void;
+  handleTokenOpen: () => void;
+  handleDeletionOpen: () => void;
+}
+
+interface IDeleteApplicationProps {
   open: boolean;
   loading: boolean;
   handleClose: () => void;
@@ -75,18 +88,12 @@ interface MoreOpenState {
     id: string;
     name: string;
     description: string;
-    permissions: [];
+    expiresAt: Date;
+    token: string;
   };
 }
 
-interface IMoreMenuProps {
-  anchorEl: HTMLElement | null;
-  handleClose: () => void;
-  handleEditOpen: () => void;
-  handleDeletionOpen: () => void;
-}
-
-const CreateRole: FC<ICreateRoleProps> = ({
+const CreateApiKey: FC<ICreateApiKeyProps> = ({
   open,
   body,
   validation,
@@ -97,7 +104,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create Role</DialogTitle>
+      <DialogTitle>Create API Key</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -105,7 +112,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="e.g. CI/CD token"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -120,20 +127,22 @@ const CreateRole: FC<ICreateRoleProps> = ({
             />
           </Grid>
           <Grid>
-            <TextField
-              label="Key"
-              fullWidth
-              required
-              placeholder="sys_admin"
-              error={validation.key}
-              helperText={validation.key ? 'Must not be blank' : ''}
-              value={body.key}
-              onChange={(event) => handleInputChange('key', event.target.value)}
+            <DateTimePicker
+              label="Expires at"
+              value={dayjs(body.expiresAt)}
+              onChange={(value) =>
+                handleInputChange('expiresAt', value?.toDate())
+              }
+              disablePast
               slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">org:</InputAdornment>
-                  ),
+                textField: {
+                  fullWidth: true,
+                  required: true,
+                  placeholder: 'Expiry Date',
+                  error: validation.expiresAt,
+                  helperText: validation.expiresAt
+                    ? 'Expiry date is required'
+                    : '',
                 },
               }}
             />
@@ -142,7 +151,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Describe the token's usage"
               value={body.description}
               multiline
               rows={3}
@@ -154,17 +163,6 @@ const CreateRole: FC<ICreateRoleProps> = ({
                   shrink: true,
                 },
               }}
-            />
-          </Grid>
-          <Grid>
-            <PermissionPicker
-              multiple
-              required
-              error={validation.permissions}
-              helperText="Atleast one permission must be selected"
-              onPermissionSelect={(permissions) =>
-                handleInputChange('permissions', permissions)
-              }
             />
           </Grid>
         </Grid>
@@ -185,7 +183,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
   );
 };
 
-const EditRole: FC<IEditRoleProps> = ({
+const EditApiKey: FC<IEditApiKeyProps> = ({
   open,
   body,
   validation,
@@ -196,7 +194,7 @@ const EditRole: FC<IEditRoleProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Update Role</DialogTitle>
+      <DialogTitle>Update API Key</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -204,7 +202,7 @@ const EditRole: FC<IEditRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="e.g. CI/CD token"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -219,10 +217,31 @@ const EditRole: FC<IEditRoleProps> = ({
             />
           </Grid>
           <Grid>
+            <DateTimePicker
+              label="Expires at"
+              value={dayjs(body.expiresAt)}
+              onChange={(value) =>
+                handleInputChange('expiresAt', value?.toDate())
+              }
+              disablePast
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  required: true,
+                  placeholder: 'Expiry Date',
+                  error: validation.expiresAt,
+                  helperText: validation.expiresAt
+                    ? 'Expiry date is required'
+                    : '',
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Describe the token's usage"
               value={body.description}
               multiline
               rows={3}
@@ -234,18 +253,6 @@ const EditRole: FC<IEditRoleProps> = ({
                   shrink: true,
                 },
               }}
-            />
-          </Grid>
-          <Grid>
-            <PermissionPicker
-              multiple
-              required
-              value={body.permissions}
-              error={validation.permissions}
-              helperText="Atleast one permission must be selected"
-              onPermissionSelect={(permissions) =>
-                handleInputChange('permissions', permissions)
-              }
             />
           </Grid>
         </Grid>
@@ -266,23 +273,67 @@ const EditRole: FC<IEditRoleProps> = ({
   );
 };
 
-const DeletionModal: FC<IDeleteRoleProps> = ({
+const TokensModal: FC<ITokensModalProps> = ({ open, body, handleClose }) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Token</DialogTitle>
+      <IconButton
+        sx={(theme) => ({
+          position: 'absolute',
+          right: 8,
+          top: 12,
+          color: theme.palette.grey[500],
+        })}
+        aria-label="close"
+        onClick={handleClose}
+      >
+        <Close />
+      </IconButton>
+      <DialogContent>
+        <Grid container spacing={2} p={1} width="100%" direction="column">
+          <Grid>
+            <SecretManager
+              label="Key"
+              value={body.token}
+              fullWidth
+              copyFunc={true}
+              visibilityFunc={true}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const DeletionModal: FC<IDeleteApplicationProps> = ({
   open,
   loading,
   handleClose,
   handleDelete,
 }) => {
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete role?</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={() => {
+        handleClose();
+      }}
+      fullWidth
+    >
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete API Key?</DialogTitle>
       <DialogContent>
         <DialogContentText gutterBottom>
-          Are you sure you want to delete this role? This is irreversible and
-          all permissions associated with this role will be unlinked.
+          Are you sure you want to delete this API Key? This is irreversible and
+          all apps using this will stop working.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="inherit">
+        <Button
+          onClick={() => {
+            handleClose();
+          }}
+          color="inherit"
+        >
           Cancel
         </Button>
         <LoadingButton
@@ -301,12 +352,14 @@ const DeletionModal: FC<IDeleteRoleProps> = ({
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
   handleEditOpen,
+  handleTokenOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
       <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
+      <MenuItem onClick={handleTokenOpen}>Token</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
       </MenuItem>
@@ -314,20 +367,26 @@ const MoreMenu: FC<IMoreMenuProps> = ({
   );
 };
 
-const Roles = () => {
-  const [addRole, setAddRole] = useState(false);
-  const [editRole, setEditRole] = useState(false);
-  const [deletionOpen, setDeletionOpen] = useState(false);
+const ApiKeys = () => {
+  const [addApiKey, setAddApiKey] = useState(false);
+  const [editApiKey, setEditApiKey] = useState(false);
   const [body, setBody] = useState({
     name: '',
-    key: '',
     description: '',
-    permissions: [],
+    expiresAt: dayjs().add(1, 'hour').toDate(),
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: { id: '', name: '', description: '', permissions: [] },
+    state: {
+      id: '',
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+      token: '',
+    },
   });
+  const [tokenOpen, setTokenOpen] = useState(false);
+  const [deletionOpen, setDeletionOpen] = useState(false);
   const [apiResponse, setApiResponse] = useState({
     error: false,
     loading: false,
@@ -336,11 +395,12 @@ const Roles = () => {
   });
   const [validation, setValidation] = useState({
     name: false,
-    key: false,
-    permissions: false,
+    expiresAt: false,
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { revalidate } = useRevalidator();
 
   const page = useMemo(() => {
     const skip = searchParams.get('skip');
@@ -374,23 +434,20 @@ const Roles = () => {
     return 10;
   }, [searchParams]);
 
-  const { revalidate } = useRevalidator();
+  const loaderData = useLoaderData() as IApiKeyLoaderData;
 
-  const loaderData = useLoaderData() as IRoleLoaderData;
-
-  const handleCreateRole = async () => {
+  const handleCreateApiKey = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (!/^[a-z0-9_]+$/.test(body.key)) {
-      tempValidation.key = true;
-      validationCount++;
-    }
-    if (body.permissions.length < 1) {
-      tempValidation.permissions = true;
+    if (
+      !dayjs(body.expiresAt).isValid() &&
+      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+    ) {
+      tempValidation.expiresAt = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -399,7 +456,7 @@ const Roles = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/role/create`,
+          `${import.meta.env.VITE_API_URL}/api-key/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -414,7 +471,7 @@ const Roles = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new role',
+            message: 'Created new api key',
           });
         } else {
           constants.fetchError(response.status);
@@ -422,24 +479,26 @@ const Roles = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: true,
-          error: false,
-          message: error.message || 'Error creating role',
+          success: false,
+          error: true,
+          message: error.message || 'Error creating api key',
         });
       }
     }
   };
 
-  const handleEditRole = async (id: string) => {
+  const handleEditApiKey = async () => {
     const tempValidation = { ...validation };
-    const tempBody = { ...body, key: undefined };
     let validationCount = 0;
-    if (tempBody.name.length < 1) {
+    if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (tempBody.permissions.length < 1) {
-      tempValidation.permissions = true;
+    if (
+      !dayjs(body.expiresAt).isValid() &&
+      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
+    ) {
+      tempValidation.expiresAt = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -448,11 +507,13 @@ const Roles = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/role/update/${id}`,
+          `${import.meta.env.VITE_API_URL}/api-key/update/${
+            moreMenuOpen.state.token
+          }`,
           {
             method: 'PUT',
             credentials: 'include',
-            body: JSON.stringify(tempBody),
+            body: JSON.stringify(body),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -463,7 +524,7 @@ const Roles = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Updated role',
+            message: 'Updated api key',
           });
         } else {
           constants.fetchError(response.status);
@@ -471,19 +532,19 @@ const Roles = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          error: true,
           success: false,
-          message: error.message || 'Error updating role',
+          error: true,
+          message: error.message || 'Error updating api key',
         });
       }
     }
   };
 
-  const handleDeleteRole = async (id: string) => {
+  const handleDeleteApiKey = async (token: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/role/delete/${id}`,
+        `${import.meta.env.VITE_API_URL}/api-key/delete/${token}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -497,7 +558,7 @@ const Roles = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: 'Deleted role',
+          message: 'Deleted API Key',
         });
         setDeletionOpen(false);
         handleMoreMenuClose();
@@ -510,13 +571,37 @@ const Roles = () => {
         ...apiResponse,
         success: false,
         error: true,
-        message: error.message || 'Error deleting role',
+        message: error.message || 'Error deleting API key',
       });
     }
   };
 
+  const handleInputChange = (
+    name: string,
+    value: string | Date | undefined,
+  ) => {
+    setValidation({ ...validation, [name]: false });
+    setBody({ ...body, [name]: value });
+  };
+
   const handleMoreMenuClose = () => {
     setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  };
+
+  const handleEditModalOpen = () => {
+    setEditApiKey(true);
+    setBody({
+      ...body,
+      name: moreMenuOpen.state.name,
+      description: moreMenuOpen.state.description,
+      expiresAt: dayjs(moreMenuOpen.state.expiresAt).toDate(),
+    });
+    handleMoreMenuClose();
+  };
+
+  const handleTokenModalOpen = () => {
+    setTokenOpen(true);
+    handleMoreMenuClose();
   };
 
   const handleDeletionModalOpen = () => {
@@ -524,34 +609,42 @@ const Roles = () => {
     handleMoreMenuClose();
   };
 
-  const handleEditModalOpen = () => {
-    setBody({
-      ...body,
-      name: moreMenuOpen.state.name,
-      description: moreMenuOpen.state.description,
-      permissions: moreMenuOpen.state.permissions,
+  const handleTokenModalClose = () => {
+    setTokenOpen(false);
+    setMoreMenuOpen({
+      open: null,
+      state: {
+        id: '',
+        token: '',
+        name: '',
+        description: '',
+        expiresAt: dayjs().toDate(),
+      },
     });
-    setEditRole(true);
-    handleMoreMenuClose();
-  };
-
-  const handleInputChange = (name: string, value: any) => {
-    setValidation({ ...validation, [name]: false });
-    setBody({ ...body, [name]: value });
-  };
-
-  const handleCreateRoleModalClose = () => {
-    setBody({ ...body, name: '', key: '', description: '', permissions: [] });
-    setAddRole(false);
-  };
-
-  const handleEditRoleModalClose = () => {
-    setBody({ ...body, name: '', key: '', description: '', permissions: [] });
-    setEditRole(false);
   };
 
   const handleDeletionModalClose = () => {
     setDeletionOpen(false);
+  };
+
+  const handleEditApiKeyModalClose = () => {
+    setBody({
+      ...body,
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+    });
+    setEditApiKey(false);
+  };
+
+  const handleCreateApiKeyModalClose = () => {
+    setBody({
+      ...body,
+      name: '',
+      description: '',
+      expiresAt: dayjs().add(1, 'hour').toDate(),
+    });
+    setAddApiKey(false);
   };
 
   return (
@@ -568,47 +661,54 @@ const Roles = () => {
             error: false,
           });
           revalidate();
-          handleCreateRoleModalClose();
-          handleEditRoleModalClose();
+          handleCreateApiKeyModalClose();
+          handleEditApiKeyModalClose();
+          handleDeletionModalClose();
         }}
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
         handleEditOpen={handleEditModalOpen}
+        handleTokenOpen={handleTokenModalOpen}
         handleDeletionOpen={handleDeletionModalOpen}
         handleClose={handleMoreMenuClose}
       />
-      <CreateRole
-        open={addRole}
+      <CreateApiKey
+        open={addApiKey}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleCreateRoleModalClose}
-        handleSubmit={handleCreateRole}
+        handleClose={handleCreateApiKeyModalClose}
         handleInputChange={handleInputChange}
+        handleSubmit={handleCreateApiKey}
       />
-      <EditRole
-        open={editRole}
+      <EditApiKey
+        open={editApiKey}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleEditRoleModalClose}
-        handleSubmit={() => handleEditRole(moreMenuOpen.state.id)}
+        handleClose={handleEditApiKeyModalClose}
         handleInputChange={handleInputChange}
+        handleSubmit={handleEditApiKey}
+      />
+      <TokensModal
+        open={tokenOpen}
+        body={{ token: moreMenuOpen.state.token }}
+        handleClose={handleTokenModalClose}
       />
       <DeletionModal
         open={deletionOpen}
         loading={apiResponse.loading}
         handleClose={handleDeletionModalClose}
-        handleDelete={() => handleDeleteRole(moreMenuOpen.state.id)}
+        handleDelete={() => handleDeleteApiKey(moreMenuOpen.state.token)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">Roles</Typography>
+            <Typography variant="h4">API Keys</Typography>
             <Typography color="textSecondary">
-              Define user access levels and roles to ensure appropriate access
-              to resources within your organization.
+              Manage, secure, and create API keys to control access to your
+              applications and services effectively.
             </Typography>
           </Grid>
           <Grid>
@@ -616,9 +716,9 @@ const Roles = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={() => setAddRole(true)}
+              onClick={() => setAddApiKey(true)}
             >
-              Create Role
+              Create API Key
             </Button>
           </Grid>
         </Grid>
@@ -636,17 +736,17 @@ const Roles = () => {
                         {value.description}
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      Key: <Chip label={value.key} />
-                    </TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
+                    <TableCell>{`ExpiresAt At: ${dayjs(value.expiresAt).format(
+                      'D MMM YYYY',
+                    )}`}</TableCell>
                     <TableCell>
-                      <Tooltip title="More Info">
+                      <Tooltip title="More Info" arrow>
                         <IconButton
                           onClick={(event) =>
                             setMoreMenuOpen({
@@ -654,9 +754,10 @@ const Roles = () => {
                               open: event.currentTarget,
                               state: {
                                 id: value.id,
+                                token: value.token,
                                 name: value.name,
                                 description: value.description,
-                                permissions: value.Permissions,
+                                expiresAt: dayjs(value.expiresAt).toDate(),
                               },
                             })
                           }
@@ -697,4 +798,4 @@ const Roles = () => {
   );
 };
 
-export default Roles;
+export default ApiKeys;

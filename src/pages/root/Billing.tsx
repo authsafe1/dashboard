@@ -24,7 +24,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
-import constants from '../config/constants';
+import constants from '../../config/constants';
 
 const StyledCard = styled(MuiCard)<{ selected?: boolean; disabled?: boolean }>(
   ({ theme }) => ({

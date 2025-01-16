@@ -14,8 +14,8 @@ import {
 import { MuiColorInput } from 'mui-color-input';
 import { useState } from 'react';
 import { useLoaderData, useRevalidator } from 'react-router';
-import { Alert, Preview } from '../../components';
-import constants from '../../config/constants';
+import { Alert, Preview } from '../../../components';
+import constants from '../../../config/constants';
 
 const BrandingLogin = () => {
   const theme = useTheme();

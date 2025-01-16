@@ -1,7 +1,8 @@
-import { Add, Close, MoreHoriz } from '@mui/icons-material';
+import { Add, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,6 +10,7 @@ import {
   DialogTitle,
   Grid2 as Grid,
   IconButton,
+  InputAdornment,
   Menu,
   MenuItem,
   Table,
@@ -21,65 +23,56 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
-import { Alert, SecretManager } from '../components';
-import constants from '../config/constants';
+import { Alert } from '../../components';
+import constants from '../../config/constants';
 
-interface IApiKeyLoaderData {
+interface IPermissionLoaderData {
   count: number;
   all: {
     id: string;
     name: string;
+    key: string;
     description: string;
-    token: string;
     createdAt: string;
     updatedAt: string;
-    expiresAt: string;
   }[];
-}
-
-interface ICreateApiKeyProps {
-  open: boolean;
-  body: { name: string; description: string; expiresAt: Date };
-  validation: { name: boolean; expiresAt: boolean };
-  loading: boolean;
-  handleInputChange: (name: string, value: string | Date | undefined) => void;
-  handleSubmit: () => Promise<void>;
-  handleClose: () => void;
-}
-
-interface IEditApiKeyProps {
-  open: boolean;
-  body: { name: string; description: string; expiresAt: Date };
-  validation: { name: boolean; expiresAt: boolean };
-  loading: boolean;
-  handleInputChange: (name: string, value: string | Date | undefined) => void;
-  handleSubmit: () => Promise<void>;
-  handleClose: () => void;
-}
-
-interface ITokensModalProps {
-  open: boolean;
-  body: { token: string };
-  handleClose: () => void;
 }
 
 interface IMoreMenuProps {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
   handleEditOpen: () => void;
-  handleTokenOpen: () => void;
   handleDeletionOpen: () => void;
 }
 
-interface IDeleteApplicationProps {
+interface ICreatePermissionProps {
+  open: boolean;
+  body: { name: string; key: string; description: string };
+  validation: { name: boolean; key: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string) => void;
+  handleSubmit: () => Promise<void>;
+  handleClose: () => void;
+}
+
+interface IDeletePermissionProps {
   open: boolean;
   loading: boolean;
   handleClose: () => void;
   handleDelete: () => void;
+}
+
+interface IEditPermissionProps {
+  open: boolean;
+  body: { name: string; description: string };
+  validation: { name: boolean; key: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string) => void;
+  handleSubmit: () => Promise<void>;
+  handleClose: () => void;
 }
 
 interface MoreOpenState {
@@ -88,12 +81,10 @@ interface MoreOpenState {
     id: string;
     name: string;
     description: string;
-    expiresAt: Date;
-    token: string;
   };
 }
 
-const CreateApiKey: FC<ICreateApiKeyProps> = ({
+const EditPermission: FC<IEditPermissionProps> = ({
   open,
   body,
   validation,
@@ -104,7 +95,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create API Key</DialogTitle>
+      <DialogTitle>Update Permission</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -112,7 +103,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. CI/CD token"
+              placeholder="e.g. System Access"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -127,121 +118,10 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
             />
           </Grid>
           <Grid>
-            <DateTimePicker
-              label="Expires at"
-              value={dayjs(body.expiresAt)}
-              onChange={(value) =>
-                handleInputChange('expiresAt', value?.toDate())
-              }
-              disablePast
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  required: true,
-                  placeholder: 'Expiry Date',
-                  error: validation.expiresAt,
-                  helperText: validation.expiresAt
-                    ? 'Expiry date is required'
-                    : '',
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
             <TextField
               label="Description"
               fullWidth
-              placeholder="Describe the token's usage"
-              value={body.description}
-              multiline
-              rows={3}
-              onChange={(event) =>
-                handleInputChange('description', event.target.value)
-              }
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="inherit">
-          Cancel
-        </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
-          Create
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-const EditApiKey: FC<IEditApiKeyProps> = ({
-  open,
-  body,
-  validation,
-  loading,
-  handleInputChange,
-  handleSubmit,
-  handleClose,
-}) => {
-  return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Update API Key</DialogTitle>
-      <DialogContent>
-        <Grid container spacing={2} p={1} width="100%" direction="column">
-          <Grid>
-            <TextField
-              label="Name"
-              fullWidth
-              required
-              placeholder="e.g. CI/CD token"
-              error={validation.name}
-              helperText={validation.name ? 'Must not be blank' : ''}
-              value={body.name}
-              onChange={(event) =>
-                handleInputChange('name', event.target.value)
-              }
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
-            <DateTimePicker
-              label="Expires at"
-              value={dayjs(body.expiresAt)}
-              onChange={(value) =>
-                handleInputChange('expiresAt', value?.toDate())
-              }
-              disablePast
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  required: true,
-                  placeholder: 'Expiry Date',
-                  error: validation.expiresAt,
-                  helperText: validation.expiresAt
-                    ? 'Expiry date is required'
-                    : '',
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
-            <TextField
-              label="Description"
-              fullWidth
-              placeholder="Describe the token's usage"
+              placeholder="Permission to access all system resources"
               value={body.description}
               multiline
               rows={3}
@@ -273,67 +153,118 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
   );
 };
 
-const TokensModal: FC<ITokensModalProps> = ({ open, body, handleClose }) => {
+const CreatePermission: FC<ICreatePermissionProps> = ({
+  open,
+  body,
+  validation,
+  loading,
+  handleInputChange,
+  handleSubmit,
+  handleClose,
+}) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2 }}>Token</DialogTitle>
-      <IconButton
-        sx={(theme) => ({
-          position: 'absolute',
-          right: 8,
-          top: 12,
-          color: theme.palette.grey[500],
-        })}
-        aria-label="close"
-        onClick={handleClose}
-      >
-        <Close />
-      </IconButton>
+      <DialogTitle>Create Permission</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
-            <SecretManager
-              label="Key"
-              value={body.token}
+            <TextField
+              label="Name"
               fullWidth
-              copyFunc={true}
-              visibilityFunc={true}
+              required
+              placeholder="e.g. System Access"
+              error={validation.name}
+              helperText={validation.name ? 'Must not be blank' : ''}
+              value={body.name}
+              onChange={(event) =>
+                handleInputChange('name', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <TextField
+              label="Key"
+              fullWidth
+              required
+              placeholder="feature:permission"
+              error={validation.key}
+              helperText={
+                validation.key
+                  ? "Key must follow the pattern '[segment1]:[segment2]'"
+                  : ''
+              }
+              value={body.key}
+              onChange={(event) => handleInputChange('key', event.target.value)}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">org:</InputAdornment>
+                  ),
+                },
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid>
+            <TextField
+              label="Description"
+              fullWidth
+              placeholder="Permission to access all system resources"
+              value={body.description}
+              multiline
+              rows={3}
+              onChange={(event) =>
+                handleInputChange('description', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
             />
           </Grid>
         </Grid>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          variant="contained"
+          loading={loading}
+          onClick={handleSubmit}
+        >
+          Create
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 };
 
-const DeletionModal: FC<IDeleteApplicationProps> = ({
+const DeletionModal: FC<IDeletePermissionProps> = ({
   open,
   loading,
   handleClose,
   handleDelete,
 }) => {
   return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        handleClose();
-      }}
-      fullWidth
-    >
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete API Key?</DialogTitle>
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete permission?</DialogTitle>
       <DialogContent>
         <DialogContentText gutterBottom>
-          Are you sure you want to delete this API Key? This is irreversible and
-          all apps using this will stop working.
+          Are you sure you want to delete this permission? This is irreversible
+          and all roles with this permission will be unlinked.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => {
-            handleClose();
-          }}
-          color="inherit"
-        >
+        <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
         <LoadingButton
@@ -352,14 +283,12 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
   handleEditOpen,
-  handleTokenOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
       <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
-      <MenuItem onClick={handleTokenOpen}>Token</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
       </MenuItem>
@@ -367,26 +296,19 @@ const MoreMenu: FC<IMoreMenuProps> = ({
   );
 };
 
-const ApiKeys = () => {
-  const [addApiKey, setAddApiKey] = useState(false);
-  const [editApiKey, setEditApiKey] = useState(false);
+const Permissions = () => {
+  const [addPermission, setAddPermission] = useState(false);
+  const [editPermission, setEditPermission] = useState(false);
+  const [deletionOpen, setDeletionOpen] = useState(false);
   const [body, setBody] = useState({
     name: '',
+    key: '',
     description: '',
-    expiresAt: dayjs().add(1, 'hour').toDate(),
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: {
-      id: '',
-      name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
-      token: '',
-    },
+    state: { id: '', name: '', description: '' },
   });
-  const [tokenOpen, setTokenOpen] = useState(false);
-  const [deletionOpen, setDeletionOpen] = useState(false);
   const [apiResponse, setApiResponse] = useState({
     error: false,
     loading: false,
@@ -395,7 +317,7 @@ const ApiKeys = () => {
   });
   const [validation, setValidation] = useState({
     name: false,
-    expiresAt: false,
+    key: false,
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -434,20 +356,17 @@ const ApiKeys = () => {
     return 10;
   }, [searchParams]);
 
-  const loaderData = useLoaderData() as IApiKeyLoaderData;
+  const loaderData = useLoaderData() as IPermissionLoaderData;
 
-  const handleCreateApiKey = async () => {
+  const handleCreatePermission = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (
-      !dayjs(body.expiresAt).isValid() &&
-      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
-    ) {
-      tempValidation.expiresAt = true;
+    if (!/^[a-z0-9_]+:[a-z0-9_]+$/.test(body.key)) {
+      tempValidation.key = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -456,7 +375,7 @@ const ApiKeys = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api-key/create`,
+          `${import.meta.env.VITE_API_URL}/permission/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -471,7 +390,7 @@ const ApiKeys = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new api key',
+            message: 'Created new permission',
           });
         } else {
           constants.fetchError(response.status);
@@ -479,26 +398,23 @@ const ApiKeys = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: false,
           error: true,
-          message: error.message || 'Error creating api key',
+          success: false,
+          message: error.message || 'Error creating permission',
         });
       }
     }
   };
 
-  const handleEditApiKey = async () => {
+  const handleEditPermission = async (id: string) => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (
-      !dayjs(body.expiresAt).isValid() &&
-      !dayjs(body.expiresAt).isAfter(dayjs(), 'day')
-    ) {
-      tempValidation.expiresAt = true;
+    if (!/^[a-z0-9_]+:[a-z0-9_]+$/.test(body.key)) {
+      tempValidation.key = true;
       validationCount++;
     }
     if (validationCount > 0) {
@@ -507,9 +423,7 @@ const ApiKeys = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api-key/update/${
-            moreMenuOpen.state.token
-          }`,
+          `${import.meta.env.VITE_API_URL}/permission/update/${id}`,
           {
             method: 'PUT',
             credentials: 'include',
@@ -524,7 +438,7 @@ const ApiKeys = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Updated api key',
+            message: 'Updated permission',
           });
         } else {
           constants.fetchError(response.status);
@@ -532,19 +446,19 @@ const ApiKeys = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: false,
           error: true,
-          message: error.message || 'Error updating api key',
+          success: false,
+          message: error.message || 'Error updating permission',
         });
       }
     }
   };
 
-  const handleDeleteApiKey = async (token: string) => {
+  const handleDeletePermission = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api-key/delete/${token}`,
+        `${import.meta.env.VITE_API_URL}/permission/delete/${id}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -558,7 +472,7 @@ const ApiKeys = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: 'Deleted API Key',
+          message: 'Deleted permission',
         });
         setDeletionOpen(false);
         handleMoreMenuClose();
@@ -571,36 +485,18 @@ const ApiKeys = () => {
         ...apiResponse,
         success: false,
         error: true,
-        message: error.message || 'Error deleting API key',
+        message: error.message || 'Error deleting permission',
       });
     }
   };
 
-  const handleInputChange = (
-    name: string,
-    value: string | Date | undefined,
-  ) => {
-    setValidation({ ...validation, [name]: false });
-    setBody({ ...body, [name]: value });
-  };
-
-  const handleMoreMenuClose = () => {
-    setMoreMenuOpen({ ...moreMenuOpen, open: null });
-  };
-
-  const handleEditModalOpen = () => {
-    setEditApiKey(true);
+  const handleEditPermissionModalOpen = () => {
     setBody({
       ...body,
       name: moreMenuOpen.state.name,
       description: moreMenuOpen.state.description,
-      expiresAt: dayjs(moreMenuOpen.state.expiresAt).toDate(),
     });
-    handleMoreMenuClose();
-  };
-
-  const handleTokenModalOpen = () => {
-    setTokenOpen(true);
+    setEditPermission(true);
     handleMoreMenuClose();
   };
 
@@ -609,42 +505,27 @@ const ApiKeys = () => {
     handleMoreMenuClose();
   };
 
-  const handleTokenModalClose = () => {
-    setTokenOpen(false);
-    setMoreMenuOpen({
-      open: null,
-      state: {
-        id: '',
-        token: '',
-        name: '',
-        description: '',
-        expiresAt: dayjs().toDate(),
-      },
-    });
+  const handleInputChange = (name: string, value: string) => {
+    setValidation({ ...validation, [name]: false });
+    setBody({ ...body, [name]: value });
+  };
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  };
+
+  const handleEditPermissionModalClose = () => {
+    setBody({ ...body, name: '', key: '', description: '' });
+    setEditPermission(false);
+  };
+
+  const handleCreatePermissionModalClose = () => {
+    setBody({ ...body, name: '', key: '', description: '' });
+    setAddPermission(false);
   };
 
   const handleDeletionModalClose = () => {
     setDeletionOpen(false);
-  };
-
-  const handleEditApiKeyModalClose = () => {
-    setBody({
-      ...body,
-      name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
-    });
-    setEditApiKey(false);
-  };
-
-  const handleCreateApiKeyModalClose = () => {
-    setBody({
-      ...body,
-      name: '',
-      description: '',
-      expiresAt: dayjs().add(1, 'hour').toDate(),
-    });
-    setAddApiKey(false);
   };
 
   return (
@@ -661,54 +542,48 @@ const ApiKeys = () => {
             error: false,
           });
           revalidate();
-          handleCreateApiKeyModalClose();
-          handleEditApiKeyModalClose();
+          handleCreatePermissionModalClose();
+          handleEditPermissionModalClose();
           handleDeletionModalClose();
         }}
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
-        handleEditOpen={handleEditModalOpen}
-        handleTokenOpen={handleTokenModalOpen}
+        handleEditOpen={handleEditPermissionModalOpen}
         handleDeletionOpen={handleDeletionModalOpen}
         handleClose={handleMoreMenuClose}
       />
-      <CreateApiKey
-        open={addApiKey}
+      <CreatePermission
+        open={addPermission}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleCreateApiKeyModalClose}
+        handleClose={handleCreatePermissionModalClose}
         handleInputChange={handleInputChange}
-        handleSubmit={handleCreateApiKey}
+        handleSubmit={handleCreatePermission}
       />
-      <EditApiKey
-        open={editApiKey}
+      <EditPermission
+        open={editPermission}
         body={body}
         validation={validation}
         loading={apiResponse.loading}
-        handleClose={handleEditApiKeyModalClose}
+        handleClose={handleEditPermissionModalClose}
         handleInputChange={handleInputChange}
-        handleSubmit={handleEditApiKey}
-      />
-      <TokensModal
-        open={tokenOpen}
-        body={{ token: moreMenuOpen.state.token }}
-        handleClose={handleTokenModalClose}
+        handleSubmit={() => handleEditPermission(moreMenuOpen.state.id)}
       />
       <DeletionModal
         open={deletionOpen}
         loading={apiResponse.loading}
         handleClose={handleDeletionModalClose}
-        handleDelete={() => handleDeleteApiKey(moreMenuOpen.state.token)}
+        handleDelete={() => handleDeletePermission(moreMenuOpen.state.id)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">API Keys</Typography>
+            <Typography variant="h4">Permissions</Typography>
             <Typography color="textSecondary">
-              Manage, secure, and create API keys to control access to your
-              applications and services effectively.
+              Define and manage permissions to control access and privileges
+              across your applications.
             </Typography>
           </Grid>
           <Grid>
@@ -716,9 +591,9 @@ const ApiKeys = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={() => setAddApiKey(true)}
+              onClick={() => setAddPermission(true)}
             >
-              Create API Key
+              Create Permission
             </Button>
           </Grid>
         </Grid>
@@ -736,13 +611,13 @@ const ApiKeys = () => {
                         {value.description}
                       </Typography>
                     </TableCell>
+                    <TableCell>
+                      <Chip label={value.key} />
+                    </TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                      'D MMM YYYY',
-                    )}`}</TableCell>
-                    <TableCell>{`ExpiresAt At: ${dayjs(value.expiresAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
                     <TableCell>
@@ -754,10 +629,8 @@ const ApiKeys = () => {
                               open: event.currentTarget,
                               state: {
                                 id: value.id,
-                                token: value.token,
                                 name: value.name,
                                 description: value.description,
-                                expiresAt: dayjs(value.expiresAt).toDate(),
                               },
                             })
                           }
@@ -798,4 +671,4 @@ const ApiKeys = () => {
   );
 };
 
-export default ApiKeys;
+export default Permissions;

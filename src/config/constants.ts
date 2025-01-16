@@ -85,23 +85,21 @@ export default {
       Icon: Link,
     },
   ],
-  dashboardNavigation: [
+  dashboardNavigation: (id?: string) => [
     {
       subheader: 'Overview',
-      routes: [
-        { to: '/organizations/quick-start', text: 'Quick Start', Icon: Bolt },
-      ],
+      routes: [{ to: `/organizations/${id}`, text: 'Quick Start', Icon: Bolt }],
     },
     {
       subheader: 'Users and Applications',
       routes: [
         {
-          to: '/organizations/users?skip=0&take=10',
+          to: `/organizations/${id}/users?skip=0&take=10`,
           text: 'Users',
           Icon: Person,
         },
         {
-          to: '/organizations/applications?skip=0&take=10',
+          to: `/organizations/${id}/applications?skip=0&take=10`,
           text: 'Applications',
           Icon: Apps,
         },
@@ -111,12 +109,12 @@ export default {
       subheader: 'Access Management',
       routes: [
         {
-          to: '/organizations/roles?skip=0&take=10',
+          to: `/organizations/${id}/roles?skip=0&take=10`,
           text: 'Roles',
           Icon: Badge,
         },
         {
-          to: '/organizations/permissions?skip=0&take=10',
+          to: `/organizations/${id}/permissions?skip=0&take=10`,
           text: 'Permissions',
           Icon: Verified,
         },
@@ -126,7 +124,7 @@ export default {
       subheader: 'Branding & Customization',
       routes: [
         {
-          to: '/organizations/branding/login',
+          to: `/organizations/${id}/branding/login`,
           text: 'Login',
           Icon: Login,
         },
@@ -136,12 +134,12 @@ export default {
       subheader: 'Developers',
       routes: [
         {
-          to: '/organizations/webhooks?skip=0&take=10',
+          to: `/organizations/${id}/webhooks?skip=0&take=1`,
           text: 'Webhooks',
           Icon: Webhook,
         },
         {
-          to: '/organizations/api-keys?skip=0&take=10',
+          to: `/organizations/${id}/api-keys?skip=0&take=10`,
           text: 'API Keys',
           Icon: Key,
         },
