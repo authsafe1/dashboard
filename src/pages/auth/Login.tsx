@@ -17,7 +17,7 @@ import {
 import { FormEventHandler, Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, Loader } from '../../components';
+import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -117,7 +117,7 @@ const Login = () => {
   }, [isAuthenticated, profile, location, navigate]);
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <Fragment>
       <Alert

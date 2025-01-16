@@ -1,4 +1,4 @@
-import { Fade } from '@mui/material';
+import { Zoom } from '@mui/material';
 import { grey, red } from '@mui/material/colors';
 import { alpha, createTheme, PaletteMode } from '@mui/material/styles';
 
@@ -514,8 +514,8 @@ export const getTheme = (mode: PaletteMode) => {
       MuiTooltip: {
         defaultProps: {
           arrow: true,
-          slotProps: {
-            transition: Fade,
+          slots: {
+            transition: Zoom,
           },
         },
       },

@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Loader } from '../components';
+import { ScreenLoader } from '../components';
 
 interface Organization {
   id: string;
@@ -97,7 +97,7 @@ export const OrganizationProvider: FC<{ children: React.ReactNode }> = ({
   }, [checkOrganization]);
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <OrganizationContext.Provider
       value={{ organization, loading, changeOrganization, checkOrganization }}

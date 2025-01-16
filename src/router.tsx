@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router';
-import DashboardLayout from './dashboard-layout';
-import ErrorComponent from './error';
+import DashboardLayout from './layouts/dashboard-layout';
+import OrganizationLayout from './layouts/organization-layout';
 import {
   activityLogLoader,
   apiKeysLoader,
@@ -17,8 +17,6 @@ import {
   usersLoader,
   webhooksLoader,
 } from './loaders';
-import NotFoundComponent from './not-found';
-import OrganizationLayout from './organization-layout';
 import {
   ActivityLog,
   ApiKeys,
@@ -26,9 +24,11 @@ import {
   AuthConfirm,
   AuthorizationLog,
   BrandingLogin,
+  Error,
   ForgotPassword,
   GoogleCreate,
   Login,
+  NotFound,
   OAuth2Authorize,
   Organizations,
   Permissions,
@@ -50,7 +50,7 @@ import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
 const router = createBrowserRouter([
   {
     path: '/',
-    errorElement: <ErrorComponent />,
+    errorElement: <Error />,
     children: [
       {
         path: 'auth',
@@ -151,11 +151,11 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: 'organizations/:id',
+            path: 'organizations',
             element: <OrganizationProtectedRoute />,
             children: [
               {
-                path: '',
+                path: ':id',
                 element: <DashboardLayout />,
                 children: [
                   { index: true, element: <QuickStart /> },
@@ -221,7 +221,7 @@ const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <NotFoundComponent />,
+        element: <NotFound />,
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
-import { Loader } from './components';
+import { ScreenLoader } from './components';
 import { useAuth } from './context/AuthContext';
 import { useOrganization } from './context/OrganizationContext';
 
@@ -8,7 +8,7 @@ export const AuthProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <Loader loading={true} />;
+    return <ScreenLoader />;
   }
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace state={{ from: location }} />;
@@ -21,7 +21,7 @@ export const OrganizationProtectedRoute = () => {
   const { organization, loading } = useOrganization();
 
   if (loading) {
-    return <Loader loading={true} />;
+    return <ScreenLoader />;
   }
   if (!organization) {
     return <Navigate to="/" replace />;

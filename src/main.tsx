@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
-import { Loader } from './components';
+import { ScreenLoader } from './components';
 import { AuthProvider } from './context/AuthContext';
 import { OrganizationProvider } from './context/OrganizationContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -23,7 +23,7 @@ root.render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <OrganizationProvider>
           <AuthProvider>
-            <Suspense fallback={<Loader loading={true} />}>
+            <Suspense fallback={<ScreenLoader />}>
               <RouterProvider router={router} />
             </Suspense>
           </AuthProvider>

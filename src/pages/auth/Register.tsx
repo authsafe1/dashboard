@@ -17,7 +17,7 @@ import {
 import { FormEventHandler, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, Loader } from '../../components';
+import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -110,7 +110,7 @@ const Register = () => {
           loading: false,
           success: false,
           error: true,
-          message: error.message || 'Error creating organization',
+          message: error.message || 'Error creating profile',
         });
       }
     }
@@ -138,7 +138,7 @@ const Register = () => {
   }, [isAuthenticated, location, navigate]);
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <Box>
       <Alert

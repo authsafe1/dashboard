@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { FormEventHandler, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { Alert, AuthSafeIcon, Loader } from '../../components';
+import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -67,7 +67,7 @@ const TwoFactorBackup = () => {
   };
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <>
       <Alert

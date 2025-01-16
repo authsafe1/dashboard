@@ -13,7 +13,7 @@ import {
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import { FormEventHandler, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
-import { Alert, AuthSafeIcon, Loader } from '../../components';
+import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -71,7 +71,7 @@ const TwoFactorAuthentication = () => {
   };
 
   return loading ? (
-    <Loader loading={true} />
+    <ScreenLoader />
   ) : (
     <>
       <Alert
