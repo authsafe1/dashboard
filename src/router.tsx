@@ -44,7 +44,7 @@ import {
   Users,
   Webhooks,
 } from './pages';
-import Insight from './pages/Insights';
+import Insight from './pages/organization/Insights';
 import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
 
 const router = createBrowserRouter([
@@ -151,14 +151,14 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: '',
+            path: 'organizations/:id',
             element: <OrganizationProtectedRoute />,
             children: [
               {
-                path: 'organizations',
+                path: '',
                 element: <DashboardLayout />,
                 children: [
-                  { path: 'quick-start', element: <QuickStart /> },
+                  { index: true, element: <QuickStart /> },
                   { path: 'profile', element: <Profile /> },
                   {
                     path: 'applications',

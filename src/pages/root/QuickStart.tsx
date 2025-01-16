@@ -21,8 +21,8 @@ import {
 import { FC, useState } from 'react';
 import isEmail from 'validator/es/lib/isEmail';
 import isURL from 'validator/es/lib/isURL';
-import { PermissionPicker } from '../components';
-import constants from '../config/constants';
+import { PermissionPicker } from '../../components';
+import constants from '../../config/constants';
 
 interface ICreateUserProps {
   body: {

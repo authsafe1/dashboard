@@ -1,9 +1,7 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import { Add, Close, MoreHoriz } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
-  Autocomplete,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -27,41 +25,34 @@ import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
-import { Alert } from '../components';
-import constants from '../config/constants';
+import { Alert, GrantSelector, SecretManager } from '../../components';
+import constants from '../../config/constants';
 
-interface ICreateWebhookProps {
-  open: boolean;
-  body: {
-    name: string;
-    url: string;
-    description?: string;
-    events: string[];
-  };
-  validation: { name: boolean; url: boolean; events: boolean };
-  loading: boolean;
-  handleInputChange: (name: string, value: string | string[]) => void;
-  handleSubmit: () => Promise<void>;
-  handleClose: () => void;
-}
-
-interface IWebhookLoaderData {
+interface IApplicationLoaderData {
   count: number;
   all: {
     id: string;
     name: string;
-    url: string;
-    description: string;
-    events: string[];
+    grant: string;
+    secret: string;
+    redirectUri: string;
     createdAt: string;
     updatedAt: string;
   }[];
 }
 
-interface IMoreMenuProps {
-  anchorEl: HTMLElement | null;
+interface ICreateApplicationProps {
+  open: boolean;
+  body: {
+    name: string;
+    redirectUri?: string;
+    grant: string;
+  };
+  validation: { name: boolean; redirectUri: boolean; grant: boolean };
+  loading: boolean;
+  handleInputChange: (name: string, value: string) => void;
+  handleSubmit: () => Promise<void>;
   handleClose: () => void;
-  handleDeletionOpen: () => void;
 }
 
 interface IDeleteApplicationProps {
@@ -72,27 +63,41 @@ interface IDeleteApplicationProps {
   handleDelete: () => void;
 }
 
-const CreateWebhook: FC<ICreateWebhookProps> = ({
+interface IMoreMenuProps {
+  anchorEl: HTMLElement | null;
+  handleClose: () => void;
+  handleCredentialsOpen: () => void;
+  handleDeletionOpen: () => void;
+}
+
+interface ICredentialsModalProps {
+  open: boolean;
+  body: { id: string; secret: string };
+  handleClose: () => void;
+}
+
+const CreateApplication: FC<ICreateApplicationProps> = ({
   open,
   body,
   validation,
   loading,
   handleInputChange,
-  handleSubmit,
   handleClose,
+  handleSubmit,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      <DialogTitle>Create Webhook</DialogTitle>
+      <DialogTitle>Create Application</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
             <TextField
               label="Name"
               fullWidth
-              placeholder="Name of the Webhook"
+              required
+              placeholder="e.g. Google"
               error={validation.name}
-              helperText={validation.url ? 'Must not be blank' : ''}
+              helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
               onChange={(event) =>
                 handleInputChange('name', event.target.value)
@@ -104,75 +109,38 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
               }}
             />
           </Grid>
-          <Grid>
-            <TextField
-              label="Endpoint"
-              fullWidth
-              placeholder="https://example.com/webhook"
-              error={validation.url}
-              helperText={validation.url ? 'Must not be blank' : ''}
-              value={body.url}
-              onChange={(event) => handleInputChange('url', event.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
-            <TextField
-              label="Description"
-              fullWidth
-              multiline
-              rows={3}
-              placeholder="Description of use of this webhook"
-              value={body.description}
-              onChange={(event) =>
-                handleInputChange('description', event.target.value)
-              }
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-          <Grid>
-            <Autocomplete
-              options={constants.eventCatalog}
-              groupBy={(option) => option.split('.')[0].toUpperCase()}
-              fullWidth
-              multiple
-              disableCloseOnSelect
-              value={body.events}
-              onChange={(_event, value) => handleInputChange('events', value)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Events"
-                  placeholder={
-                    params.InputProps.startAdornment
-                      ? ''
-                      : 'Events to subscribe to'
-                  }
-                  error={validation.events}
-                  helperText={
-                    validation.events ? 'Must select atleast one event' : ''
-                  }
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                />
-              )}
-            />
-          </Grid>
+          {body.grant === 'code' ? (
+            <Grid>
+              <TextField
+                label="Redirect URI"
+                fullWidth
+                required
+                type="url"
+                autoComplete="url"
+                placeholder="e.g. https://oauth2.google.com/callback"
+                error={validation.redirectUri}
+                helperText={validation.redirectUri ? 'Must be a URL' : ''}
+                value={body.redirectUri}
+                onChange={(event) =>
+                  handleInputChange('redirectUri', event.target.value)
+                }
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+              />
+            </Grid>
+          ) : null}
+          <GrantSelector
+            defaultValue={body.grant}
+            title="Grant"
+            onSelect={(grant) => handleInputChange('grant', grant)}
+          />
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={handleClose}>
+        <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
         <LoadingButton
@@ -189,12 +157,13 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
 
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
+  handleCredentialsOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
-      <MenuItem>Edit</MenuItem>
+      <MenuItem onClick={handleCredentialsOpen}>Credentials</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
       </MenuItem>
@@ -202,35 +171,101 @@ const MoreMenu: FC<IMoreMenuProps> = ({
   );
 };
 
+const CredentialsModal: FC<ICredentialsModalProps> = ({
+  open,
+  body,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Credentials</DialogTitle>
+      <IconButton
+        sx={(theme) => ({
+          position: 'absolute',
+          right: 8,
+          top: 12,
+          color: theme.palette.grey[500],
+        })}
+        aria-label="close"
+        onClick={handleClose}
+      >
+        <Close />
+      </IconButton>
+      <DialogContent>
+        <Grid container spacing={2} p={1} width="100%" direction="column">
+          <Grid>
+            <SecretManager
+              label="Client ID"
+              value={body.id}
+              fullWidth
+              copyFunc={true}
+              visibilityFunc={false}
+            />
+          </Grid>
+          <Grid>
+            <SecretManager
+              label="Client Secret"
+              value={body.secret}
+              fullWidth
+              copyFunc={true}
+              visibilityFunc
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const DeletionModal: FC<IDeleteApplicationProps> = ({
   open,
   loading,
+  name,
   handleClose,
   handleDelete,
 }) => {
+  const [typedName, setTypedName] = useState('');
   return (
     <Dialog
       open={open}
       onClose={() => {
         handleClose();
+        setTypedName('');
       }}
       fullWidth
     >
-      <DialogTitle sx={{ m: 0, p: 2 }}>Delete webhook?</DialogTitle>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Delete application?</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete this webhook? This is irreversible and
-          associated webhook URLs will be unlinked.
+        <DialogContentText gutterBottom>
+          Are you sure you want to delete this application? This is irreversible
+          and all associated permissions and logins will be removed.
         </DialogContentText>
+        <DialogContentText gutterBottom>
+          Enter application name to confirm.
+        </DialogContentText>
+        <TextField
+          size="small"
+          fullWidth
+          placeholder="e.g. Google"
+          value={typedName}
+          onChange={(event) => setTypedName(event.target.value)}
+        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="inherit">
+        <Button
+          onClick={() => {
+            handleClose();
+            setTypedName('');
+          }}
+          color="inherit"
+        >
           Cancel
         </Button>
         <LoadingButton
           loading={loading}
           color="error"
           variant="contained"
+          disabled={typedName !== name}
           onClick={handleDelete}
         >
           Delete
@@ -240,11 +275,10 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
   );
 };
 
-interface WebhookBody {
+interface ClientBody {
   name: string;
-  url: string;
-  description?: string;
-  events: string[];
+  redirectUri?: string;
+  grant: string;
 }
 
 interface MoreOpenState {
@@ -252,27 +286,22 @@ interface MoreOpenState {
   state: {
     id: string;
     name: string;
-    url: string;
+    secret: string;
   };
 }
 
-const Webhooks = () => {
-  const [addWebhook, setAddWebhook] = useState(false);
-  const [deletionOpen, setDeletionOpen] = useState(false);
-  const [body, setBody] = useState<WebhookBody>({
-    name: '',
-    url: '',
-    description: '',
-    events: [],
-  });
+const Applications = () => {
+  const [addApplication, setAddApplication] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: { id: '', name: '', url: '' },
+    state: { id: '', name: '', secret: '' },
   });
-  const [validation, setValidation] = useState({
-    name: false,
-    url: false,
-    events: false,
+  const [credentialsOpen, setCredentialsOpen] = useState(false);
+  const [deletionOpen, setDeletionOpen] = useState(false);
+  const [body, setBody] = useState<ClientBody>({
+    name: '',
+    redirectUri: '',
+    grant: 'code',
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -280,6 +309,13 @@ const Webhooks = () => {
     success: false,
     message: '',
   });
+  const [validation, setValidation] = useState({
+    name: false,
+    redirectUri: false,
+    grant: false,
+  });
+
+  const { revalidate } = useRevalidator();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -315,21 +351,14 @@ const Webhooks = () => {
     return 10;
   }, [searchParams]);
 
-  const { revalidate } = useRevalidator();
+  const loaderData = useLoaderData() as IApplicationLoaderData;
 
-  const loaderData = useLoaderData() as IWebhookLoaderData;
-
-  const handleWebhookModalOpen = () => {
-    setAddWebhook(true);
-  };
-
-  const handleWebhookModalClose = () => {
-    setAddWebhook(false);
-    setBody({ ...body, name: '', url: '', description: '', events: [] });
-  };
-
-  const handleMoreMenuClose = () => {
-    setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  const handleCredentialModalClose = () => {
+    setCredentialsOpen(false);
+    setMoreMenuOpen({
+      open: null,
+      state: { id: '', name: '', secret: '' },
+    });
   };
 
   const handleDeletionModalOpen = () => {
@@ -340,11 +369,11 @@ const Webhooks = () => {
     setDeletionOpen(false);
   };
 
-  const handleDeleteWebhook = async (id: string) => {
+  const handleDeleteClient = async (id: string) => {
     setApiResponse({ ...apiResponse, loading: true });
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/webhook/delete/${id}`,
+        `${import.meta.env.VITE_API_URL}/client/delete/${id}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -358,9 +387,11 @@ const Webhooks = () => {
           ...apiResponse,
           success: true,
           error: false,
-          message: 'Deleted Webhook',
+          message: 'Deleted application',
         });
+        setDeletionOpen(false);
         handleMoreMenuClose();
+        revalidate();
       } else {
         constants.fetchError(response.status);
       }
@@ -369,37 +400,40 @@ const Webhooks = () => {
         ...apiResponse,
         success: false,
         error: true,
-        message: error.message || 'Error deleting webhook',
+        message: error.message || 'Error deleting application',
       });
     }
   };
 
-  const handleCreateWebhook = async () => {
+  const handleCreateClient = async () => {
     const tempValidation = { ...validation };
     let validationCount = 0;
     if (body.name.length < 1) {
       tempValidation.name = true;
       validationCount++;
     }
-    if (body.url.length < 1 || !isURL(body.url)) {
-      tempValidation.url = true;
+    if (
+      (body?.redirectUri as string)?.length > 1 &&
+      !isURL(body?.redirectUri as string)
+    ) {
+      tempValidation.redirectUri = true;
       validationCount++;
     }
-    if (body.events.length < 1) {
-      tempValidation.events = true;
+    if (body.grant.length < 1) {
+      tempValidation.grant = true;
       validationCount++;
     }
     if (validationCount > 0) {
       setValidation(tempValidation);
     } else {
       const tempBody = { ...body };
-      if ((body?.description as string).length < 1) {
-        tempBody.description = undefined;
+      if ((body?.redirectUri as string)?.length < 1) {
+        tempBody.redirectUri = undefined;
       }
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/webhook/create`,
+          `${import.meta.env.VITE_API_URL}/client/create`,
           {
             method: 'POST',
             credentials: 'include',
@@ -414,7 +448,7 @@ const Webhooks = () => {
             ...apiResponse,
             success: true,
             error: false,
-            message: 'Created new webhook',
+            message: 'Created new application',
           });
         } else {
           constants.fetchError(response.status);
@@ -422,17 +456,31 @@ const Webhooks = () => {
       } catch (error: any) {
         setApiResponse({
           ...apiResponse,
-          success: true,
-          error: false,
-          message: error.message || 'Error creating webhook',
+          success: false,
+          error: true,
+          message: error.message || 'Error creating application',
         });
       }
     }
   };
 
-  const handleInputChange = (name: string, value: string | string[]) => {
+  const handleInputChange = (name: string, value: string) => {
     setValidation({ ...validation, [name]: false });
     setBody({ ...body, [name]: value });
+  };
+
+  const handleApplicationModalClose = () => {
+    setBody({ ...body, name: '', redirectUri: '', grant: 'code' });
+    setAddApplication(false);
+  };
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuOpen({ ...moreMenuOpen, open: null });
+  };
+
+  const handleCredentialModalOpen = () => {
+    setCredentialsOpen(true);
+    handleMoreMenuClose();
   };
 
   return (
@@ -449,38 +497,42 @@ const Webhooks = () => {
             error: false,
           });
           revalidate();
-          handleWebhookModalClose();
-          handleDeletionModalClose();
+          handleApplicationModalClose();
         }}
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
+        handleCredentialsOpen={handleCredentialModalOpen}
         handleDeletionOpen={handleDeletionModalOpen}
         handleClose={handleMoreMenuClose}
+      />
+      <CreateApplication
+        open={addApplication}
+        body={body}
+        validation={validation}
+        loading={apiResponse.loading}
+        handleClose={handleApplicationModalClose}
+        handleSubmit={handleCreateClient}
+        handleInputChange={handleInputChange}
+      />
+      <CredentialsModal
+        open={credentialsOpen}
+        handleClose={handleCredentialModalClose}
+        body={moreMenuOpen.state}
       />
       <DeletionModal
         open={deletionOpen}
         loading={apiResponse.loading}
         name={moreMenuOpen.state.name}
         handleClose={handleDeletionModalClose}
-        handleDelete={() => handleDeleteWebhook(moreMenuOpen.state.id)}
-      />
-      <CreateWebhook
-        open={addWebhook}
-        body={body}
-        validation={validation}
-        loading={apiResponse.loading}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleCreateWebhook}
-        handleClose={handleWebhookModalClose}
+        handleDelete={() => handleDeleteClient(moreMenuOpen.state.id)}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid container width="100%" justifyContent="space-between">
           <Grid rowSpacing={2}>
-            <Typography variant="h4">Webhooks</Typography>
+            <Typography variant="h4">Applications</Typography>
             <Typography color="textSecondary">
-              Trigger real-time events, enable dynamic updates, and keep your
-              systems synchronized effortlessly.
+              Setup a new application for AuthSafe authentication.
             </Typography>
           </Grid>
           <Grid>
@@ -488,9 +540,9 @@ const Webhooks = () => {
               variant="contained"
               size="large"
               startIcon={<Add />}
-              onClick={handleWebhookModalOpen}
+              onClick={() => setAddApplication(true)}
             >
-              Create Webhook
+              Create Application
             </Button>
           </Grid>
         </Grid>
@@ -498,28 +550,12 @@ const Webhooks = () => {
           <Table>
             <TableBody>
               {loaderData &&
-                loaderData?.all.map((value) => (
+                loaderData?.all &&
+                loaderData.all.map((value) => (
                   <TableRow key={value.id}>
-                    <TableCell>
-                      <Typography fontWeight="bold" gutterBottom>
-                        {value.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {value.description}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Grid container spacing={1} alignItems="center">
-                        <Grid>
-                          <Typography variant="body2">Events: </Typography>
-                        </Grid>
-                        {value.events.map((event) => (
-                          <Grid key={event}>
-                            <Chip label={event} />
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </TableCell>
+                    <TableCell>{value.name}</TableCell>
+                    <TableCell>{`Client ID: ${value.id}`}</TableCell>
+                    <TableCell>{`Grant: ${value.grant}`}</TableCell>
                     <TableCell>{`Created At: ${dayjs(value.createdAt).format(
                       'D MMM YYYY',
                     )}`}</TableCell>
@@ -536,7 +572,7 @@ const Webhooks = () => {
                               state: {
                                 id: value.id,
                                 name: value.name,
-                                url: value.url,
+                                secret: value.secret,
                               },
                             })
                           }
@@ -550,7 +586,7 @@ const Webhooks = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {loaderData && loaderData?.count ? (
+        {loaderData && loaderData.count ? (
           <TablePagination
             component="div"
             count={loaderData?.count || 0}
@@ -577,4 +613,4 @@ const Webhooks = () => {
   );
 };
 
-export default Webhooks;
+export default Applications;

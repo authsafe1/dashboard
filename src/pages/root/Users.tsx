@@ -29,9 +29,9 @@ import dayjs from 'dayjs';
 import React, { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, RolePicker } from '../components';
-import { Role } from '../components/reusable/RolePicker';
-import constants from '../config/constants';
+import { Alert, RolePicker } from '../../components';
+import { Role } from '../../components/reusable/RolePicker';
+import constants from '../../config/constants';
 
 interface IUserLoaderData {
   count: number;

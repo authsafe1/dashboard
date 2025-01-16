@@ -22,9 +22,9 @@ import {
 import imageCompression from 'browser-image-compression';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Alert, FileUploader, SecretManager } from '../components';
-import constants from '../config/constants';
-import { useAuth } from '../context/AuthContext';
+import { Alert, FileUploader, SecretManager } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
 
 interface IDeleteOrganizationProps {
   open: boolean;
