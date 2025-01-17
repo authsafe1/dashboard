@@ -501,12 +501,6 @@ const Profile = () => {
                   </Typography>
                   <Typography noWrap>{profile?.email}</Typography>
                 </Grid>
-                {/* <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="h6" color="textSecondary">
-                    Domain
-                  </Typography>
-                  <Typography noWrap>{profile?.domain}</Typography>
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>
@@ -555,18 +549,43 @@ const Profile = () => {
         </Grid>
         <Grid>
           <Card variant="outlined">
+            <CardHeader title="Update Password" />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid>
+                  <Typography>
+                    Update your password periodically to strengthen your account
+                    security. A strong password not only protects your sensitive
+                    information but also reduces the risk of unauthorized
+                    access.
+                  </Typography>
+                </Grid>
+                <Grid>
+                  <LoadingButton
+                    variant="contained"
+                    loading={twoFaApiResponse.loading}
+                  >
+                    Update
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid>
+          <Card variant="outlined">
             <CardHeader title="Secrets" />
             <CardContent>
               <Grid container width="100%" spacing={2} direction="column">
-                {/* <Grid>
+                <Grid>
                   <SecretManager
                     label="Profile ID"
                     fullWidth
-                    value={Profile?.id}
+                    value={profile?.id}
                     copyFunc={true}
                     visibilityFunc={true}
                   />
-                </Grid> */}
+                </Grid>
                 <Grid>
                   <SecretManager
                     label="JWKS URL"
