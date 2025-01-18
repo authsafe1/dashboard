@@ -17,7 +17,7 @@ import {
 import { FormEventHandler, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
+import { Alert, AuthSafeIcon, Password, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -29,7 +29,6 @@ const Register = () => {
 
   const [body, setBody] = useState({
     name: '',
-    domain: '',
     email: searchParams.get('email') || '',
     password: '',
   });
@@ -68,14 +67,7 @@ const Register = () => {
     if (!isEmail(body.email)) {
       tempError.email = true;
     }
-    if (
-      !/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g.test(
-        body.domain,
-      )
-    ) {
-      tempError.domain = true;
-    }
-    if (body.password.length < 6) {
+    if (!constants.passwordRegex.test(body.password)) {
       tempError.password = true;
     }
     setError(tempError);
@@ -239,22 +231,6 @@ const Register = () => {
                     </Grid>
                     <Grid width="100%">
                       <TextField
-                        label="Domain"
-                        name="domain"
-                        error={error.domain}
-                        helperText={
-                          error.domain ? 'Must be a valid domain' : null
-                        }
-                        value={body.domain}
-                        onChange={(event) =>
-                          setBody({ ...body, domain: event.target.value })
-                        }
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid width="100%">
-                      <TextField
                         label="Email"
                         name="email"
                         type="email"
@@ -270,23 +246,12 @@ const Register = () => {
                       />
                     </Grid>
                     <Grid width="100%">
-                      <TextField
-                        label="Password"
-                        name="password"
-                        type="password"
-                        autoComplete="new-password"
-                        error={error.password}
-                        helperText={
-                          error.password
-                            ? 'Must be a greater than 6 characters'
-                            : null
-                        }
-                        value={body.password}
-                        onChange={(event) =>
-                          setBody({ ...body, password: event.target.value })
-                        }
-                        required
+                      <Password
+                        required={true}
                         fullWidth
+                        onChange={(value) =>
+                          setBody({ ...body, password: value })
+                        }
                       />
                     </Grid>
                   </Grid>

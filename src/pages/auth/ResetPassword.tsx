@@ -9,12 +9,11 @@ import {
   Grid2 as Grid,
   IconButton,
   Link as MuiLink,
-  TextField,
   Typography,
 } from '@mui/material';
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { Alert, AuthSafeIcon } from '../../components';
+import { Alert, AuthSafeIcon, Password } from '../../components';
 import constants from '../../config/constants';
 import { useThemeToggle } from '../../context/ThemeContext';
 
@@ -25,10 +24,6 @@ const ResetPassword = () => {
   });
 
   const navigate = useNavigate();
-
-  const [error, setError] = useState({
-    password: false,
-  });
 
   const { theme } = useThemeToggle();
 
@@ -44,10 +39,9 @@ const ResetPassword = () => {
   ) => {
     event.preventDefault();
     const tempError = { password: false };
-    if (body.password.length < 6) {
+    if (!constants.passwordRegex.test(body.password)) {
       tempError.password = true;
     }
-    setError(tempError);
     if (!tempError.password) {
       setApiResponse({ ...apiResponse, loading: true });
       try {
@@ -148,23 +142,13 @@ const ResetPassword = () => {
               <CardContent>
                 <Grid container>
                   <Grid width="100%">
-                    <TextField
+                    <Password
                       label="New Password"
-                      name="password"
-                      type="password"
-                      autoComplete="new-password"
-                      error={error.password}
-                      helperText={
-                        error.password
-                          ? 'Must be a greater than 6 characters'
-                          : null
-                      }
-                      value={body.password}
-                      onChange={(event) =>
-                        setBody({ ...body, password: event.target.value })
-                      }
-                      required
+                      required={true}
                       fullWidth
+                      onChange={(value) =>
+                        setBody({ ...body, password: value })
+                      }
                     />
                   </Grid>
                 </Grid>

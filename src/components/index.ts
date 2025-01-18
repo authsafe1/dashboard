@@ -2,6 +2,7 @@ import AuthSafeIcon from './icons/AuthSafeIcon';
 import Alert from './reusable/Alert';
 import ErrorTooltip from './reusable/ErrorTooltip';
 import FileUploader from './reusable/FileUploader';
+import Password from './reusable/Password';
 import PermissionPicker from './reusable/PermissionPicker';
 import RichTextEditor from './reusable/RichTextEditor';
 import RolePicker from './reusable/RolePicker';
@@ -27,6 +28,7 @@ export {
   GrantSelector,
   MetadataTable,
   MoreMenu,
+  Password,
   PermissionPicker,
   Preview,
   ProfileAvatar,
