@@ -353,6 +353,6 @@ export default {
     subtitle:
       'Please verify your email within 10 days to avoid account deletion.',
   },
-  passwordRegex: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#!$%^&])(?=.*\d).{8,}$/,
+  passwordRegex: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#!$%^&-])(?=.*\d).{8,}$/,
   maxProfilePhotoSize: 0.2,
 };
