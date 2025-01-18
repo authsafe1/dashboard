@@ -1,5 +1,11 @@
-import { Close, Done } from '@mui/icons-material';
-import { Stack, TextField, TextFieldProps, Typography } from '@mui/material';
+import { Close, Done, Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  IconButton,
+  Stack,
+  TextField,
+  TextFieldProps,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
 
 type PasswordProps = Omit<TextFieldProps, 'onChange' | 'error' | 'type'> &
@@ -8,10 +14,13 @@ type PasswordProps = Omit<TextFieldProps, 'onChange' | 'error' | 'type'> &
 const Password: FC<PasswordProps> = ({
   label,
   autoComplete,
+  slotProps,
   onChange,
   ...otherProps
 }) => {
   const [password, setPassword] = useState('');
+  const [visible, setVisible] = useState(false);
+
   const uppercaseRegex = /[A-Z]/;
   const lowercaseRegex = /[a-z]/;
   const specialCharRegex = /[@#!$%^&]/;
@@ -24,13 +33,24 @@ const Password: FC<PasswordProps> = ({
       {...otherProps}
       label={label || 'Password'}
       value={password}
-      type="password"
+      type={visible ? 'text' : 'password'}
       onChange={(event) => {
         setPassword(event.target.value);
         onChange(event.target.value);
       }}
       error={!passwordRegex.test(password) && password.length > 0}
       autoComplete={autoComplete || 'new-password'}
+      slotProps={{
+        ...slotProps,
+        input: {
+          ...slotProps?.input,
+          endAdornment: (
+            <IconButton onClick={() => setVisible(!visible)}>
+              {visible ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          ),
+        },
+      }}
       helperText={
         <Stack spacing={1}>
           {uppercaseRegex.test(password) ? (
