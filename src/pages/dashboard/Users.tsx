@@ -29,7 +29,7 @@ import dayjs from 'dayjs';
 import React, { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, RolePicker } from '../../components';
+import { Alert, Password, RolePicker } from '../../components';
 import { Role } from '../../components/reusable/RolePicker';
 import constants from '../../config/constants';
 
@@ -242,21 +242,11 @@ const CreateUser: FC<ICreateUserProps> = ({
                 />
               </Grid>
               <Grid>
-                <TextField
-                  label="Password"
+                <Password
+                  required={true}
                   fullWidth
-                  required
-                  type="password"
-                  placeholder="e.g. password"
-                  autoComplete="new-password"
-                  error={validation.password}
-                  helperText={
-                    validation.password ? 'Must be a strong password' : ''
-                  }
-                  value={body.password}
-                  onChange={(event) =>
-                    handleInputChange('password', event.target.value)
-                  }
+                  placeholder="Password"
+                  onChange={(value) => handleInputChange('password', value)}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -553,7 +543,7 @@ const Users = () => {
       tempValidation.email = true;
       validationCount++;
     }
-    if ((body?.password as string)?.length < 6) {
+    if (body.password && !constants.passwordRegex.test(body.password)) {
       tempValidation.password = true;
       validationCount++;
     }
@@ -653,8 +643,9 @@ const Users = () => {
     if ((body?.password as string)?.length < 1) {
       tempBody.password = undefined;
     } else if (
-      (body?.password as string)?.length < 6 &&
-      (body?.password as string)?.length > 0
+      body.password &&
+      body.password.length > 0 &&
+      !constants.passwordRegex.test(body.password)
     ) {
       tempValidation.password = true;
       validationCount++;

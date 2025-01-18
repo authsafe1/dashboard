@@ -12,7 +12,7 @@ import {
 import { FormEventHandler, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, AuthSafeIcon, ScreenLoader } from '../../components';
+import { Alert, AuthSafeIcon, Password, ScreenLoader } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 import { useThemeToggle } from '../../context/ThemeContext';
@@ -62,7 +62,7 @@ const GoogleCreate = () => {
     if (!isEmail(body.email)) {
       tempError.email = true;
     }
-    if (body.password.length < 6) {
+    if (!constants.passwordRegex.test(body.password)) {
       tempError.password = true;
     }
     setError(tempError);
@@ -214,23 +214,12 @@ const GoogleCreate = () => {
                     />
                   </Grid>
                   <Grid width="100%">
-                    <TextField
-                      label="Password"
-                      name="password"
-                      type="password"
-                      autoComplete="new-password"
-                      error={error.password}
-                      helperText={
-                        error.password
-                          ? 'Must be a greater than 6 characters'
-                          : null
-                      }
-                      value={body.password}
-                      onChange={(event) =>
-                        setBody({ ...body, password: event.target.value })
-                      }
-                      required
+                    <Password
+                      required={true}
                       fullWidth
+                      onChange={(value) =>
+                        setBody({ ...body, password: value })
+                      }
                     />
                   </Grid>
                 </Grid>
