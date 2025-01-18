@@ -215,6 +215,8 @@ const GoogleCreate = () => {
                   </Grid>
                   <Grid width="100%">
                     <Password
+                      placeholder="Password"
+                      confirmPasswordPlaceholder="Confirm Password"
                       required={true}
                       fullWidth
                       onChange={(value) =>

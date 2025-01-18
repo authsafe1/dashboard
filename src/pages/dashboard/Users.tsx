@@ -246,6 +246,7 @@ const CreateUser: FC<ICreateUserProps> = ({
                   required={true}
                   fullWidth
                   placeholder="Password"
+                  confirmPasswordPlaceholder="Confirm Password"
                   onChange={(value) => handleInputChange('password', value)}
                   slotProps={{
                     inputLabel: {
