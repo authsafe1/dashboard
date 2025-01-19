@@ -398,7 +398,7 @@ export const getTheme = (mode: PaletteMode) => {
       MuiFormLabel: {
         styleOverrides: {
           asterisk: {
-            color: red['A700'],
+            color: red[500],
           },
           root: ({ theme }) => ({
             typography: theme.typography.caption,
