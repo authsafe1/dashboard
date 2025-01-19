@@ -103,7 +103,7 @@ const EditPermission: FC<IEditPermissionProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. System Access"
+              placeholder="Enter permission name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -121,7 +121,7 @@ const EditPermission: FC<IEditPermissionProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Permission to access all system resources"
+              placeholder="Enter permission description"
               value={body.description}
               multiline
               rows={3}
@@ -172,7 +172,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. System Access"
+              placeholder="Enter permission name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -216,7 +216,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Permission to access all system resources"
+              placeholder="Enter permission description"
               value={body.description}
               multiline
               rows={3}

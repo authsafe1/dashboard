@@ -95,7 +95,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Google"
+              placeholder="Enter application name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -117,7 +117,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
                 required
                 type="url"
                 autoComplete="url"
-                placeholder="e.g. https://oauth2.google.com/callback"
+                placeholder="Enter redirect uri"
                 error={validation.redirectUri}
                 helperText={validation.redirectUri ? 'Must be a URL' : ''}
                 value={body.redirectUri}
@@ -240,13 +240,10 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
           Are you sure you want to delete this application? This is irreversible
           and all associated permissions and logins will be removed.
         </DialogContentText>
-        <DialogContentText gutterBottom>
-          Enter application name to confirm.
-        </DialogContentText>
         <TextField
           size="small"
           fullWidth
-          placeholder="e.g. Google"
+          placeholder="Enter application name to confirm"
           value={typedName}
           onChange={(event) => setTypedName(event.target.value)}
         />

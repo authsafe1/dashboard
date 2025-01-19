@@ -160,7 +160,7 @@ const CreateOrganization: FC<ICreateOrganizationProps> = ({
               fullWidth
               required
               autoComplete="name"
-              placeholder="e.g. Acme Ltd."
+              placeholder="Enter organization name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -179,7 +179,7 @@ const CreateOrganization: FC<ICreateOrganizationProps> = ({
               label="Domain"
               fullWidth
               required
-              placeholder="e.g. acme.com"
+              placeholder="Enter organization domain"
               error={validation.domain}
               helperText={validation.domain ? 'Must be a domain' : ''}
               value={body.domain}
@@ -235,7 +235,7 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
               fullWidth
               required
               autoComplete="name"
-              placeholder="e.g. John Doe"
+              placeholder="Enter organization name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -254,11 +254,9 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
               label="Domain"
               fullWidth
               required
-              type="email"
-              autoComplete="email"
-              placeholder="e.g. john.doe@example.com"
+              placeholder="Enter organization domain"
               error={validation.domain}
-              helperText={validation.domain ? 'Must be an email' : ''}
+              helperText={validation.domain ? 'Must be a domain' : ''}
               value={body.domain}
               onChange={(event) =>
                 handleInputChange('domain', event.target.value)

@@ -90,7 +90,8 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
             <TextField
               label="Name"
               fullWidth
-              placeholder="Name of the Webhook"
+              required
+              placeholder="Enter name of the webhook"
               error={validation.name}
               helperText={validation.url ? 'Must not be blank' : ''}
               value={body.name}
@@ -108,7 +109,8 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
             <TextField
               label="Endpoint"
               fullWidth
-              placeholder="https://example.com/webhook"
+              required
+              placeholder="Enter webhook endpoint"
               error={validation.url}
               helperText={validation.url ? 'Must not be blank' : ''}
               value={body.url}
@@ -126,7 +128,7 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
               fullWidth
               multiline
               rows={3}
-              placeholder="Description of use of this webhook"
+              placeholder="Enter webhook description"
               value={body.description}
               onChange={(event) =>
                 handleInputChange('description', event.target.value)
@@ -151,6 +153,7 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
                 <TextField
                   {...params}
                   label="Events"
+                  required
                   placeholder={
                     params.InputProps.startAdornment
                       ? ''

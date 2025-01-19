@@ -210,6 +210,7 @@ const Login = () => {
                         name="email"
                         type="email"
                         autoComplete="email"
+                        placeholder="Enter your email"
                         value={body.email}
                         error={error.email}
                         helperText={error.email ? 'Must be a email' : null}
@@ -226,6 +227,7 @@ const Login = () => {
                         name="password"
                         type="password"
                         autoComplete="current-password"
+                        placeholder="Enter your password"
                         value={body.password}
                         error={error.password}
                         helperText={

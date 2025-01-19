@@ -171,6 +171,7 @@ const OAuth2Authorize = () => {
                       name="email"
                       type="email"
                       autoComplete="email"
+                      placeholder="Enter your email"
                       value={body.email}
                       error={error.email}
                       helperText={error.email ? 'Must be a email' : null}
@@ -187,6 +188,7 @@ const OAuth2Authorize = () => {
                       name="password"
                       type="password"
                       autoComplete="current-password"
+                      placeholder="Enter your password"
                       value={body.password}
                       error={error.password}
                       helperText={
