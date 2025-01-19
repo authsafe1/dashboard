@@ -112,7 +112,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="Enter api key name"
+              placeholder="Enter API key name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -151,7 +151,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Describe the token's usage"
+              placeholder="Describe the key's usage"
               value={body.description}
               multiline
               rows={3}
@@ -202,7 +202,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="Enter api key name"
+              placeholder="Enter API key name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -228,7 +228,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
                 textField: {
                   fullWidth: true,
                   required: true,
-                  placeholder: 'Api key expiry date',
+                  placeholder: 'API key expiry date',
                   error: validation.expiresAt,
                   helperText: validation.expiresAt
                     ? 'Expiry date is required'
@@ -241,7 +241,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Describe the token's usage"
+              placeholder="Describe the key's usage"
               value={body.description}
               multiline
               rows={3}

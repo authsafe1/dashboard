@@ -124,7 +124,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Key"
               fullWidth
               required
-              placeholder="Enter role key"
+              placeholder="key"
               error={validation.key}
               helperText={validation.key ? 'Must not be blank' : ''}
               value={body.key}

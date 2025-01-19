@@ -90,6 +90,7 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
             <TextField
               label="Name"
               fullWidth
+              required
               placeholder="Enter name of the webhook"
               error={validation.name}
               helperText={validation.url ? 'Must not be blank' : ''}
@@ -108,6 +109,7 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
             <TextField
               label="Endpoint"
               fullWidth
+              required
               placeholder="Enter webhook endpoint"
               error={validation.url}
               helperText={validation.url ? 'Must not be blank' : ''}
@@ -151,6 +153,7 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
                 <TextField
                   {...params}
                   label="Events"
+                  required
                   placeholder={
                     params.InputProps.startAdornment
                       ? ''

@@ -242,6 +242,7 @@ const CreateUser: FC<ICreateUserProps> = ({
                 <Password
                   required={true}
                   fullWidth
+                  type="third-party"
                   onChange={(value) => handleInputChange('password', value)}
                   slotProps={{
                     inputLabel: {
@@ -366,21 +367,11 @@ const EditUser: FC<IEditUserProps> = ({
             />
           </Grid>
           <Grid>
-            <TextField
-              label="Password"
+            <Password
+              required={true}
               fullWidth
-              required
-              type="password"
-              placeholder="e.g. password"
-              autoComplete="new-password"
-              error={validation.password}
-              helperText={
-                validation.password ? 'Must be a strong password' : ''
-              }
-              value={body.password}
-              onChange={(event) =>
-                handleInputChange('password', event.target.value)
-              }
+              type="third-party"
+              onChange={(value) => handleInputChange('password', value)}
               slotProps={{
                 inputLabel: {
                   shrink: true,
