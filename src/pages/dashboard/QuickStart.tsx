@@ -498,7 +498,7 @@ const QuickStart = () => {
       tempValidation.email = true;
       validationCount++;
     }
-    if (userBody.password.length < 6) {
+    if (!constants.passwordRegex.test(userBody.password)) {
       tempValidation.password = true;
       validationCount++;
     }
