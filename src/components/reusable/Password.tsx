@@ -109,7 +109,7 @@ const Password: FC<PasswordProps> = ({
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   <Done fontSize="inherit" color="inherit" />
-                  Atleast one special character ({`@,#,!,$,%,^,&`})
+                  Atleast one special character ({`@,#,!,$,%,^,&,-`})
                 </Typography>
               ) : (
                 <Typography
@@ -143,7 +143,7 @@ const Password: FC<PasswordProps> = ({
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   <Done fontSize="inherit" color="inherit" />
-                  Minimum 8 character length
+                  Atleast 8 characters
                 </Typography>
               ) : (
                 <Typography
@@ -151,7 +151,7 @@ const Password: FC<PasswordProps> = ({
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   <Close fontSize="inherit" color="inherit" />
-                  Minimum 8 character length
+                  Atleast 8 characters
                 </Typography>
               )}
             </Stack>
