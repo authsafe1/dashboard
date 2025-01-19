@@ -21,7 +21,7 @@ import {
 import { FC, useState } from 'react';
 import isEmail from 'validator/es/lib/isEmail';
 import isURL from 'validator/es/lib/isURL';
-import { PermissionPicker } from '../../components';
+import { Password, PermissionPicker } from '../../components';
 import constants from '../../config/constants';
 
 interface ICreateUserProps {
@@ -81,7 +81,7 @@ const CreateUser: FC<ICreateUserProps> = ({
               fullWidth
               required
               autoComplete="name"
-              placeholder="e.g. John Doe"
+              placeholder="Enter user's name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -102,7 +102,7 @@ const CreateUser: FC<ICreateUserProps> = ({
               required
               type="email"
               autoComplete="email"
-              placeholder="e.g. john.doe@example.com"
+              placeholder="Enter user's email"
               error={validation.email}
               helperText={validation.email ? 'Must be an email' : ''}
               value={body.email}
@@ -117,21 +117,11 @@ const CreateUser: FC<ICreateUserProps> = ({
             />
           </Grid>
           <Grid>
-            <TextField
-              label="Password"
+            <Password
+              required={true}
               fullWidth
-              required
-              type="password"
-              placeholder="e.g. password"
-              autoComplete="new-password"
-              error={validation.password}
-              helperText={
-                validation.password ? 'Must be a strong password' : ''
-              }
-              value={body.password}
-              onChange={(event) =>
-                handleInputChange('password', event.target.value)
-              }
+              type="third-party"
+              onChange={(value) => handleInputChange('password', value)}
               slotProps={{
                 inputLabel: {
                   shrink: true,
@@ -170,7 +160,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Google"
+              placeholder="Enter application name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -192,7 +182,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
                 required
                 type="url"
                 autoComplete="url"
-                placeholder="e.g. https://oauth2.google.com/callback"
+                placeholder="Enter redirect uri"
                 error={validation.redirectUri}
                 helperText={validation.redirectUri ? 'Must be a URL' : ''}
                 value={body.redirectUri}
@@ -244,7 +234,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
           loading={loading}
           onClick={handleSubmit}
         >
-          Create Client
+          Create Application
         </LoadingButton>
       </CardActions>
     </Card>
@@ -267,7 +257,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. System Access"
+              placeholder="Enter permission name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -311,7 +301,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="Permission to access all system resources"
+              placeholder="Enter permission description"
               value={body.description}
               multiline
               rows={3}
@@ -356,7 +346,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="Enter role name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -375,7 +365,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Key"
               fullWidth
               required
-              placeholder="sys_admin"
+              placeholder="key"
               error={validation.key}
               helperText={validation.key ? 'Must not be blank' : ''}
               value={body.key}
@@ -393,7 +383,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Enter role description"
               value={body.description}
               multiline
               rows={3}
