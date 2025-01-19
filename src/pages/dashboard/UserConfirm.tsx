@@ -151,6 +151,7 @@ const UserConfirm = () => {
                     name="email"
                     type="email"
                     autoComplete="email"
+                    placeholder="Enter your email"
                     value={loaderData?.email || undefined}
                     disabled
                     fullWidth
@@ -161,6 +162,7 @@ const UserConfirm = () => {
                     label="Name"
                     name="name"
                     autoComplete="name"
+                    placeholder="Enter your name"
                     value={body.name}
                     error={error.name}
                     helperText={error.name ? 'Must not be blank' : null}
@@ -177,6 +179,7 @@ const UserConfirm = () => {
                     name="password"
                     type="password"
                     autoComplete="current-password"
+                    placeholder="Enter your password"
                     value={body.password}
                     error={error.password}
                     helperText={

@@ -143,8 +143,6 @@ const ResetPassword = () => {
                 <Grid container>
                   <Grid width="100%">
                     <Password
-                      placeholder="Password"
-                      confirmPasswordPlaceholder="Confirm Password"
                       label="New Password"
                       required={true}
                       fullWidth

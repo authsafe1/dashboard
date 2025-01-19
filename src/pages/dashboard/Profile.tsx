@@ -57,13 +57,10 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
           Are you sure you want to delete your profile? This is irreversible and
           all associated details and data would be removed
         </DialogContentText>
-        <DialogContentText gutterBottom>
-          Enter email to confirm.
-        </DialogContentText>
         <TextField
           size="small"
           fullWidth
-          placeholder="e.g. john.doe@gmail.com"
+          placeholder="Enter email to confirm"
           value={typedEmail}
           onChange={(event) => setTypedEmail(event.target.value)}
         />

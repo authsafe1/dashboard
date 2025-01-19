@@ -128,6 +128,7 @@ const BrandingLogin = () => {
                       <Grid width="100%">
                         <TextField
                           label="Logo"
+                          placeholder="Enter logo url"
                           value={body.logo}
                           onChange={(event) =>
                             setBody({ ...body, logo: event.target.value })
@@ -147,6 +148,7 @@ const BrandingLogin = () => {
                       <Grid width="100%">
                         <TextField
                           label="Background Image"
+                          placeholder="Enter background image url"
                           value={body.backgroundImage}
                           onChange={(event) =>
                             setBody({
@@ -177,6 +179,7 @@ const BrandingLogin = () => {
                         <MuiColorInput
                           label="Primary"
                           value={body.primaryColor}
+                          placeholder="Enter primary color"
                           format="hex"
                           onChange={(color) =>
                             setBody({ ...body, primaryColor: color })
@@ -220,6 +223,7 @@ const BrandingLogin = () => {
                       <Grid width="100%">
                         <TextField
                           label="Header"
+                          placeholder="Enter header text"
                           value={body.header}
                           onChange={(event) =>
                             setBody({ ...body, header: event.target.value })
@@ -230,6 +234,7 @@ const BrandingLogin = () => {
                       <Grid width="100%">
                         <TextField
                           label="Subheader"
+                          placeholder="Enter subheader text"
                           value={body.subHeader}
                           onChange={(event) =>
                             setBody({ ...body, subHeader: event.target.value })
@@ -240,6 +245,7 @@ const BrandingLogin = () => {
                       <Grid width="100%">
                         <TextField
                           label="Login Button"
+                          placeholder="Enter login button text"
                           value={body.buttonText}
                           onChange={(event) =>
                             setBody({

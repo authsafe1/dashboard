@@ -105,7 +105,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="Enter role name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -124,7 +124,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
               label="Key"
               fullWidth
               required
-              placeholder="sys_admin"
+              placeholder="Enter role key"
               error={validation.key}
               helperText={validation.key ? 'Must not be blank' : ''}
               value={body.key}
@@ -142,7 +142,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Enter role description"
               value={body.description}
               multiline
               rows={3}
@@ -204,7 +204,7 @@ const EditRole: FC<IEditRoleProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. Sys Admin"
+              placeholder="Enter role name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -222,7 +222,7 @@ const EditRole: FC<IEditRoleProps> = ({
             <TextField
               label="Description"
               fullWidth
-              placeholder="e.g. User allowed to configure system resources"
+              placeholder="Enter role description"
               value={body.description}
               multiline
               rows={3}

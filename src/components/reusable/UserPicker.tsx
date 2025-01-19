@@ -136,6 +136,7 @@ const UserPicker: React.FC<UserPickerProps> = ({
           {...params}
           label="Select a user"
           variant="outlined"
+          placeholder={params.InputProps.startAdornment ? '' : 'Select options'}
           required={required}
           error={error}
           fullWidth

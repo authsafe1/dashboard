@@ -16,14 +16,10 @@ type PasswordProps = Omit<
 > &
   Required<{
     onChange: (value: string) => void;
-    placeholder: string;
-    confirmPasswordPlaceholder: string;
   }>;
 
 const Password: FC<PasswordProps> = ({
   label,
-  placeholder,
-  confirmPasswordPlaceholder,
   autoComplete,
   slotProps,
   onChange,
@@ -49,7 +45,7 @@ const Password: FC<PasswordProps> = ({
           label={label || 'Password'}
           value={password}
           type={visible ? 'text' : 'password'}
-          placeholder={placeholder}
+          placeholder="Enter your password"
           onChange={(event) => {
             setPassword(event.target.value);
             onChange(!confirmPasswordError ? event.target.value : '');
@@ -162,7 +158,7 @@ const Password: FC<PasswordProps> = ({
         <TextField
           type="password"
           label="Confirm Password"
-          placeholder={confirmPasswordPlaceholder}
+          placeholder="Re-enter your password"
           error={confirmPasswordError}
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}

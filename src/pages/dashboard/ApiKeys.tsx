@@ -112,7 +112,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. CI/CD token"
+              placeholder="Enter api key name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -138,7 +138,7 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
                 textField: {
                   fullWidth: true,
                   required: true,
-                  placeholder: 'Expiry Date',
+                  placeholder: 'Api key expiry date',
                   error: validation.expiresAt,
                   helperText: validation.expiresAt
                     ? 'Expiry date is required'
@@ -202,7 +202,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
               label="Name"
               fullWidth
               required
-              placeholder="e.g. CI/CD token"
+              placeholder="Enter api key name"
               error={validation.name}
               helperText={validation.name ? 'Must not be blank' : ''}
               value={body.name}
@@ -228,7 +228,7 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
                 textField: {
                   fullWidth: true,
                   required: true,
-                  placeholder: 'Expiry Date',
+                  placeholder: 'Api key expiry date',
                   error: validation.expiresAt,
                   helperText: validation.expiresAt
                     ? 'Expiry date is required'

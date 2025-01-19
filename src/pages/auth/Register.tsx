@@ -219,6 +219,7 @@ const Register = () => {
                         name="name"
                         type="text"
                         autoComplete="name"
+                        placeholder="Enter your name"
                         error={error.name}
                         helperText={error.name ? 'Must not be empty' : null}
                         value={body.name}
@@ -235,6 +236,7 @@ const Register = () => {
                         name="email"
                         type="email"
                         autoComplete="email"
+                        placeholder="Enter your email"
                         error={error.email}
                         helperText={error.email ? 'Must be a email' : null}
                         value={body.email}
@@ -247,8 +249,6 @@ const Register = () => {
                     </Grid>
                     <Grid width="100%">
                       <Password
-                        placeholder="Password"
-                        confirmPasswordPlaceholder="Confirm Password"
                         required={true}
                         fullWidth
                         onChange={(value) =>

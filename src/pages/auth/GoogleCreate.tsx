@@ -193,6 +193,7 @@ const GoogleCreate = () => {
                       name="name"
                       type="text"
                       autoComplete="name"
+                      placeholder="Enter your name"
                       error={error.name}
                       helperText={error.name ? 'Must not be empty' : null}
                       value={body.name}
@@ -208,6 +209,7 @@ const GoogleCreate = () => {
                       label="Email"
                       name="email"
                       type="email"
+                      placeholder="Enter your email"
                       value={body.email}
                       disabled
                       fullWidth
@@ -215,8 +217,6 @@ const GoogleCreate = () => {
                   </Grid>
                   <Grid width="100%">
                     <Password
-                      placeholder="Password"
-                      confirmPasswordPlaceholder="Confirm Password"
                       required={true}
                       fullWidth
                       onChange={(value) =>

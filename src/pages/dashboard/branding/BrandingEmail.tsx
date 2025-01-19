@@ -50,9 +50,7 @@ const EmailTemplateDialog: FC<IEmailTemplateDialog> = ({
               fullWidth
               required
               autoComplete="email"
-              placeholder="e.g. John Doe"
-              // error={validation.name}
-              // helperText={validation.name ? "Must not be blank" : ""}
+              placeholder="Enter sender's email"
               value={body.from}
               onChange={(event) =>
                 handleInputChange('from', event.target.value)
@@ -70,7 +68,7 @@ const EmailTemplateDialog: FC<IEmailTemplateDialog> = ({
               fullWidth
               required
               autoComplete="email"
-              placeholder="e.g. acne@example.com"
+              placeholder="Enter reply to email"
               // error={validation.name}
               // helperText={validation.name ? "Must not be blank" : ""}
               value={body.replyTo}
@@ -89,7 +87,7 @@ const EmailTemplateDialog: FC<IEmailTemplateDialog> = ({
               label="Subject"
               fullWidth
               required
-              placeholder="e.g. Email subject"
+              placeholder="Enter email subject"
               // error={validation.name}
               // helperText={validation.name ? "Must not be blank" : ""}
               value={body.subject}

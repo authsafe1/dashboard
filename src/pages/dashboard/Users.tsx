@@ -130,13 +130,10 @@ const DeletionModal: FC<IDeleteUserProps> = ({
           Are you sure you want to delete this user? This is irreversible and
           all associated roles and permissions would be unlinked
         </DialogContentText>
-        <DialogContentText gutterBottom>
-          Enter email to confirm.
-        </DialogContentText>
         <TextField
           size="small"
           fullWidth
-          placeholder="e.g. john.doe@gmail.com"
+          placeholder="Enter email to confirm"
           value={typedEmail}
           onChange={(event) => setTypedEmail(event.target.value)}
         />
@@ -206,7 +203,7 @@ const CreateUser: FC<ICreateUserProps> = ({
                   fullWidth
                   required
                   autoComplete="name"
-                  placeholder="e.g. John Doe"
+                  placeholder="Enter user's name"
                   error={validation.name}
                   helperText={validation.name ? 'Must not be blank' : ''}
                   value={body.name}
@@ -227,7 +224,7 @@ const CreateUser: FC<ICreateUserProps> = ({
                   required
                   type="email"
                   autoComplete="email"
-                  placeholder="e.g. john.doe@example.com"
+                  placeholder="Enter user's email"
                   error={validation.email}
                   helperText={validation.email ? 'Must be an email' : ''}
                   value={body.email}
@@ -245,8 +242,6 @@ const CreateUser: FC<ICreateUserProps> = ({
                 <Password
                   required={true}
                   fullWidth
-                  placeholder="Password"
-                  confirmPasswordPlaceholder="Confirm Password"
                   onChange={(value) => handleInputChange('password', value)}
                   slotProps={{
                     inputLabel: {
@@ -265,7 +260,7 @@ const CreateUser: FC<ICreateUserProps> = ({
                   required
                   type="email"
                   autoComplete="email"
-                  placeholder="e.g. john.doe@example.com"
+                  placeholder="Enter user's email"
                   error={validation.email}
                   helperText={validation.email ? 'Must be an email' : ''}
                   value={body.email}

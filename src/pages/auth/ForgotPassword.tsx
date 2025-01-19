@@ -148,6 +148,7 @@ const ForgotPassword = () => {
                       label="Email"
                       name="email"
                       type="email"
+                      placeholder="Enter your email"
                       autoComplete="new-password"
                       error={error.email}
                       helperText={error.email ? 'Must be a email' : null}
