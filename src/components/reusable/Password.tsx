@@ -66,11 +66,15 @@ const Password: FC<PasswordProps> = ({
                 </IconButton>
               ),
             },
+            formHelperText: {
+              component: 'div',
+            },
           }}
           helperText={
-            <Stack spacing={1}>
+            <Stack spacing={0.5}>
               {uppercaseRegex.test(password) ? (
                 <Typography
+                  component="span"
                   color="success"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -79,6 +83,7 @@ const Password: FC<PasswordProps> = ({
                 </Typography>
               ) : (
                 <Typography
+                  component="span"
                   color="error"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -88,6 +93,7 @@ const Password: FC<PasswordProps> = ({
               )}
               {lowercaseRegex.test(password) ? (
                 <Typography
+                  component="span"
                   color="success"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -96,6 +102,7 @@ const Password: FC<PasswordProps> = ({
                 </Typography>
               ) : (
                 <Typography
+                  component="span"
                   color="error"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -105,6 +112,7 @@ const Password: FC<PasswordProps> = ({
               )}
               {specialCharRegex.test(password) ? (
                 <Typography
+                  component="span"
                   color="success"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -113,6 +121,7 @@ const Password: FC<PasswordProps> = ({
                 </Typography>
               ) : (
                 <Typography
+                  component="span"
                   color="error"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -122,6 +131,7 @@ const Password: FC<PasswordProps> = ({
               )}
               {numberRegex.test(password) ? (
                 <Typography
+                  component="span"
                   color="success"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -130,6 +140,7 @@ const Password: FC<PasswordProps> = ({
                 </Typography>
               ) : (
                 <Typography
+                  component="span"
                   color="error"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -139,6 +150,7 @@ const Password: FC<PasswordProps> = ({
               )}
               {lengthRegex.test(password) ? (
                 <Typography
+                  component="span"
                   color="success"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
@@ -147,6 +159,7 @@ const Password: FC<PasswordProps> = ({
                 </Typography>
               ) : (
                 <Typography
+                  component="span"
                   color="error"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >

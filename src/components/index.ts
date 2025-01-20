@@ -1,5 +1,6 @@
 import AuthSafeIcon from './icons/AuthSafeIcon';
 import Alert from './reusable/Alert';
+import AvatarUploader from './reusable/AvatarUploader';
 import ErrorTooltip from './reusable/ErrorTooltip';
 import FileUploader from './reusable/FileUploader';
 import Password from './reusable/Password';
@@ -21,6 +22,7 @@ import ProfileAvatar from './ui/ProfileAvatar';
 export {
   Alert,
   AuthSafeIcon,
+  AvatarUploader,
   ErrorTooltip,
   FAQ,
   FileUploader,

@@ -1,7 +1,8 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import { Add, Download, MoreHoriz, TableChart } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -29,7 +30,7 @@ import dayjs from 'dayjs';
 import React, { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, Password, RolePicker } from '../../components';
+import { Alert, FileUploader, Password, RolePicker } from '../../components';
 import { Role } from '../../components/reusable/RolePicker';
 import constants from '../../config/constants';
 
@@ -73,6 +74,14 @@ interface ICreateUserProps {
   loading: boolean;
   handleInputChange: (name: string, value: string) => void;
   handleInvite: () => Promise<void>;
+  handleCreate: () => Promise<void>;
+  handleClose: () => void;
+}
+
+interface ICreateBulkUsersProps {
+  open: boolean;
+  loading: boolean;
+  handleInputChange: (name: string, value: File | null) => void;
   handleCreate: () => Promise<void>;
   handleClose: () => void;
 }
@@ -397,6 +406,49 @@ const EditUser: FC<IEditUserProps> = ({
   );
 };
 
+const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
+  open,
+  loading,
+  handleInputChange,
+  handleCreate,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle>Bulk Create User</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={1} alignItems="center">
+          <Grid size={{ xs: 10 }}>
+            <FileUploader
+              fullWidth
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            />
+          </Grid>
+          <Grid size={{ xs: 2 }}>
+            <Tooltip title="Download user template">
+              <IconButton color="primary" size="large">
+                <Download />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          variant="contained"
+          loading={loading}
+          onClick={handleCreate}
+        >
+          Create
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const AssignRole: FC<IRoleAssignmentProps> = ({
   open,
   loading,
@@ -457,6 +509,7 @@ const MoreMenu: FC<IMoreMenuProps> = ({
 };
 
 const Users = () => {
+  const [bulkAddUser, setBulkAddUser] = useState(false);
   const [addUser, setAddUser] = useState(false);
   const [roleAssignment, setRoleAssignment] = useState(false);
   const [editUser, setEditUser] = useState(false);
@@ -805,6 +858,10 @@ const Users = () => {
     setDeleteUser(false);
   };
 
+  const handleCreateBulkUserClose = () => {
+    setBulkAddUser(false);
+  };
+
   const loaderData = useLoaderData() as IUserLoaderData;
 
   return (
@@ -837,6 +894,12 @@ const Users = () => {
         handleCreate={handleCreateUser}
         handleInvite={handleInviteUser}
         handleInputChange={handleInputChange}
+      />
+      <CreateBulkUser
+        open={bulkAddUser}
+        loading={apiResponse.loading}
+        handleClose={handleCreateBulkUserClose}
+        handleCreate={async () => console.log('hello')}
       />
       <EditUser
         open={editUser}
@@ -878,14 +941,22 @@ const Users = () => {
             </Typography>
           </Grid>
           <Grid>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<Add />}
-              onClick={() => setAddUser(true)}
-            >
-              Create User
-            </Button>
+            <ButtonGroup size="large">
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={() => setAddUser(true)}
+              >
+                Create User
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<TableChart />}
+                onClick={() => setBulkAddUser(true)}
+              >
+                Bulk Create Users
+              </Button>
+            </ButtonGroup>
           </Grid>
         </Grid>
         <TableContainer component={Grid} justifyContent="center" width="100%">
