@@ -1,110 +1,45 @@
-import { PhotoCameraOutlined } from '@mui/icons-material';
-import { Box, BoxProps, CircularProgress } from '@mui/material';
-import React, { useRef, useState } from 'react';
-import ProfileAvatar from '../ui/ProfileAvatar';
+import { AttachFile } from '@mui/icons-material';
+import { InputAdornment, TextField, TextFieldProps } from '@mui/material';
+import { FC } from 'react';
 
-interface FileUploaderProps {
-  image?: string;
-  name?: string;
-  loading?: boolean;
-  onFileSelect: (file: File) => void;
-  sx?: BoxProps['sx'];
-}
+type FileUploaderProps = TextFieldProps & {
+  accept: string;
+  label?: string;
+  onFileSelect?: (file: File | null) => void;
+};
 
-const FileUploader: React.FC<FileUploaderProps> = ({
-  image,
-  name,
-  loading,
+const FileUploader: FC<FileUploaderProps> = ({
+  accept,
   onFileSelect,
-  sx,
+  ...props
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const InputRef = useRef<HTMLInputElement | null>(null);
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onFileSelect(file);
+    const selectedFile = event.target.files?.[0] || null;
+    if (onFileSelect) {
+      onFileSelect(selectedFile);
     }
   };
 
-  const toggleHover = (hoverState: boolean) => () => setIsHovered(hoverState);
-
   return (
-    <Box
-      position="relative"
-      onMouseEnter={toggleHover(true)}
-      onMouseLeave={toggleHover(false)}
-      sx={sx}
-    >
-      <ProfileAvatar
-        url={image}
-        name={name}
-        sx={{
-          width: '100%',
-          height: '100%',
-          borderRadius: '50%',
-          cursor: 'pointer',
-        }}
-      />
-      {isHovered && !loading && (
-        <>
-          <Box
-            onClick={() => InputRef.current?.click()}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              bgcolor: 'rgba(0, 0, 0, 0.6)',
-              color: '#fff',
-              zIndex: 1,
-              borderRadius: '50%',
-              cursor: 'pointer',
-              opacity: isHovered ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out',
-            }}
-          >
-            <PhotoCameraOutlined />
-          </Box>
-          <input
-            ref={InputRef}
-            id="file-input"
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-        </>
-      )}
-      {loading && (
-        <Box
-          onClick={() => InputRef.current?.click()}
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'rgba(0, 0, 0, 0.6)',
-            color: '#fff',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <CircularProgress size={25} color="inherit" />
-        </Box>
-      )}
-    </Box>
+    <TextField
+      {...props}
+      type="file"
+      onChange={handleFileChange}
+      slotProps={{
+        input: {
+          startAdornment: (
+            <InputAdornment position="start">
+              <AttachFile />
+            </InputAdornment>
+          ),
+          slotProps: {
+            input: {
+              accept,
+            },
+          },
+        },
+      }}
+    />
   );
 };
 

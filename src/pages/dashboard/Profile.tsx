@@ -22,7 +22,7 @@ import {
 import imageCompression from 'browser-image-compression';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Alert, FileUploader, SecretManager } from '../../components';
+import { Alert, AvatarUploader, SecretManager } from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 
@@ -473,7 +473,7 @@ const Profile = () => {
                 gap: isMobile ? undefined : 4,
               }}
             >
-              <FileUploader
+              <AvatarUploader
                 image={profile?.photo}
                 name={profile?.name}
                 loading={photoApiResponse.loading}
