@@ -21,6 +21,7 @@
     "@tiptap/starter-kit": "^2.10.4",
     "browser-image-compression": "^2.0.2",
     "dayjs": "^1.11.13",
+    "exceljs": "^4.4.0",
     "lodash": "^4.17.21",
     "mui-color-input": "^5.0.1",
     "mui-one-time-password-input": "^3.0.2",
