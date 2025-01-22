@@ -2,22 +2,6 @@ import { createBrowserRouter } from 'react-router';
 import DashboardLayout from './layouts/dashboard-layout';
 import OrganizationLayout from './layouts/organization-layout';
 import {
-  activityLogLoader,
-  apiKeysLoader,
-  applicationsLoader,
-  authConfirmLoader,
-  authorizationLogLoader,
-  brandingLoginLoader,
-  insightLoader,
-  oauth2AuthorizeLoader,
-  organizationsLoader,
-  permissionsLoader,
-  rolesLoader,
-  securityAlertLoader,
-  usersLoader,
-  webhooksLoader,
-} from './loaders';
-import {
   ActivityLog,
   ApiKeys,
   Applications,
@@ -46,6 +30,22 @@ import {
 } from './pages';
 import Insight from './pages/organization/Insights';
 import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
+import {
+  activityLogLoader,
+  apiKeysLoader,
+  applicationsLoader,
+  authConfirmLoader,
+  authorizationLogLoader,
+  brandingLoginLoader,
+  insightLoader,
+  oauth2AuthorizeLoader,
+  organizationsLoader,
+  permissionsLoader,
+  rolesLoader,
+  securityAlertLoader,
+  usersLoader,
+  webhooksLoader,
+} from './utils/loaders';
 
 const router = createBrowserRouter([
   {
