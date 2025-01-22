@@ -11,6 +11,8 @@ import {
   DialogTitle,
   Grid2 as Grid,
   IconButton,
+  InputBase,
+  LinearProgress,
   Menu,
   MenuItem,
   Link as MuiLink,
@@ -19,6 +21,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TablePagination,
   TableRow,
   Tabs,
@@ -33,6 +36,7 @@ import isEmail from 'validator/es/lib/isEmail';
 import { Alert, FileUploader, Password, RolePicker } from '../../components';
 import { Role } from '../../components/reusable/RolePicker';
 import constants from '../../config/constants';
+import { readAndParseExcel } from '../../utils/csv';
 
 interface IUserLoaderData {
   count: number;
@@ -80,8 +84,14 @@ interface ICreateUserProps {
 
 interface ICreateBulkUsersProps {
   open: boolean;
+  body: {
+    name: string;
+    email: string;
+    password: string;
+  }[];
   loading: boolean;
-  handleInputChange: (name: string, value: File | null) => void;
+  parsedLoading: boolean;
+  handleParseFile: (file: File | null) => Promise<void>;
   handleCreate: () => Promise<void>;
   handleClose: () => void;
 }
@@ -408,8 +418,10 @@ const EditUser: FC<IEditUserProps> = ({
 
 const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
   open,
+  body,
   loading,
-  handleInputChange,
+  parsedLoading,
+  handleParseFile,
   handleCreate,
   handleClose,
 }) => {
@@ -422,14 +434,56 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
             <FileUploader
               fullWidth
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              onFileSelect={(file) => handleParseFile(file)}
             />
           </Grid>
           <Grid size={{ xs: 2 }}>
             <Tooltip title="Download user template">
-              <IconButton color="primary" size="large">
+              <IconButton
+                color="primary"
+                size="large"
+                href="/template/bulk-user-template.xlsx"
+                download="Bulk User Template.xlsx"
+              >
                 <Download />
               </IconButton>
             </Tooltip>
+          </Grid>
+          <Grid width="100%">
+            <TableContainer sx={{ maxHeight: 500 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Password</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {parsedLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={3}>
+                        <LinearProgress />
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    body.map(({ name, email, password }, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{name}</TableCell>
+                        <TableCell>{email}</TableCell>
+                        <TableCell>
+                          <InputBase
+                            fullWidth
+                            value={password}
+                            type="password"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </DialogContent>
@@ -514,6 +568,7 @@ const Users = () => {
   const [roleAssignment, setRoleAssignment] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [deleteUser, setDeleteUser] = useState(false);
+  const [parsedLoading, setParsedLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -522,6 +577,9 @@ const Users = () => {
     email: '',
     password: '',
   });
+  const [parsedBody, setParsedBody] = useState<{
+    data: { name: string; email: string; password: string }[];
+  }>({ data: [] });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
     state: { id: '', name: '', email: '' },
@@ -801,6 +859,23 @@ const Users = () => {
     setBody({ ...body, [name]: value });
   };
 
+  const handleParseFileToArray = async (file: File | null) => {
+    if (file) {
+      setParsedLoading(true);
+      try {
+        const parsedData = await readAndParseExcel(file);
+        setParsedBody({
+          ...parsedBody,
+          data: parsedData,
+        });
+      } catch (error) {
+        console.error('Error parsing file:', error);
+      } finally {
+        setParsedLoading(false);
+      }
+    }
+  };
+
   const handleCreateUserModalClose = () => {
     setBody({ ...body, name: '', email: '', password: '' });
     setValidation({
@@ -860,6 +935,8 @@ const Users = () => {
 
   const handleCreateBulkUserClose = () => {
     setBulkAddUser(false);
+    setParsedBody({ ...parsedBody, data: [] });
+    setParsedLoading(false);
   };
 
   const loaderData = useLoaderData() as IUserLoaderData;
@@ -897,7 +974,10 @@ const Users = () => {
       />
       <CreateBulkUser
         open={bulkAddUser}
+        body={parsedBody.data}
         loading={apiResponse.loading}
+        parsedLoading={parsedLoading}
+        handleParseFile={handleParseFileToArray}
         handleClose={handleCreateBulkUserClose}
         handleCreate={async () => console.log('hello')}
       />
