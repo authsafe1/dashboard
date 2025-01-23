@@ -1,4 +1,10 @@
-import { Add, Download, MoreHoriz, TableChart } from '@mui/icons-material';
+import {
+  Add,
+  Download,
+  Info,
+  MoreHoriz,
+  TableChart,
+} from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
@@ -450,6 +456,9 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
             </Tooltip>
           </Grid>
           <Grid width="100%">
+            <Tooltip title="Maximum 100 rows will be parsed">
+              <Info fontSize="small" sx={{ float: 'right' }} />
+            </Tooltip>
             <TableContainer sx={{ maxHeight: 500 }}>
               <Table>
                 <TableHead>
@@ -463,7 +472,7 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
                   {parsedLoading ? (
                     <TableRow>
                       <TableCell colSpan={3}>
-                        <LinearProgress />
+                        <LinearProgress aria-disabled />
                       </TableCell>
                     </TableRow>
                   ) : (
