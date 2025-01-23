@@ -1,4 +1,4 @@
-import ExcelJS from 'exceljs';
+import { Row, Workbook } from 'exceljs';
 
 export const readAndParseExcel = async (file: File): Promise<any[]> => {
   return new Promise((resolve, reject) => {
@@ -7,25 +7,20 @@ export const readAndParseExcel = async (file: File): Promise<any[]> => {
       try {
         const arrayBuffer = event.target?.result as ArrayBuffer;
 
-        const workbook = new ExcelJS.Workbook();
+        const workbook = new Workbook();
         await workbook.xlsx.load(arrayBuffer);
 
         const worksheet = workbook.getWorksheet(1);
-        const jsonData: any[] = [];
 
-        worksheet?.eachRow((row, rowNumber) => {
-          if (rowNumber === 1) return;
+        const rows = worksheet?.getRows(2, 100) as Row[];
 
-          const rowData = {
-            name: row.getCell(1).value,
-            email: row.getCell(2).value,
-            password: row.getCell(3).value,
-          };
+        const data = rows.map((row) => ({
+          name: row.getCell(1).value?.toString() || '',
+          email: row.getCell(2).value?.toString() || '',
+          password: row.getCell(3).value?.toString() || '',
+        }));
 
-          jsonData.push(rowData);
-        });
-
-        resolve(jsonData);
+        resolve(data);
       } catch (error) {
         reject(error);
       }
