@@ -95,6 +95,7 @@ interface ICreateBulkUsersProps {
     email: string;
     password: string;
   }[];
+  validation: { name: boolean; email: boolean; password: boolean }[];
   loading: boolean;
   parsedLoading: boolean;
   handleParseFile: (file: File | null) => Promise<void>;
@@ -426,6 +427,7 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
   open,
   body,
   loading,
+  validation,
   parsedLoading,
   handleParseFile,
   handleCreate,
@@ -478,13 +480,44 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
                   ) : (
                     body.map(({ name, email, password }, index) => (
                       <TableRow key={index}>
-                        <TableCell>{name}</TableCell>
-                        <TableCell>{email}</TableCell>
+                        <TableCell>
+                          <InputBase
+                            fullWidth
+                            value={name}
+                            sx={
+                              validation[index]?.name
+                                ? {
+                                    color: 'error.main',
+                                  }
+                                : undefined
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <InputBase
+                            fullWidth
+                            value={email}
+                            sx={
+                              validation[index]?.email
+                                ? {
+                                    color: 'error.main',
+                                  }
+                                : undefined
+                            }
+                          />
+                        </TableCell>
                         <TableCell>
                           <InputBase
                             fullWidth
                             value={password}
                             type="password"
+                            sx={
+                              validation[index]?.password
+                                ? {
+                                    color: 'error.main',
+                                  }
+                                : undefined
+                            }
                           />
                         </TableCell>
                       </TableRow>
@@ -589,6 +622,9 @@ const Users = () => {
   const [parsedBody, setParsedBody] = useState<{
     data: { name: string; email: string; password: string }[];
   }>({ data: [] });
+  const [bulkUserValidation, setBulkUserValidation] = useState<
+    { name: boolean; email: boolean; password: boolean }[]
+  >([]);
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
     state: { id: '', name: '', email: '' },
@@ -638,6 +674,59 @@ const Users = () => {
     }
     return 10;
   }, [searchParams]);
+
+  const handleCreateBulkUser = async () => {
+    let validationCount = 0;
+    const tempValidation = parsedBody.data.map((row) => {
+      if (
+        row.name.length < 1 ||
+        (row.email.length > 1 && !isEmail(row.email)) ||
+        !constants.passwordRegex.test(row.password)
+      ) {
+        validationCount++;
+      }
+      return {
+        name: row.name.length < 1,
+        email: row.email.length > 1 && !isEmail(row.email),
+        password: !constants.passwordRegex.test(row.password),
+      };
+    });
+    if (validationCount > 0) {
+      setBulkUserValidation(tempValidation);
+    } else {
+      setApiResponse({ ...apiResponse, loading: true });
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/user/create/bulk`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(parsedBody),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        if (response.ok) {
+          setApiResponse({
+            ...apiResponse,
+            success: true,
+            error: false,
+            message: 'Created new users',
+          });
+        } else {
+          constants.fetchError(response.status);
+        }
+      } catch (error: any) {
+        setApiResponse({
+          ...apiResponse,
+          success: false,
+          error: true,
+          message: error.message || 'Error creating users',
+        });
+      }
+    }
+  };
 
   const handleCreateUser = async () => {
     const tempValidation = { ...validation };
@@ -945,6 +1034,7 @@ const Users = () => {
   const handleCreateBulkUserClose = () => {
     setBulkAddUser(false);
     setParsedBody({ ...parsedBody, data: [] });
+    setBulkUserValidation([]);
     setParsedLoading(false);
   };
 
@@ -968,6 +1058,7 @@ const Users = () => {
           handleEditUserModalClose();
           handleDeletionClose();
           handleRoleAssignmentClose();
+          handleCreateBulkUserClose();
           handleMoreMenuClose();
         }}
       />
@@ -985,10 +1076,11 @@ const Users = () => {
         open={bulkAddUser}
         body={parsedBody.data}
         loading={apiResponse.loading}
+        validation={bulkUserValidation}
         parsedLoading={parsedLoading}
         handleParseFile={handleParseFileToArray}
         handleClose={handleCreateBulkUserClose}
-        handleCreate={async () => console.log('hello')}
+        handleCreate={handleCreateBulkUser}
       />
       <EditUser
         open={editUser}
