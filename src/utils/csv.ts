@@ -14,13 +14,13 @@ export const readAndParseExcel = async (file: File): Promise<any[]> => {
 
         const rows = worksheet?.getRows(2, 100) as Row[];
 
-        const data = rows.map((row) => ({
+        const jsonData = rows.map((row) => ({
           name: row.getCell(1).value?.toString() || '',
           email: row.getCell(2).value?.toString() || '',
           password: row.getCell(3).value?.toString() || '',
         }));
 
-        resolve(data);
+        resolve(jsonData);
       } catch (error) {
         reject(error);
       }
