@@ -22,7 +22,12 @@ import {
 import imageCompression from 'browser-image-compression';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Alert, AvatarUploader, SecretManager } from '../../components';
+import {
+  Alert,
+  AvatarUploader,
+  Password,
+  SecretManager,
+} from '../../components';
 import constants from '../../config/constants';
 import { useAuth } from '../../context/AuthContext';
 
@@ -38,6 +43,15 @@ interface ITwoFaProps {
   open: boolean;
   qrcode: string;
   backupCodes: string[];
+  handleClose: () => void;
+}
+
+interface IUpdatePasswordProps {
+  open: boolean;
+  loading: boolean;
+  body: { oldPassword: string; newPassword: string };
+  handlePasswordChange: (name: string, value: string) => void;
+  handleUpdatePassword: () => Promise<void>;
   handleClose: () => void;
 }
 
@@ -142,12 +156,76 @@ const TwoFaModal: FC<ITwoFaProps> = ({
   );
 };
 
+const UpdatePasswordModal: FC<IUpdatePasswordProps> = ({
+  open,
+  body,
+  loading,
+  handlePasswordChange,
+  handleUpdatePassword,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle sx={{ m: 0, p: 2 }}>Update Password</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2} padding={2}>
+          <Grid width="100%">
+            <TextField
+              label="Current Password"
+              placeholder="Enter your current password"
+              fullWidth
+              value={body.oldPassword}
+              onChange={(event) =>
+                handlePasswordChange('oldPassword', event.target.value)
+              }
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+          <Grid width="100%">
+            <Password
+              onChange={(value) => handlePasswordChange('newPassword', value)}
+              fullWidth
+              isNew
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <LoadingButton
+          loading={loading}
+          onClick={handleUpdatePassword}
+          variant="contained"
+        >
+          Update
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const Profile = () => {
   const { profile, checkAuth } = useAuth();
   const [deletionOpen, setDeletionOpen] = useState(false);
+  const [updatePasswordOpen, setUpdatePasswordOpen] = useState(false);
   const [qrCode, setQrCode] = useState('');
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [qrCodeOpen, setQrCodeOpen] = useState(false);
+  const [updatePasswordBody, setUpdatePasswordBody] = useState({
+    oldPassword: '',
+    newPassword: '',
+  });
   const [deletionApiResponse, setDeletionApiResponse] = useState({
     error: false,
     loading: false,
@@ -173,6 +251,12 @@ const Profile = () => {
     message: '',
   });
   const [apiKeyResponse, setApiKeyResponse] = useState({
+    error: false,
+    loading: false,
+    success: false,
+    message: '',
+  });
+  const [updatePasswordApiResponse, setUpdatePasswordApiResponse] = useState({
     error: false,
     loading: false,
     success: false,
@@ -308,6 +392,45 @@ const Profile = () => {
     }
   };
 
+  const handleUpdatePassword = async () => {
+    setUpdatePasswordApiResponse({
+      ...updatePasswordApiResponse,
+      loading: true,
+    });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/profile/change-password`,
+        {
+          method: 'PUT',
+          credentials: 'include',
+          body: JSON.stringify(updatePasswordBody),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (response.ok) {
+        setUpdatePasswordApiResponse({
+          ...updatePasswordApiResponse,
+          success: true,
+          error: false,
+          loading: false,
+          message: 'Password updated',
+        });
+      } else {
+        constants.fetchError(response.status);
+      }
+    } catch (err: any) {
+      setUpdatePasswordApiResponse({
+        ...updatePasswordApiResponse,
+        success: false,
+        error: true,
+        loading: false,
+        message: err.message || 'Error updating password',
+      });
+    }
+  };
+
   const resizeImage = async (file: File) => {
     try {
       return await imageCompression(file, {
@@ -367,6 +490,10 @@ const Profile = () => {
     }
   };
 
+  const handlePasswordChange = (name: string, value: string) => {
+    setUpdatePasswordBody({ ...updatePasswordBody, [name]: value });
+  };
+
   const handleDeletionOpen = () => {
     setDeletionOpen(true);
   };
@@ -383,6 +510,10 @@ const Profile = () => {
     setQrCodeOpen(false);
     setQrCode('');
     checkAuth();
+  };
+
+  const handleUpdatePasswordClose = () => {
+    setUpdatePasswordOpen(false);
   };
 
   return (
@@ -429,6 +560,19 @@ const Profile = () => {
         }}
       />
       <Alert
+        success={updatePasswordApiResponse.success}
+        error={updatePasswordApiResponse.error}
+        message={updatePasswordApiResponse.message}
+        handleClose={() => {
+          setUpdatePasswordApiResponse({
+            ...updatePasswordApiResponse,
+            success: false,
+            error: false,
+          });
+          handleUpdatePasswordClose();
+        }}
+      />
+      <Alert
         success={photoApiResponse.success}
         error={photoApiResponse.error}
         message={photoApiResponse.message}
@@ -461,6 +605,14 @@ const Profile = () => {
         qrcode={qrCode}
         backupCodes={backupCodes}
         handleClose={handleQrCodeClose}
+      />
+      <UpdatePasswordModal
+        open={updatePasswordOpen}
+        body={updatePasswordBody}
+        loading={updatePasswordApiResponse.loading}
+        handleUpdatePassword={handleUpdatePassword}
+        handlePasswordChange={handlePasswordChange}
+        handleClose={handleUpdatePasswordClose}
       />
       <Grid container width="100%" spacing={2} direction="column">
         <Grid>
@@ -558,12 +710,12 @@ const Profile = () => {
                   </Typography>
                 </Grid>
                 <Grid>
-                  <LoadingButton
+                  <Button
                     variant="contained"
-                    loading={twoFaApiResponse.loading}
+                    onClick={() => setUpdatePasswordOpen(true)}
                   >
                     Update
-                  </LoadingButton>
+                  </Button>
                 </Grid>
               </Grid>
             </CardContent>
@@ -594,16 +746,6 @@ const Profile = () => {
                     visibilityFunc={false}
                   />
                 </Grid>
-                {/* <Grid>
-                  <SecretManager
-                    multiline
-                    fullWidth
-                    label="Public Key"
-                    value={Profile?.Secret?.publicKey}
-                    copyFunc={true}
-                    visibilityFunc={false}
-                  />
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

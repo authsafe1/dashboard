@@ -13,7 +13,7 @@ import constants from '../../config/constants';
 type PasswordProps = Omit<
   TextFieldProps,
   'onChange' | 'error' | 'type' | 'placeholder'
-> & { type?: 'first-party' | 'third-party' } & Required<{
+> & { type?: 'first-party' | 'third-party'; isNew?: boolean } & Required<{
     onChange: (value: string) => void;
   }>;
 
@@ -22,6 +22,7 @@ const Password: FC<PasswordProps> = ({
   autoComplete,
   slotProps,
   type = 'first-party',
+  isNew = false,
   onChange,
   ...otherProps
 }) => {
@@ -42,12 +43,14 @@ const Password: FC<PasswordProps> = ({
       <Grid width="100%">
         <TextField
           {...otherProps}
-          label={label || 'Password'}
+          label={label || isNew ? 'New Password' : 'Password'}
           value={password}
           type={visible ? 'text' : 'password'}
           placeholder={
             type === 'third-party'
               ? "Enter user's password"
+              : isNew
+              ? 'Enter your new password'
               : 'Enter your password'
           }
           onChange={(event) => {
@@ -174,10 +177,12 @@ const Password: FC<PasswordProps> = ({
       <Grid width="100%">
         <TextField
           type="password"
-          label="Confirm Password"
+          label={isNew ? 'Confirm new Password' : 'Confirm Password'}
           placeholder={
             type === 'third-party'
               ? "Re-enter user's password"
+              : isNew
+              ? 'Re-enter your new password'
               : 'Re-enter your password'
           }
           error={confirmPasswordError}
