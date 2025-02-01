@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { ScreenLoader } from '../components';
 
-enum Plan {
+export enum Plan {
   FREE = 'FREE',
   PROFESSIONAL = 'PROFESSIONAL',
   ENTERPRISE = 'ENTERPRISE',
@@ -22,9 +22,11 @@ interface Profile {
   name: string;
   email: string;
   photo: string;
-  plan: Plan;
   isTwoFactorAuthEnabled: boolean;
   isVerified: boolean;
+  Subscription: {
+    type: Plan;
+  };
   Organizations: {
     id: string;
     name: string;

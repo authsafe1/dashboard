@@ -6,6 +6,7 @@ import {
   Bolt,
   Brush,
   Business,
+  CreditCard,
   GroupAdd,
   History,
   IntegrationInstructions,
@@ -159,6 +160,16 @@ export default {
       ],
     },
     {
+      subheader: 'Plan',
+      routes: [
+        {
+          to: '/billing?plan=free',
+          text: 'Billing',
+          Icon: CreditCard,
+        },
+      ],
+    },
+    {
       subheader: 'Analytics and Monitoring',
       routes: [
         {
@@ -178,56 +189,37 @@ export default {
         },
       ],
     },
-    // {
-    //   subheader: "Plan",
-    //   routes: [
-    //     { to: "/dashboard/plan/billing", text: "Billing", Icon: CreditCard },
-    //   ],
-    // },
   ],
-  billingTiers: [
-    {
-      title: 'Free',
-      subtitle: 'Everything you need to get started',
-      totalPrice: '0',
-      description: [
+  billingTiers: {
+    FREE: {
+      price: '₹0',
+      features: [
         '10,000 monthly active users',
         '100 permission and 10 roles',
         'Email-password authentication',
         'Community support',
       ],
-      buttonText: 'Continue as Free',
-      priceId: '',
     },
-    {
-      title: 'Professional',
-      subtitle: 'Powerful features for growing teams',
-      subheader: 'Recommended',
-      totalPrice: '1999',
-      description: [
+    PROFESSIONAL: {
+      price: '₹799',
+      features: [
         'Up to 100,000 users',
         'Social login integration',
         '1000 permissions and 100 roles',
         'Remove AuthSafe branding',
         'Email support with 24-hour response',
       ],
-      buttonText: 'Upgrade to Professional',
-      priceId: '',
     },
-    {
-      title: 'Enterprise',
-      subtitle: 'Custom-tailored for large organizations',
-      totalPrice: '7999',
-      description: [
+    ENTERPRISE: {
+      price: '₹4,999',
+      features: [
         'Unlimited users',
         'SSO support',
         'Unlimited roles and permissions',
         '24/7 priority support',
       ],
-      buttonText: 'Upgrade to Enterprise',
-      priceId: '',
     },
-  ],
+  },
   grants: [
     {
       Icon: Laptop,
@@ -240,55 +232,6 @@ export default {
       title: 'First Party Applications',
       description: 'CLI, daemons and cron jobs for uninterrupted processes',
       value: 'client-credentials',
-    },
-  ],
-  pricingTiers: [
-    {
-      title: 'Free',
-      subtitle: 'Everything you need to get started',
-      totalPrice: '0',
-      description: [
-        '10,000 monthly active users',
-        '100 permission and 10 roles',
-        'Email-password authentication',
-        'Community support',
-      ],
-      buttonText: 'Sign Up for free',
-      buttonVariant: 'outlined',
-      buttonColor: 'primary',
-      redirectUrl: '/plan/billing?plan=free',
-    },
-    {
-      title: 'Professional',
-      subtitle: 'Powerful features for growing teams',
-      subheader: 'Recommended',
-      totalPrice: '1999',
-      description: [
-        'Up to 100,000 users',
-        'Social login integration',
-        '1000 permissions and 100 roles',
-        'Remove AuthSafe branding',
-        'Email support with 24-hour response',
-      ],
-      buttonText: 'Start Now',
-      buttonVariant: 'contained',
-      buttonColor: 'primary',
-      redirectUrl: '/plan/billing?plan=professional',
-    },
-    {
-      title: 'Enterprise',
-      subtitle: 'Custom-tailored for large organizations',
-      totalPrice: '7999',
-      description: [
-        'Unlimited users',
-        'SSO support',
-        'Unlimited roles and permissions',
-        '24/7 priority support',
-      ],
-      buttonText: 'Contact Us',
-      buttonVariant: 'outlined',
-      buttonColor: 'primary',
-      redirectUrl: '/plan/billing?plan=enterprise',
     },
   ],
   gettingStartedSteps: [
@@ -347,6 +290,15 @@ export default {
       default:
         throw new Error(`Unexpected Error: Unknown Error`);
     }
+  },
+  loadScript: (src: string) => {
+    return new Promise<boolean>((resolve) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   },
   unverifiedUserMessage: {
     title: 'Warning! Unverified user',

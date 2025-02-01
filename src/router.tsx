@@ -7,6 +7,7 @@ import {
   Applications,
   AuthConfirm,
   AuthorizationLog,
+  Billing,
   BrandingLogin,
   Error,
   ForgotPassword,
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
               },
               { path: 'profile', element: <Profile /> },
               {
+                path: 'billing',
+                element: <Billing />,
+              },
+              {
                 path: 'organizations',
                 loader: organizationsLoader,
                 element: <Organizations />,
@@ -190,15 +195,6 @@ const router = createBrowserRouter([
                     loader: apiKeysLoader,
                     element: <ApiKeys />,
                   },
-                  // {
-                  //   path: "plan",
-                  //   children: [
-                  //     {
-                  //       path: "billing",
-                  //       element: <BillingPlan />,
-                  //     },
-                  //   ],
-                  // },
                   {
                     path: 'branding',
                     children: [

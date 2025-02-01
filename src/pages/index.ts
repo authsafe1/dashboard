@@ -12,7 +12,7 @@ const TwoFactorBackup = lazy(() => import('./auth/TwoBackup'));
 const TwoFactorAuthentication = lazy(
   () => import('./auth/TwoFactorAuthentication'),
 );
-const BillingPlan = lazy(() => import('./dashboard/Billing'));
+const Billing = lazy(() => import('./dashboard/Billing'));
 const BrandingLogin = lazy(() => import('./dashboard/branding/BrandingLogin'));
 const Insights = lazy(() => import('./organization/Insights'));
 const ActivityLog = lazy(() => import('./organization/log/Activity'));
@@ -36,7 +36,7 @@ export {
   Applications,
   AuthConfirm,
   AuthorizationLog,
-  BillingPlan,
+  Billing,
   BrandingLogin,
   Error,
   ForgotPassword,
