@@ -1,6 +1,7 @@
 import { CheckCircleRounded } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -203,18 +204,21 @@ const Billing = () => {
           </Grid>
         </Grid>
         <Grid container spacing={2} width="100%">
-          <Grid size={{ md: 4, xs: 12 }}>
+          <Grid size={{ lg: 4, xs: 12 }}>
             <Card
               sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                borderRadius: 3,
+                padding: 2,
               }}
+              variant="outlined"
             >
               <CardHeader
                 title="Free"
-                subheader={constants.billingTiers.FREE.price}
+                subheader={`${constants.billingTiers.FREE.price}/month`}
               />
               <CardContent>
                 <Stack spacing={2}>
@@ -240,18 +244,40 @@ const Billing = () => {
               </CardActions>
             </Card>
           </Grid>
-          <Grid size={{ md: 4, xs: 12 }}>
+          <Grid size={{ lg: 4, xs: 12 }}>
             <Card
               sx={{
+                position: 'relative',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                borderRadius: 3,
+                padding: 2,
+                border: (theme) => `2px solid ${theme.palette.primary.main}`,
               }}
+              variant="outlined"
             >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  background: (theme) => theme.palette.primary.main,
+                  color: 'white',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  padding: '4px 12px',
+                  borderTopRightRadius: '8px',
+                  borderBottomLeftRadius: '8px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Recommended
+              </Box>
               <CardHeader
                 title="Professional"
-                subheader={constants.billingTiers.PROFESSIONAL.price}
+                subheader={`${constants.billingTiers.PROFESSIONAL.price}/month`}
               />
               <CardContent>
                 <Stack spacing={2}>
@@ -286,18 +312,21 @@ const Billing = () => {
               </CardActions>
             </Card>
           </Grid>
-          <Grid size={{ md: 4, xs: 12 }}>
+          <Grid size={{ lg: 4, xs: 12 }}>
             <Card
               sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                borderRadius: 3,
+                padding: 2,
               }}
+              variant="outlined"
             >
               <CardHeader
                 title="Enterprise"
-                subheader={constants.billingTiers.ENTERPRISE.price}
+                subheader={`${constants.billingTiers.ENTERPRISE.price}/month`}
               />
               <CardContent>
                 <Stack spacing={2}>
