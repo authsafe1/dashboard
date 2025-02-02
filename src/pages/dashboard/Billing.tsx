@@ -1,4 +1,4 @@
-import { CheckCircleRounded } from '@mui/icons-material';
+import { AutoAwesome, CheckCircleRounded } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
@@ -271,10 +271,20 @@ const Billing = () => {
                   padding: '4px 12px',
                   borderTopRightRadius: '8px',
                   borderBottomLeftRadius: '8px',
-                  textTransform: 'uppercase',
                 }}
               >
-                Recommended
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
+                  <AutoAwesome fontSize="small" />
+                  <Typography fontSize="small" textTransform="uppercase">
+                    Recommended
+                  </Typography>
+                </Box>
               </Box>
               <CardHeader
                 title="Professional"
