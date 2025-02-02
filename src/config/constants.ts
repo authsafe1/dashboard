@@ -163,7 +163,7 @@ export default {
       subheader: 'Plan',
       routes: [
         {
-          to: '/billing?plan=free',
+          to: '/billing',
           text: 'Billing',
           Icon: CreditCard,
         },
