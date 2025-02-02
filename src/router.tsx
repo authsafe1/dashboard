@@ -12,6 +12,7 @@ import {
   Error,
   ForgotPassword,
   GoogleCreate,
+  Insights,
   Login,
   NotFound,
   OAuth2Authorize,
@@ -29,7 +30,6 @@ import {
   Users,
   Webhooks,
 } from './pages';
-import Insight from './pages/organization/Insights';
 import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
 import {
   activityLogLoader,
@@ -121,7 +121,7 @@ const router = createBrowserRouter([
               {
                 index: true,
                 loader: insightLoader,
-                element: <Insight />,
+                element: <Insights />,
               },
               { path: 'profile', element: <Profile /> },
               {
