@@ -235,6 +235,7 @@ const Billing = () => {
                   loading={apiResponse.loading.FREE}
                   disabled={profile?.Subscription.type === Plan.FREE}
                   variant="contained"
+                  fullWidth
                   onClick={handleCancelSubscription}
                 >
                   {profile?.Subscription.type === Plan.FREE
@@ -300,6 +301,7 @@ const Billing = () => {
                   loading={apiResponse.loading.PROFESSIONAL}
                   disabled={profile?.Subscription.type === Plan.PROFESSIONAL}
                   variant="contained"
+                  fullWidth
                   onClick={(event) => {
                     event.preventDefault();
                     handleSubscription('PROFESSIONAL');
@@ -349,6 +351,7 @@ const Billing = () => {
                   loading={apiResponse.loading.ENTERPRISE}
                   disabled={profile?.Subscription.type === Plan.ENTERPRISE}
                   variant="contained"
+                  fullWidth
                   onClick={(event) => {
                     event.preventDefault();
                     handleSubscription('ENTERPRISE');
