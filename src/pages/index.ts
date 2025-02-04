@@ -1,32 +1,30 @@
 import { lazy } from 'react';
 
-const ApiKeys = lazy(() => import('./dashboard/ApiKeys'));
-const Applications = lazy(() => import('./dashboard/Applications'));
-const AuthConfirm = lazy(() => import('./auth/AuthConfirm'));
-const ForgotPassword = lazy(() => import('./auth/ForgotPassword'));
-const GoogleCreate = lazy(() => import('./auth/GoogleCreate'));
-const Login = lazy(() => import('./auth/Login'));
-const Register = lazy(() => import('./auth/Register'));
-const ResetPassword = lazy(() => import('./auth/ResetPassword'));
-const TwoFactorBackup = lazy(() => import('./auth/TwoBackup'));
-const TwoFactorAuthentication = lazy(
-  () => import('./auth/TwoFactorAuthentication'),
-);
-const Billing = lazy(() => import('./dashboard/Billing'));
-const BrandingLogin = lazy(() => import('./dashboard/branding/BrandingLogin'));
-const Insights = lazy(() => import('./organization/Insights'));
-const ActivityLog = lazy(() => import('./organization/log/Activity'));
-const AuthorizationLog = lazy(() => import('./organization/log/Authorization'));
-const SecurityLog = lazy(() => import('./organization/log/Security'));
-const OAuth2Authorize = lazy(() => import('./dashboard/OAuth2Authorize'));
-const Permissions = lazy(() => import('./dashboard/Permissions'));
-const Profile = lazy(() => import('./dashboard/Profile'));
-const QuickStart = lazy(() => import('./dashboard/QuickStart'));
-const Roles = lazy(() => import('./dashboard/Roles'));
-const UserConfirm = lazy(() => import('./dashboard/UserConfirm'));
-const Users = lazy(() => import('./dashboard/Users'));
-const Webhooks = lazy(() => import('./dashboard/Webhooks'));
-const Organizations = lazy(() => import('./organization/Organizations'));
+const ApiKeys = lazy(() => import('./dashboard/api-keys'));
+const Applications = lazy(() => import('./dashboard/applications'));
+const AuthConfirm = lazy(() => import('./auth/confirm'));
+const ForgotPassword = lazy(() => import('./auth/forgot-password'));
+const GoogleCreate = lazy(() => import('./auth/google/create'));
+const Login = lazy(() => import('./auth/login'));
+const Register = lazy(() => import('./auth/register'));
+const ResetPassword = lazy(() => import('./auth/reset-password'));
+const TwoFactorBackup = lazy(() => import('./auth/2fa.backup'));
+const TwoFactorAuthentication = lazy(() => import('./auth/2fa'));
+const Billing = lazy(() => import('./dashboard/billing'));
+const BrandingLogin = lazy(() => import('./dashboard/branding/login'));
+const Insights = lazy(() => import('./organization/insights'));
+const ActivityLog = lazy(() => import('./organization/log/activity'));
+const AuthorizationLog = lazy(() => import('./organization/log/authorization'));
+const SecurityLog = lazy(() => import('./organization/log/security'));
+const OAuth2Authorize = lazy(() => import('./dashboard/oauth2/authorize'));
+const Permissions = lazy(() => import('./dashboard/permissions'));
+const Profile = lazy(() => import('./dashboard/profile'));
+const QuickStart = lazy(() => import('./dashboard/quick-start'));
+const Roles = lazy(() => import('./dashboard/roles'));
+const UserConfirm = lazy(() => import('./user/confirm'));
+const Users = lazy(() => import('./dashboard/users'));
+const Webhooks = lazy(() => import('./dashboard/webhooks'));
+const Organizations = lazy(() => import('./organization/organizations'));
 const Error = lazy(() => import('./error/error'));
 const NotFound = lazy(() => import('./error/not-found'));
 

@@ -57,9 +57,9 @@ const UserConfirm = () => {
       setApiResponse({ ...apiResponse, loading: true });
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/user/confirm?token=${queryParams.get(
-            'token',
-          )}`,
+          `${
+            import.meta.env.VITE_API_URL
+          }/profile/confirm?token=${queryParams.get('token')}`,
           {
             method: 'POST',
             credentials: 'include',
