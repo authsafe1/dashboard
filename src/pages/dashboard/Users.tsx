@@ -5,7 +5,6 @@ import {
   MoreHoriz,
   TableChart,
 } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Button,
   ButtonGroup,
@@ -168,7 +167,7 @@ const DeletionModal: FC<IDeleteUserProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
@@ -176,7 +175,7 @@ const DeletionModal: FC<IDeleteUserProps> = ({
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -316,21 +315,13 @@ const CreateUser: FC<ICreateUserProps> = ({
           Cancel
         </Button>
         {tabValue === 0 ? (
-          <LoadingButton
-            variant="contained"
-            loading={loading}
-            onClick={handleCreate}
-          >
+          <Button variant="contained" loading={loading} onClick={handleCreate}>
             Create
-          </LoadingButton>
+          </Button>
         ) : (
-          <LoadingButton
-            variant="contained"
-            loading={loading}
-            onClick={handleInvite}
-          >
+          <Button variant="contained" loading={loading} onClick={handleInvite}>
             Invite
-          </LoadingButton>
+          </Button>
         )}
       </DialogActions>
     </Dialog>
@@ -411,13 +402,9 @@ const EditUser: FC<IEditUserProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -533,13 +520,9 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleCreate}
-        >
+        <Button variant="contained" loading={loading} onClick={handleCreate}>
           Create
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -574,13 +557,13 @@ const AssignRole: FC<IRoleAssignmentProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           variant="contained"
           onClick={() => handleAssignRole(body.id, (role as Role)?.id)}
         >
           Assign
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

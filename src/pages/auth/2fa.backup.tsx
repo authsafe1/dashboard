@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -147,14 +147,14 @@ const TwoFactorBackup = () => {
               <CardActions>
                 <Grid container width="100%" justifyContent="center">
                   <Grid>
-                    <LoadingButton
+                    <Button
                       loading={apiResponse.loading}
                       size="large"
                       variant="contained"
                       type="submit"
                     >
                       Submit
-                    </LoadingButton>
+                    </Button>
                   </Grid>
                 </Grid>
               </CardActions>

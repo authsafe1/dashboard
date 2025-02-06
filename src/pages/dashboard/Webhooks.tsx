@@ -1,5 +1,4 @@
 import { Add, MoreHoriz } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Autocomplete,
   Button,
@@ -178,13 +177,9 @@ const CreateWebhook: FC<ICreateWebhookProps> = ({
         <Button color="inherit" onClick={handleClose}>
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -230,14 +225,14 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

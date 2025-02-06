@@ -1,5 +1,4 @@
 import { InfoOutlined } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
@@ -83,7 +82,7 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
@@ -91,7 +90,7 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -203,13 +202,13 @@ const UpdatePasswordModal: FC<IUpdatePasswordProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           onClick={handleUpdatePassword}
           variant="contained"
         >
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -674,22 +673,22 @@ const Profile = () => {
                 </Grid>
                 <Grid>
                   {profile?.isTwoFactorAuthEnabled ? (
-                    <LoadingButton
+                    <Button
                       variant="contained"
                       color="error"
                       loading={twoFaApiResponse.loading}
                       onClick={handleDisableTwoFA}
                     >
                       Disable
-                    </LoadingButton>
+                    </Button>
                   ) : (
-                    <LoadingButton
+                    <Button
                       variant="contained"
                       loading={twoFaApiResponse.loading}
                       onClick={handleEnableTwoFA}
                     >
                       Enable
-                    </LoadingButton>
+                    </Button>
                   )}
                 </Grid>
               </Grid>

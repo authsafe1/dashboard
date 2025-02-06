@@ -1,5 +1,4 @@
 import { Add, Close, MoreHoriz } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Dialog,
@@ -171,13 +170,9 @@ const CreateApiKey: FC<ICreateApiKeyProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -261,13 +256,9 @@ const EditApiKey: FC<IEditApiKeyProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -336,14 +327,14 @@ const DeletionModal: FC<IDeleteApplicationProps> = ({
         >
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

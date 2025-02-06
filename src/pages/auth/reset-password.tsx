@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -161,14 +161,14 @@ const ResetPassword = () => {
                   rowSpacing={3}
                 >
                   <Grid>
-                    <LoadingButton
+                    <Button
                       variant="contained"
                       size="large"
                       loading={apiResponse.loading}
                       type="submit"
                     >
                       Submit
-                    </LoadingButton>
+                    </Button>
                   </Grid>
                   <Grid width="100%">
                     <Divider />

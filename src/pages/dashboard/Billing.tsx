@@ -1,7 +1,7 @@
 import { AutoAwesome, CheckCircleRounded } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -231,7 +231,7 @@ const Billing = () => {
                 </Stack>
               </CardContent>
               <CardActions>
-                <LoadingButton
+                <Button
                   loading={apiResponse.loading.FREE}
                   disabled={profile?.Subscription.type === Plan.FREE}
                   variant="contained"
@@ -241,7 +241,7 @@ const Billing = () => {
                   {profile?.Subscription.type === Plan.FREE
                     ? 'Continue as Free'
                     : 'Downgrade to Free'}
-                </LoadingButton>
+                </Button>
               </CardActions>
             </Card>
           </Grid>
@@ -307,7 +307,7 @@ const Billing = () => {
                 </Stack>
               </CardContent>
               <CardActions>
-                <LoadingButton
+                <Button
                   loading={apiResponse.loading.PROFESSIONAL}
                   disabled={profile?.Subscription.type === Plan.PROFESSIONAL}
                   variant="contained"
@@ -320,7 +320,7 @@ const Billing = () => {
                   {profile?.Subscription.type === Plan.ENTERPRISE
                     ? 'Downgrade to Professional'
                     : 'Upgrade to Professional'}
-                </LoadingButton>
+                </Button>
               </CardActions>
             </Card>
           </Grid>
@@ -357,7 +357,7 @@ const Billing = () => {
                 </Stack>
               </CardContent>
               <CardActions>
-                <LoadingButton
+                <Button
                   loading={apiResponse.loading.ENTERPRISE}
                   disabled={profile?.Subscription.type === Plan.ENTERPRISE}
                   variant="contained"
@@ -368,7 +368,7 @@ const Billing = () => {
                   }}
                 >
                   Upgrade to Enterprise
-                </LoadingButton>
+                </Button>
               </CardActions>
             </Card>
           </Grid>
