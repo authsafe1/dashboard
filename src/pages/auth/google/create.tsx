@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -235,14 +235,14 @@ const GoogleCreate = () => {
                 <Grid container width="100%" rowSpacing={5}>
                   <Grid container width="100%" justifyContent="center">
                     <Grid>
-                      <LoadingButton
+                      <Button
                         variant="contained"
                         size="large"
                         loading={apiResponse.loading}
                         type="submit"
                       >
                         Create
-                      </LoadingButton>
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>

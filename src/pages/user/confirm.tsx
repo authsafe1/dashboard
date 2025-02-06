@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
-import { Alert, AuthSafeIcon } from '../../components';
+import { Alert, AuthSafeIcon, Password } from '../../components';
 import constants from '../../config/constants';
 import { useThemeToggle } from '../../context/ThemeContext';
 
@@ -47,7 +47,7 @@ const UserConfirm = () => {
       tempError.name = true;
       validationCount++;
     }
-    if (body.password.length < 6) {
+    if (!constants.passwordRegex.test(body.password)) {
       tempError.password = true;
       validationCount++;
     }
@@ -174,24 +174,12 @@ const UserConfirm = () => {
                   />
                 </Grid>
                 <Grid width="100%">
-                  <TextField
-                    label="Password"
+                  <Password
+                    required={true}
+                    type="first-party"
                     name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="Enter your password"
-                    value={body.password}
-                    error={error.password}
-                    helperText={
-                      error.password
-                        ? 'Must be a greater than 6 characters'
-                        : null
-                    }
-                    onChange={(event) =>
-                      setBody({ ...body, password: event.target.value })
-                    }
-                    required
-                    fullWidth
+                    autoComplete="new-password"
+                    onChange={(value) => setBody({ ...body, password: value })}
                   />
                 </Grid>
               </Grid>
@@ -204,14 +192,14 @@ const UserConfirm = () => {
                 alignItems="center"
               >
                 <Grid>
-                  <LoadingButton
+                  <Button
                     variant="contained"
                     type="submit"
                     loading={apiResponse.loading}
                     size="large"
                   >
                     Confirm
-                  </LoadingButton>
+                  </Button>
                 </Grid>
               </Grid>
             </CardActions>

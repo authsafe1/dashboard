@@ -1,7 +1,7 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -214,14 +214,14 @@ const OAuth2Authorize = () => {
                     alignItems="center"
                   >
                     <Grid>
-                      <LoadingButton
+                      <Button
                         type="submit"
                         variant="contained"
                         loading={apiResponse.loading}
                         size="large"
                       >
                         {loaderData ? loaderData?.buttonText : 'Login'}
-                      </LoadingButton>
+                      </Button>
                     </Grid>
                   </Grid>
                   <Grid container width="100%">

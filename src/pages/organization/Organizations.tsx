@@ -1,5 +1,4 @@
 import { Add, MoreHoriz } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Dialog,
@@ -127,14 +126,14 @@ const DeletionModal: FC<IDeleteOrganizationProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -199,13 +198,9 @@ const CreateOrganization: FC<ICreateOrganizationProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleCreate}
-        >
+        <Button variant="contained" loading={loading} onClick={handleCreate}>
           Create
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -283,13 +278,9 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -157,14 +157,14 @@ const TwoFactorAuthentication = () => {
                   rowSpacing={3}
                 >
                   <Grid>
-                    <LoadingButton
+                    <Button
                       loading={apiResponse.loading}
                       size="large"
                       variant="contained"
                       type="submit"
                     >
                       Submit
-                    </LoadingButton>
+                    </Button>
                   </Grid>
                   <Grid width="100%">
                     <Divider />

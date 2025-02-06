@@ -1,5 +1,4 @@
 import { Add, MoreHoriz } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Chip,
@@ -141,13 +140,9 @@ const EditPermission: FC<IEditPermissionProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -236,13 +231,9 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -267,14 +258,14 @@ const DeletionModal: FC<IDeletePermissionProps> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={loading}
           color="error"
           variant="contained"
           onClick={handleDelete}
         >
           Delete
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

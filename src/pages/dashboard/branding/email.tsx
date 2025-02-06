@@ -1,4 +1,3 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Button,
   Card,
@@ -114,9 +113,9 @@ const EmailTemplateDialog: FC<IEmailTemplateDialog> = ({
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <LoadingButton variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={handleSubmit}>
           Update
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

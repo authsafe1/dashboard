@@ -1,6 +1,6 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -132,13 +132,9 @@ const CreateUser: FC<ICreateUserProps> = ({
         </Grid>
       </CardContent>
       <CardActions>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create User
-        </LoadingButton>
+        </Button>
       </CardActions>
     </Card>
   );
@@ -229,13 +225,9 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
         </Grid>
       </CardContent>
       <CardActions>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create Application
-        </LoadingButton>
+        </Button>
       </CardActions>
     </Card>
   );
@@ -318,13 +310,9 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
         </Grid>
       </CardContent>
       <CardActions>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create Permission
-        </LoadingButton>
+        </Button>
       </CardActions>
     </Card>
   );
@@ -411,13 +399,9 @@ const CreateRole: FC<ICreateRoleProps> = ({
         </Grid>
       </CardContent>
       <CardActions>
-        <LoadingButton
-          variant="contained"
-          loading={loading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" loading={loading} onClick={handleSubmit}>
           Create Role
-        </LoadingButton>
+        </Button>
       </CardActions>
     </Card>
   );

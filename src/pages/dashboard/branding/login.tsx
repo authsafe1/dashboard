@@ -1,6 +1,6 @@
 import { DarkMode, LightMode, Link } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -272,13 +272,13 @@ const BrandingLogin = () => {
               </Grid>
             </CardContent>
             <CardActions>
-              <LoadingButton
+              <Button
                 variant="contained"
                 loading={apiResponse.loading}
                 onClick={handleUpdateBranding}
               >
                 Save
-              </LoadingButton>
+              </Button>
             </CardActions>
           </Card>
         </Grid>

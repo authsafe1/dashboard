@@ -1,5 +1,4 @@
 import { Google } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
@@ -263,14 +262,14 @@ const Register = () => {
                 <Grid container width="100%" rowSpacing={5}>
                   <Grid container width="100%" justifyContent="center">
                     <Grid>
-                      <LoadingButton
+                      <Button
                         variant="contained"
                         size="large"
                         loading={apiResponse.loading}
                         type="submit"
                       >
                         Register
-                      </LoadingButton>
+                      </Button>
                     </Grid>
                   </Grid>
                   <Grid container width="100%">
