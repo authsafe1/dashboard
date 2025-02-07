@@ -284,7 +284,7 @@ const DashboardLayout = () => {
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem component="a" href={`${import.meta.env.VITE_BASE_URL}/docs`}>
+        <MenuItem component="a" href={import.meta.env.VITE_DOCS_URL}>
           <ListItemIcon>
             <MenuBook />
           </ListItemIcon>
