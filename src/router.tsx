@@ -160,7 +160,7 @@ const router = createBrowserRouter([
             element: <OrganizationProtectedRoute />,
             children: [
               {
-                path: ':id',
+                path: ':organizationId',
                 element: <DashboardLayout />,
                 children: [
                   { index: true, element: <QuickStart /> },
@@ -170,7 +170,7 @@ const router = createBrowserRouter([
                     element: <Applications />,
                   },
                   {
-                    path: 'applications/:id/branding',
+                    path: 'applications/:applicationId/branding',
                     loader: brandingLoginLoader,
                     element: <BrandingLogin />,
                   },
