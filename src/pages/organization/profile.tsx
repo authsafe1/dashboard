@@ -660,7 +660,7 @@ const Profile = () => {
           <Card variant="outlined">
             <CardHeader title="Enable Two-Factor Authentication (2FA)" />
             <CardContent>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} direction="column">
                 <Grid>
                   <Typography>
                     Enable 2FA to add an extra layer of security to your
@@ -699,7 +699,7 @@ const Profile = () => {
           <Card variant="outlined">
             <CardHeader title="Update Password" />
             <CardContent>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} direction="column">
                 <Grid>
                   <Typography>
                     Update your password periodically to strengthen your account
