@@ -129,9 +129,9 @@ const BrandingLogin = () => {
         <Grid rowSpacing={2}>
           <Typography variant="h4">Login Customization</Typography>
           <Typography color="textSecondary">
-            Personalize the login experience by adding your company logo,
+            Personalize the login experience by adding your application logo,
             choosing brand colors, and tailoring the look and feel to match your
-            organization's identity.
+            application's identity.
           </Typography>
         </Grid>
         <Grid size={{ xs: 12 }}>
