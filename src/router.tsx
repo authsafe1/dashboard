@@ -164,11 +164,15 @@ const router = createBrowserRouter([
                 element: <DashboardLayout />,
                 children: [
                   { index: true, element: <QuickStart /> },
-                  { path: 'profile', element: <Profile /> },
                   {
                     path: 'applications',
                     loader: applicationsLoader,
                     element: <Applications />,
+                  },
+                  {
+                    path: 'applications/:id/branding',
+                    loader: brandingLoginLoader,
+                    element: <BrandingLogin />,
                   },
                   {
                     path: 'users',
@@ -195,20 +199,16 @@ const router = createBrowserRouter([
                     loader: apiKeysLoader,
                     element: <ApiKeys />,
                   },
-                  {
-                    path: 'branding',
-                    children: [
-                      {
-                        path: 'login',
-                        element: <BrandingLogin />,
-                        loader: brandingLoginLoader,
-                      },
-                      // {
-                      //   path: "email",
-                      //   element: <BrandingEmail />,
-                      // },
-                    ],
-                  },
+                  // {
+                  //   path: 'branding',
+                  //   children: [
+                  //     {
+                  //       path: 'login',
+                  //       element: <BrandingLogin />,
+                  //       loader: brandingLoginLoader,
+                  //     },
+                  //   ],
+                  // },
                 ],
               },
             ],

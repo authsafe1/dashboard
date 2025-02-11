@@ -5,7 +5,6 @@ import ErrorTooltip from './reusable/ErrorTooltip';
 import FileUploader from './reusable/FileUploader';
 import Password from './reusable/Password';
 import PermissionPicker from './reusable/PermissionPicker';
-import RichTextEditor from './reusable/RichTextEditor';
 import RolePicker from './reusable/RolePicker';
 import RouteLoader from './reusable/RouteLoader';
 import ScreenLoader from './reusable/ScreenLoader';
@@ -34,7 +33,6 @@ export {
   PermissionPicker,
   Preview,
   ProfileAvatar,
-  RichTextEditor,
   RolePicker,
   RouteLoader,
   ScreenLoader,

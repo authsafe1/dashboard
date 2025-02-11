@@ -944,7 +944,7 @@ const Users = () => {
     if (file) {
       setParsedLoading(true);
       try {
-        const parsedData = await readAndParseExcel(file);
+        const parsedData = await readAndParseExcel<any>(file);
         setParsedBody({
           ...parsedBody,
           data: parsedData,

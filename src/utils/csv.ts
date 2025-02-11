@@ -1,6 +1,6 @@
 import { Row, Workbook } from 'exceljs';
 
-export const readAndParseExcel = async (file: File): Promise<any[]> => {
+export const readAndParseExcel = async <T>(file: File): Promise<T[]> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async (event) => {
@@ -20,7 +20,7 @@ export const readAndParseExcel = async (file: File): Promise<any[]> => {
           password: row.getCell(3).value?.toString() || '',
         }));
 
-        resolve(jsonData);
+        resolve(jsonData as T[]);
       } catch (error) {
         reject(error);
       }

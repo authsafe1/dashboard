@@ -22,7 +22,12 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { FC, useMemo, useState } from 'react';
-import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
+import {
+  useLoaderData,
+  useNavigate,
+  useRevalidator,
+  useSearchParams,
+} from 'react-router';
 import isURL from 'validator/es/lib/isURL';
 import { Alert, GrantSelector, SecretManager } from '../../components';
 import constants from '../../config/constants';
@@ -65,6 +70,7 @@ interface IDeleteApplicationProps {
 interface IMoreMenuProps {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
+  handleBrandingOpen: () => void;
   handleCredentialsOpen: () => void;
   handleDeletionOpen: () => void;
 }
@@ -152,12 +158,14 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
 
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
+  handleBrandingOpen,
   handleCredentialsOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
+      <MenuItem onClick={handleBrandingOpen}>Branding</MenuItem>
       <MenuItem onClick={handleCredentialsOpen}>Credentials</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
@@ -310,6 +318,8 @@ const Applications = () => {
   const { revalidate } = useRevalidator();
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const navigate = useNavigate();
 
   const page = useMemo(() => {
     const skip = searchParams.get('skip');
@@ -475,6 +485,11 @@ const Applications = () => {
     handleMoreMenuClose();
   };
 
+  const handleBrandingOpen = () => {
+    navigate(`${moreMenuOpen.state.id}/branding`);
+    handleMoreMenuClose();
+  };
+
   return (
     <>
       <Alert
@@ -494,6 +509,7 @@ const Applications = () => {
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
+        handleBrandingOpen={handleBrandingOpen}
         handleCredentialsOpen={handleCredentialModalOpen}
         handleDeletionOpen={handleDeletionModalOpen}
         handleClose={handleMoreMenuClose}

@@ -421,18 +421,31 @@ const DashboardLayout = () => {
                 dense
                 subheader={<ListSubheader>{subheader}</ListSubheader>}
               >
-                {routes.map(({ to, text, Icon }, indexBottom) => (
-                  <ListItemButton
-                    key={`list-button-${indexBottom}`}
-                    onClick={() => navigate(to)}
-                    selected={location.pathname === to.split('?')[0]}
-                  >
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                ))}
+                {routes.map(({ to, text, Icon }, indexBottom) =>
+                  to.includes('applications') ? (
+                    <ListItemButton
+                      key={`list-button-${indexBottom}`}
+                      onClick={() => navigate(to)}
+                      selected={location.pathname.includes('applications')}
+                    >
+                      <ListItemIcon>
+                        <Icon />
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  ) : (
+                    <ListItemButton
+                      key={`list-button-${indexBottom}`}
+                      onClick={() => navigate(to)}
+                      selected={location.pathname === to.split('?')[0]}
+                    >
+                      <ListItemIcon>
+                        <Icon />
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  ),
+                )}
               </List>
               <Divider />
             </Fragment>

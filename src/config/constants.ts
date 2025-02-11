@@ -14,7 +14,6 @@ import {
   Laptop,
   Link,
   LockPerson,
-  Login,
   Person,
   PersonAdd,
   Shield,
@@ -118,16 +117,6 @@ export default {
           to: `/organizations/${id}/permissions?skip=0&take=10`,
           text: 'Permissions',
           Icon: Verified,
-        },
-      ],
-    },
-    {
-      subheader: 'Branding & Customization',
-      routes: [
-        {
-          to: `/organizations/${id}/branding/login`,
-          text: 'Login',
-          Icon: Login,
         },
       ],
     },

@@ -1,4 +1,9 @@
-import { DarkMode, LightMode, Link } from '@mui/icons-material';
+import {
+  ArrowBack,
+  DarkMode,
+  LightMode,
+  Link as LinkIcon,
+} from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -13,9 +18,10 @@ import {
 } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input';
 import { useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router';
+import { useLoaderData, useNavigate, useRevalidator } from 'react-router';
 import { Alert, Preview } from '../../../components';
 import constants from '../../../config/constants';
+import { useOrganization } from '../../../context/OrganizationContext';
 
 const BrandingLogin = () => {
   const theme = useTheme();
@@ -23,6 +29,8 @@ const BrandingLogin = () => {
   const loaderData = useLoaderData() as any;
 
   const { revalidate } = useRevalidator();
+  const { organization } = useOrganization();
+  const navigate = useNavigate();
 
   const [body, setBody] = useState({
     logo: loaderData.logo || '',
@@ -98,6 +106,19 @@ const BrandingLogin = () => {
         }}
       />
       <Grid container width="100%" spacing={2} direction="column">
+        <Grid>
+          <Button
+            variant="contained"
+            startIcon={<ArrowBack />}
+            onClick={() =>
+              navigate(
+                `/organizations/${organization?.id}/applications?skip=0&take=10`,
+              )
+            }
+          >
+            Back
+          </Button>
+        </Grid>
         <Grid rowSpacing={2}>
           <Typography variant="h4">Login Customization</Typography>
           <Typography color="textSecondary">
@@ -138,7 +159,7 @@ const BrandingLogin = () => {
                             input: {
                               startAdornment: (
                                 <InputAdornment position="start">
-                                  <Link />
+                                  <LinkIcon />
                                 </InputAdornment>
                               ),
                             },
@@ -161,7 +182,7 @@ const BrandingLogin = () => {
                             input: {
                               startAdornment: (
                                 <InputAdornment position="start">
-                                  <Link />
+                                  <LinkIcon />
                                 </InputAdornment>
                               ),
                             },
