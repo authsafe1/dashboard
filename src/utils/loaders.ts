@@ -159,8 +159,10 @@ export const authorizationLogLoader: LoaderFunction = async ({ request }) => {
   );
 };
 
-export const brandingLoginLoader: LoaderFunction = async () => {
-  const url = `${import.meta.env.VITE_API_URL}/branding`;
+export const brandingLoginLoader: LoaderFunction = async ({ params }) => {
+  const url = `${import.meta.env.VITE_API_URL}/client/branding/${
+    params.applicationId
+  }`;
   return fetchApi(url);
 };
 

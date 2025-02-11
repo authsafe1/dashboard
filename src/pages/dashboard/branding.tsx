@@ -18,10 +18,15 @@ import {
 } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input';
 import { useState } from 'react';
-import { useLoaderData, useNavigate, useRevalidator } from 'react-router';
-import { Alert, Preview } from '../../../components';
-import constants from '../../../config/constants';
-import { useOrganization } from '../../../context/OrganizationContext';
+import {
+  useLoaderData,
+  useNavigate,
+  useParams,
+  useRevalidator,
+} from 'react-router';
+import { Alert, Preview } from '../../components';
+import constants from '../../config/constants';
+import { useOrganization } from '../../context/OrganizationContext';
 
 const BrandingLogin = () => {
   const theme = useTheme();
@@ -31,6 +36,7 @@ const BrandingLogin = () => {
   const { revalidate } = useRevalidator();
   const { organization } = useOrganization();
   const navigate = useNavigate();
+  const params = useParams();
 
   const [body, setBody] = useState({
     logo: loaderData.logo || '',
@@ -59,7 +65,9 @@ const BrandingLogin = () => {
     }
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/branding/update`,
+        `${import.meta.env.VITE_API_URL}/client/branding/update/${
+          params.applicationId
+        }`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -108,7 +116,6 @@ const BrandingLogin = () => {
       <Grid container width="100%" spacing={2} direction="column">
         <Grid>
           <Button
-            variant="contained"
             startIcon={<ArrowBack />}
             onClick={() =>
               navigate(
