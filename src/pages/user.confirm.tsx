@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
-import { Alert, AuthSafeIcon, Password } from '../../components';
-import constants from '../../config/constants';
-import { useThemeToggle } from '../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Password } from '../components';
+import constants from '../config/constants';
+import { useThemeToggle } from '../context/ThemeContext';
 
 const UserConfirm = () => {
   const loaderData: any = useLoaderData();

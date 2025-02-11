@@ -12,15 +12,10 @@ import {
 import { FormEventHandler, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import {
-  Alert,
-  AuthSafeIcon,
-  Password,
-  ScreenLoader,
-} from '../../../components';
-import constants from '../../../config/constants';
-import { useAuth } from '../../../context/AuthContext';
-import { useThemeToggle } from '../../../context/ThemeContext';
+import { Alert, AuthSafeIcon, Password, ScreenLoader } from '../../components';
+import constants from '../../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { useThemeToggle } from '../../context/ThemeContext';
 
 const GoogleCreate = () => {
   const navigate = useNavigate();
