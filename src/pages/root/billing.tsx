@@ -135,6 +135,19 @@ const Billing = () => {
       },
       handler: (response: PaymentResponse) =>
         handleVerifyPayment(response, type),
+      modal: {
+        ondismiss: () => {
+          setApiResponse({
+            ...apiResponse,
+            error: true,
+            message: 'Payment cancelled',
+            loading: {
+              ...apiResponse.loading,
+              [type]: false,
+            },
+          });
+        },
+      },
     };
     const rzp = new window.Razorpay(options);
     rzp.open();
