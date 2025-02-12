@@ -1,39 +1,28 @@
-import {
-  ChevronLeft,
-  Logout,
-  MenuBook,
-  Menu as MenuIcon,
-  Palette,
-  Person,
-} from '@mui/icons-material';
+import { Logout, MenuBook, Palette, Person } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
+  AppBar,
   Box,
   Collapse,
   Divider,
-  Drawer,
   Grid2 as Grid,
   IconButton,
-  List,
   ListItem,
   ListItemAvatar,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   Menu,
   MenuItem,
-  AppBar as MuiAppBar,
-  AppBarProps as MuiAppBarProps,
   styled,
   Switch,
+  Tab,
+  Tabs,
   Toolbar,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { yellow } from '@mui/material/colors';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Link,
   Outlet,
@@ -45,8 +34,6 @@ import { AuthSafeIcon, ProfileAvatar, RouteLoader } from '../components';
 import constants from '../config/constants';
 import { useAuth } from '../context/AuthContext';
 import { useThemeToggle } from '../context/ThemeContext';
-
-const drawerWidth = 300;
 
 const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 55,
@@ -104,63 +91,6 @@ const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const Main = styled(Grid, { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(4),
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        transition: theme.transitions.create('margin', {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-        [theme.breakpoints.down('md')]: {
-          marginLeft: `-${drawerWidth}px`,
-        },
-      },
-    },
-  ],
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        [theme.breakpoints.down('md')]: {
-          width: '100%',
-          marginLeft: 0,
-        },
-      },
-    },
-  ],
-}));
-
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -170,11 +100,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const OrganizationLayout = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const defaultTheme = useTheme();
-  const isMobile = useMediaQuery(defaultTheme.breakpoints.down('md'));
 
   const profileMenuAnchor = useRef<HTMLButtonElement | null>(null);
 
@@ -189,7 +118,6 @@ const OrganizationLayout = () => {
   const { organizationNavigation } = constants;
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleProfileMenuOpen = () => {
     setProfileMenuOpen(true);
@@ -197,22 +125,6 @@ const OrganizationLayout = () => {
 
   const handleProfileMenuClose = () => {
     setProfileMenuOpen(false);
-  };
-
-  useEffect(() => {
-    if (isMobile) {
-      setDrawerOpen(false);
-    } else {
-      setDrawerOpen(true);
-    }
-  }, [isMobile]);
-
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
   };
 
   const handleLogout = () => {
@@ -281,26 +193,10 @@ const OrganizationLayout = () => {
           Log out
         </MenuItem>
       </Menu>
-      <AppBar open={drawerOpen}>
+      <AppBar>
         <Toolbar>
-          <Box flex={1} gap={2}>
-            <IconButton
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={[
-                {
-                  mr: 1,
-                },
-                drawerOpen && { display: 'none' },
-              ]}
-            >
-              <MenuIcon />
-            </IconButton>
-            <IconButton
-              href={import.meta.env.VITE_BASE_URL}
-              sx={[drawerOpen && { display: 'none' }]}
-            >
+          <Box flex={1}>
+            <IconButton href={import.meta.env.VITE_BASE_URL}>
               <AuthSafeIcon
                 theme={defaultTheme.palette.mode}
                 fontSize="large"
@@ -318,64 +214,34 @@ const OrganizationLayout = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={drawerOpen}
-      >
-        <DrawerHeader>
-          <Box sx={{ m: 1 }}>
-            <IconButton href={import.meta.env.VITE_BASE_URL}>
-              <AuthSafeIcon theme={theme} fontSize="large" />
-            </IconButton>
-          </Box>
-          <Box sx={{ m: 1 }}>
-            <IconButton onClick={handleDrawerClose} color="inherit">
-              <ChevronLeft />
-            </IconButton>
-          </Box>
-        </DrawerHeader>
-        <Divider />
-        {organizationNavigation.map(({ subheader, routes }, indexTop) => (
-          <Fragment key={`list-header-${indexTop}`}>
-            <List dense subheader={<ListSubheader>{subheader}</ListSubheader>}>
-              {routes.map(({ to, text, Icon }, indexBottom) => (
-                <ListItemButton
-                  key={`list-button-${indexBottom}`}
-                  onClick={() => navigate(to)}
-                  selected={location.pathname === to.split('?')[0]}
-                >
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Divider />
-          </Fragment>
-        ))}
-      </Drawer>
-      <Main container open={drawerOpen}>
+      <Box width="100%">
         <DrawerHeader />
-        <Box sx={{ width: '100%', mb: alertOpen ? 4 : 0 }}>
-          <Collapse in={alertOpen} unmountOnExit>
-            <Alert severity="warning" onClose={handleAlertClose}>
-              <AlertTitle>{constants.unverifiedUserMessage.title}</AlertTitle>
-              {constants.unverifiedUserMessage.subtitle}
-            </Alert>
-          </Collapse>
-        </Box>
-        {loading ? <RouteLoader /> : <Outlet />}
-      </Main>
+        <Tabs variant="scrollable" value={location.pathname}>
+          {organizationNavigation.map(({ to, text, Icon }, index) => (
+            <Tab
+              icon={<Icon />}
+              key={`${text}-${index}`}
+              label={text}
+              iconPosition="start"
+              onClick={() => {
+                navigate(to);
+              }}
+              value={to.split('?')[0]}
+            />
+          ))}
+        </Tabs>
+        <Grid component="main" p={4}>
+          <Box sx={{ width: '100%', mb: alertOpen ? 4 : 0 }}>
+            <Collapse in={alertOpen} unmountOnExit>
+              <Alert severity="warning" onClose={handleAlertClose}>
+                <AlertTitle>{constants.unverifiedUserMessage.title}</AlertTitle>
+                {constants.unverifiedUserMessage.subtitle}
+              </Alert>
+            </Collapse>
+          </Box>
+          {loading ? <RouteLoader /> : <Outlet />}
+        </Grid>
+      </Box>
     </Box>
   );
 };

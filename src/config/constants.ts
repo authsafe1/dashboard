@@ -137,46 +137,31 @@ export default {
     },
   ],
   organizationNavigation: [
+    { to: '/', text: 'Insights', Icon: BarChart },
     {
-      subheader: 'Overview',
-      routes: [
-        { to: '/', text: 'Insights', Icon: BarChart },
-        {
-          to: '/organizations?skip=0&take=10',
-          text: 'Organizations',
-          Icon: Business,
-        },
-      ],
+      to: '/organizations?skip=0&take=10',
+      text: 'Organizations',
+      Icon: Business,
     },
     {
-      subheader: 'Plan',
-      routes: [
-        {
-          to: '/billing',
-          text: 'Billing',
-          Icon: CreditCard,
-        },
-      ],
+      to: '/billing',
+      text: 'Billing',
+      Icon: CreditCard,
     },
     {
-      subheader: 'Analytics and Monitoring',
-      routes: [
-        {
-          to: '/log/activity?skip=0&take=10',
-          text: 'Activity Logs',
-          Icon: History,
-        },
-        {
-          to: '/log/authorization?skip=0&take=10',
-          text: 'Authorization Logs',
-          Icon: LockPerson,
-        },
-        {
-          to: '/log/security?skip=0&take=10',
-          text: 'Security Logs',
-          Icon: Shield,
-        },
-      ],
+      to: '/log/activity?skip=0&take=10',
+      text: 'Activity Logs',
+      Icon: History,
+    },
+    {
+      to: '/log/authorization?skip=0&take=10',
+      text: 'Authorization Logs',
+      Icon: LockPerson,
+    },
+    {
+      to: '/log/security?skip=0&take=10',
+      text: 'Security Logs',
+      Icon: Shield,
     },
   ],
   billingTiers: {
