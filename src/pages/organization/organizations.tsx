@@ -1,6 +1,11 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import { Add, ArrowForward, MoreVert } from '@mui/icons-material';
 import {
   Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,12 +15,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TablePagination,
-  TableRow,
+  Pagination,
   TextField,
   Tooltip,
   Typography,
@@ -45,7 +45,6 @@ interface IOrganizationLoaderData {
 
 interface IMoreMenuProps {
   anchorEl: HTMLElement | null;
-  handleChangeOrganization: () => void;
   handleClose: () => void;
   handleEditOpen: () => void;
   handleDeletionOpen: () => void;
@@ -288,14 +287,12 @@ const EditOrganization: FC<IEditOrganizationProps> = ({
 
 const MoreMenu: FC<IMoreMenuProps> = ({
   anchorEl,
-  handleChangeOrganization,
   handleEditOpen,
   handleDeletionOpen,
   handleClose,
 }) => {
   return (
     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
-      <MenuItem onClick={handleChangeOrganization}>Activate</MenuItem>
       <MenuItem onClick={handleEditOpen}>Edit</MenuItem>
       <MenuItem sx={{ color: 'error.main' }} onClick={handleDeletionOpen}>
         Delete
@@ -354,21 +351,21 @@ const Organizations = () => {
         Number.isNaN(takeValue) ||
         takeValue === 0
       ) {
-        return 0;
+        return 1;
       }
-      return Math.floor(skipValue / takeValue);
+
+      return Math.floor(skipValue / takeValue) + 1;
     }
-    return 0;
+
+    return 1;
   }, [searchParams]);
 
   const rowsPerPage = useMemo(() => {
     const take = searchParams.get('take');
+    const takeValue = Number(take);
 
-    if (take) {
-      const takeValue = Number(take);
-      if (!Number.isNaN(takeValue) && takeValue > 0) {
-        return takeValue;
-      }
+    if (!Number.isNaN(takeValue) && takeValue > 0) {
+      return Math.min(takeValue, 100);
     }
     return 10;
   }, [searchParams]);
@@ -688,16 +685,12 @@ const Organizations = () => {
       />
       <MoreMenu
         anchorEl={moreMenuOpen.open}
-        handleChangeOrganization={() => {
-          changeOrganization(moreMenuOpen.state.id);
-          navigate(`/organizations/${moreMenuOpen.state.id}`);
-        }}
         handleEditOpen={handleEditUserModalOpen}
         handleDeletionOpen={handleDeletionOpen}
         handleClose={handleMoreMenuClose}
       />
       <Grid container width="100%" spacing={2} direction="column">
-        <Grid container width="100%" justifyContent="space-between">
+        <Grid container width="100%">
           <Grid rowSpacing={2}>
             <Typography variant="h4">Organizations</Typography>
             <Typography color="textSecondary">
@@ -705,33 +698,49 @@ const Organizations = () => {
               of users, applications, roles and permissions.
             </Typography>
           </Grid>
-          <Grid>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<Add />}
-              onClick={() => setAddUser(true)}
-            >
-              Create Organization
-            </Button>
-          </Grid>
         </Grid>
-        <TableContainer component={Grid} justifyContent="center" width="100%">
-          <Table>
-            <TableBody>
-              {loaderData &&
-                loaderData?.all &&
-                loaderData.all.map((value) => (
-                  <TableRow key={value.id}>
-                    <TableCell>{value.name}</TableCell>
-                    <TableCell>{value.domain}</TableCell>
-                    <TableCell>{`Created At: ${dayjs(value.createdAt).format(
-                      'D MMM YYYY',
-                    )}`}</TableCell>
-                    <TableCell>{`Updated At: ${dayjs(value.updatedAt).format(
-                      'D MMM YYYY',
-                    )}`}</TableCell>
-                    <TableCell>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <Card
+              sx={{ height: '100%', borderStyle: 'dotted', minHeight: 200 }}
+              variant="outlined"
+            >
+              <CardActionArea
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+                onClick={() => setAddUser(true)}
+              >
+                <CardContent
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <Add />
+                  <Typography>Create Organization</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+          {loaderData &&
+            loaderData?.all &&
+            loaderData.all.map((value) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={value.id}>
+                <Card
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    height: '100%',
+                    minHeight: 200,
+                  }}
+                  variant="outlined"
+                >
+                  <CardHeader
+                    title={value.name}
+                    subheader={value.domain}
+                    action={
                       <Tooltip title="More Info">
                         <IconButton
                           onClick={(event) =>
@@ -746,37 +755,68 @@ const Organizations = () => {
                             })
                           }
                         >
-                          <MoreHoriz />
+                          <MoreVert />
                         </IconButton>
                       </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {loaderData && loaderData?.count ? (
-          <TablePagination
-            component="div"
-            count={loaderData?.count || 0}
-            page={page as number}
-            rowsPerPage={rowsPerPage as number}
-            onPageChange={(_event, newPage) => {
-              const currentParams = Object.fromEntries(searchParams.entries());
-              setSearchParams({
-                ...currentParams,
-                skip: String(newPage * rowsPerPage),
-              });
-            }}
-            onRowsPerPageChange={(event) => {
-              const currentParams = Object.fromEntries(searchParams.entries());
-              setSearchParams({
-                ...currentParams,
-                take: event.target.value,
-              });
-            }}
-          />
-        ) : null}
+                    }
+                  />
+                  <CardContent
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                  >
+                    <Typography>{`ID ${value.id}`}</Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {`Updated ${dayjs(value.updatedAt).diff(
+                        Date.now(),
+                        'days',
+                      )} days ago`}
+                    </Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {`Created ${dayjs(value.createdAt).diff(
+                        Date.now(),
+                        'days',
+                      )} days ago`}
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    <Button
+                      endIcon={<ArrowForward />}
+                      onClick={() => {
+                        changeOrganization(moreMenuOpen.state.id);
+                        navigate(`/organizations/${moreMenuOpen.state.id}`);
+                      }}
+                    >
+                      Go to organization
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          {loaderData.count > 0 ? (
+            <Grid
+              size={{ xs: 12 }}
+              sx={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <Pagination
+                count={Math.max(
+                  1,
+                  Math.ceil((loaderData?.count || 0) / rowsPerPage),
+                )}
+                page={page}
+                onChange={(_event, newPage) => {
+                  const currentParams = Object.fromEntries(
+                    searchParams.entries(),
+                  );
+                  setSearchParams({
+                    ...currentParams,
+                    skip: String((newPage - 1) * rowsPerPage),
+                  });
+                }}
+              />
+            </Grid>
+          ) : null}
+        </Grid>
       </Grid>
     </>
   );
