@@ -219,18 +219,17 @@ const OrganizationLayout = () => {
         <Tabs variant="scrollable" value={location.pathname}>
           {organizationNavigation.map(({ to, text, Icon }, index) => (
             <Tab
+              component={Link}
               icon={<Icon />}
               key={`${text}-${index}`}
               label={text}
               iconPosition="start"
-              onClick={() => {
-                navigate(to);
-              }}
+              to={to}
               value={to.split('?')[0]}
             />
           ))}
         </Tabs>
-        <Grid component="main" p={4}>
+        <Grid component="main" p={5}>
           <Box sx={{ width: '100%', mb: alertOpen ? 4 : 0 }}>
             <Collapse in={alertOpen} unmountOnExit>
               <Alert severity="warning" onClose={handleAlertClose}>
