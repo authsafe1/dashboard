@@ -782,9 +782,9 @@ const Organizations = () => {
                   >
                     <Button
                       endIcon={<ArrowForward />}
-                      onClick={() => {
-                        changeOrganization(moreMenuOpen.state.id);
-                        navigate(`/organizations/${moreMenuOpen.state.id}`);
+                      onClick={async () => {
+                        await changeOrganization(value.id);
+                        navigate(`/organizations/${value.id}`);
                       }}
                     >
                       Go to organization
