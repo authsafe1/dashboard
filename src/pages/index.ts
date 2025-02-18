@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import {lazy} from 'react';
 
 const ApiKeys = lazy(() => import('./dashboard/api-keys'));
 const Applications = lazy(() => import('./dashboard/applications'));
@@ -13,9 +13,7 @@ const TwoFactorAuthentication = lazy(() => import('./auth/2fa'));
 const Billing = lazy(() => import('./root/billing'));
 const BrandingLogin = lazy(() => import('./dashboard/branding'));
 const Insights = lazy(() => import('./root/insights'));
-const ActivityLog = lazy(() => import('./root/log/activity'));
-const AuthorizationLog = lazy(() => import('./root/log/authorization'));
-const SecurityLog = lazy(() => import('./root/log/security'));
+const Log = lazy(() => import("../pages/root/logs.tsx"));
 const OAuth2Authorize = lazy(() => import('./dashboard/oauth2/authorize'));
 const Permissions = lazy(() => import('./dashboard/permissions'));
 const Profile = lazy(() => import('./root/profile'));
@@ -29,11 +27,10 @@ const Error = lazy(() => import('./error/error'));
 const NotFound = lazy(() => import('./error/not-found'));
 
 export {
-  ActivityLog,
   ApiKeys,
   Applications,
   AuthConfirm,
-  AuthorizationLog,
+  Log,
   Billing,
   BrandingLogin,
   Error,
@@ -50,7 +47,6 @@ export {
   Register,
   ResetPassword,
   Roles,
-  SecurityLog,
   TwoFactorAuthentication,
   TwoFactorBackup,
   UserConfirm,
