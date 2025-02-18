@@ -6,6 +6,7 @@ import {
   TableChart,
 } from '@mui/icons-material';
 import {
+  Box,
   Button,
   ButtonGroup,
   Chip,
@@ -445,9 +446,19 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
             </Tooltip>
           </Grid>
           <Grid width="100%">
-            <Tooltip title="Maximum 100 rows will be parsed">
-              <Info fontSize="small" sx={{ float: 'right' }} />
-            </Tooltip>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                float: 'right',
+              }}
+            >
+              <Info sx={{ color: 'text.secondary', fontSize: 'small' }} />
+              <Typography color="textSecondary" fontSize="small">
+                Maximum 100 rows will be parsed
+              </Typography>
+            </Box>
             <TableContainer sx={{ maxHeight: 500 }}>
               <Table>
                 <TableHead>

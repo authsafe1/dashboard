@@ -72,7 +72,7 @@ const CreateUser: FC<ICreateUserProps> = ({
   handleSubmit,
 }) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ border: 'none' }}>
       <CardContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -148,7 +148,7 @@ const CreateApplication: FC<ICreateApplicationProps> = ({
   handleSubmit,
 }) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ border: 'none' }}>
       <CardContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid width="100%">
@@ -241,7 +241,7 @@ const CreatePermission: FC<ICreatePermissionProps> = ({
   handleSubmit,
 }) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ border: 'none' }}>
       <CardContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>
@@ -326,7 +326,7 @@ const CreateRole: FC<ICreateRoleProps> = ({
   handleSubmit,
 }) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ border: 'none' }}>
       <CardContent>
         <Grid container spacing={2} p={1} width="100%" direction="column">
           <Grid>

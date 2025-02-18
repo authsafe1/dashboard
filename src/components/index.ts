@@ -17,6 +17,7 @@ import MetadataTable from './ui/MetadataTable';
 import MoreMenu from './ui/MoreMenu';
 import Preview from './ui/Preview';
 import ProfileAvatar from './ui/ProfileAvatar';
+import LogViewer from './reusable/LogViewer.tsx'
 
 export {
   Alert,
@@ -31,6 +32,7 @@ export {
   MoreMenu,
   Password,
   PermissionPicker,
+  LogViewer,
   Preview,
   ProfileAvatar,
   RolePicker,

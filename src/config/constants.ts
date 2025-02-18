@@ -13,7 +13,6 @@ import {
   Key,
   Laptop,
   Link,
-  LockPerson,
   Person,
   PersonAdd,
   Shield,
@@ -149,20 +148,10 @@ export default {
       Icon: CreditCard,
     },
     {
-      to: '/log/activity?skip=0&take=10',
-      text: 'Activity Logs',
+      to: '/log',
+      text: 'Logs',
       Icon: History,
-    },
-    {
-      to: '/log/authorization?skip=0&take=10',
-      text: 'Authorization Logs',
-      Icon: LockPerson,
-    },
-    {
-      to: '/log/security?skip=0&take=10',
-      text: 'Security Logs',
-      Icon: Shield,
-    },
+    }
   ],
   billingTiers: {
     FREE: {
