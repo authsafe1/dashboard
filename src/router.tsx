@@ -1,4 +1,4 @@
-import {createBrowserRouter} from 'react-router';
+import { createBrowserRouter } from 'react-router';
 import DashboardLayout from './layouts/dashboard-layout';
 import OrganizationLayout from './layouts/organization-layout';
 import {
@@ -10,7 +10,7 @@ import {
   Error,
   ForgotPassword,
   GoogleCreate,
-  Insights,
+  Home,
   Log,
   Login,
   NotFound,
@@ -28,7 +28,7 @@ import {
   Users,
   Webhooks,
 } from './pages';
-import {AuthProtectedRoute, OrganizationProtectedRoute} from './protected';
+import { AuthProtectedRoute, OrganizationProtectedRoute } from './protected';
 import {
   apiKeysLoader,
   applicationsLoader,
@@ -46,43 +46,43 @@ import {
 const router = createBrowserRouter([
   {
     path: '/',
-    errorElement: <Error/>,
+    errorElement: <Error />,
     children: [
       {
         path: 'auth',
         children: [
           {
             path: 'login',
-            element: <Login/>,
+            element: <Login />,
           },
           {
             path: 'register',
-            element: <Register/>,
+            element: <Register />,
           },
           {
             path: 'google/create',
-            element: <GoogleCreate/>,
+            element: <GoogleCreate />,
           },
           {
             path: 'forgot-password',
-            element: <ForgotPassword/>,
+            element: <ForgotPassword />,
           },
           {
             path: 'reset-password',
-            element: <ResetPassword/>,
+            element: <ResetPassword />,
           },
           {
             path: 'confirm',
             loader: authConfirmLoader,
-            element: <AuthConfirm/>,
+            element: <AuthConfirm />,
           },
           {
             path: '2fa',
-            element: <TwoFactorAuthentication/>,
+            element: <TwoFactorAuthentication />,
           },
           {
             path: '2fa/backup',
-            element: <TwoFactorBackup/>,
+            element: <TwoFactorBackup />,
           },
         ],
       },
@@ -91,7 +91,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'confirm',
-            element: <UserConfirm/>,
+            element: <UserConfirm />,
           },
         ],
       },
@@ -101,82 +101,82 @@ const router = createBrowserRouter([
           {
             path: 'authorize',
             loader: oauth2AuthorizeLoader,
-            element: <OAuth2Authorize/>,
+            element: <OAuth2Authorize />,
           },
         ],
       },
       {
         path: '',
-        element: <AuthProtectedRoute/>,
+        element: <AuthProtectedRoute />,
         children: [
           {
             path: '',
-            element: <OrganizationLayout/>,
+            element: <OrganizationLayout />,
             children: [
               {
                 index: true,
                 loader: insightLoader,
-                element: <Insights/>,
+                element: <Home />,
               },
-              {path: 'profile', element: <Profile/>},
+              { path: 'profile', element: <Profile /> },
               {
                 path: 'billing',
-                element: <Billing/>,
+                element: <Billing />,
               },
               {
                 path: 'organizations',
                 loader: organizationsLoader,
-                element: <Organizations/>,
+                element: <Organizations />,
               },
               {
                 path: 'log',
-                element: <Log/>
+                element: <Log />,
               },
             ],
           },
           {
             path: 'organizations',
-            element: <OrganizationProtectedRoute/>,
+            element: <OrganizationProtectedRoute />,
             children: [
               {
                 path: ':organizationId',
-                element: <DashboardLayout/>,
+                element: <DashboardLayout />,
                 children: [
-                  {index: true, element: <QuickStart/>},
+                  { index: true, element: <QuickStart /> },
                   {
                     path: 'applications',
                     loader: applicationsLoader,
-                    element: <Applications/>,
+                    element: <Applications />,
                   },
                   {
                     path: 'applications/:applicationId/branding',
                     loader: brandingLoginLoader,
-                    element: <BrandingLogin/>,
+                    element: <BrandingLogin />,
                   },
                   {
                     path: 'users',
                     loader: usersLoader,
-                    element: <Users/>,
+                    element: <Users />,
                   },
                   {
                     path: 'roles',
                     loader: rolesLoader,
-                    element: <Roles/>,
+                    element: <Roles />,
                   },
                   {
                     path: 'permissions',
                     loader: permissionsLoader,
-                    element: <Permissions/>,
+                    element: <Permissions />,
                   },
                   {
                     path: 'webhooks',
                     loader: webhooksLoader,
-                    element: <Webhooks/>,
+                    element: <Webhooks />,
                   },
                   {
                     path: 'api-keys',
                     loader: apiKeysLoader,
-                    element: <ApiKeys/>,
+                    element: <ApiKeys />,
                   },
                   // {
                   //   path: 'branding',
@@ -196,7 +196,7 @@ const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <NotFound/>,
+        element: <NotFound />,
       },
     ],
   },

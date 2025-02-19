@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { type LoaderFunction, redirect } from 'react-router';
 
 // Centralized API helper function
@@ -126,39 +127,6 @@ export const apiKeysLoader: LoaderFunction = async ({ request }) => {
   );
 };
 
-export const activityLogLoader: LoaderFunction = async ({ request }) => {
-  const { skip = 0, take = 10 } = Object.fromEntries(
-    new URL(request.url).searchParams.entries(),
-  );
-  return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/profile/log/activity`,
-    +skip,
-    +take,
-  );
-};
-
-export const securityAlertLoader: LoaderFunction = async ({ request }) => {
-  const { skip = 0, take = 10 } = Object.fromEntries(
-    new URL(request.url).searchParams.entries(),
-  );
-  return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/profile/log/security`,
-    +skip,
-    +take,
-  );
-};
-
-export const authorizationLogLoader: LoaderFunction = async ({ request }) => {
-  const { skip = 0, take = 10 } = Object.fromEntries(
-    new URL(request.url).searchParams.entries(),
-  );
-  return fetchPaginatedData(
-    `${import.meta.env.VITE_API_URL}/profile/log/authorization`,
-    +skip,
-    +take,
-  );
-};
-
 export const brandingLoginLoader: LoaderFunction = async ({ params }) => {
   const url = `${import.meta.env.VITE_API_URL}/client/branding/${
     params.applicationId
@@ -180,9 +148,11 @@ export const oauth2AuthorizeLoader: LoaderFunction = async ({ request }) => {
 export const insightLoader: LoaderFunction = async () => {
   const endpoints = [
     `${import.meta.env.VITE_API_URL}/organization/count`,
-    `${import.meta.env.VITE_API_URL}/profile/log/authorization/count`,
-    `${import.meta.env.VITE_API_URL}/profile/log/security/count`,
-    `${import.meta.env.VITE_API_URL}/profile/log/activity/data`,
+    `${import.meta.env.VITE_API_URL}/log/count?type=authorization&duration=1d`,
+    `${import.meta.env.VITE_API_URL}/log/count?type=security&duration=1d`,
+    `${import.meta.env.VITE_API_URL}/log?startTime=${dayjs()
+      .subtract(1, 'week')
+      ?.toISOString()}&endTime=${dayjs()?.toISOString()}&type=activity`,
   ];
 
   const data = await Promise.all(endpoints.map((url) => fetchApi(url)));
