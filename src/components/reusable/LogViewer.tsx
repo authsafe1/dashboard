@@ -11,8 +11,13 @@ import { blue, green, orange, purple, red } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
-const LOG_TYPES = ['authorization', 'security', 'activity'];
+const LOG_TYPES = [
+  { label: 'Authorization', value: 'authorization' },
+  { label: 'Security', value: 'security' },
+  { label: 'Activity', value: 'activity' },
+];
 const REFRESH_INTERVALS = [2, 5, 10]; // in seconds
 
 const levelColors: Record<string, string> = {
@@ -24,13 +29,18 @@ const levelColors: Record<string, string> = {
 };
 
 const LogViewer = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [logs, setLogs] = useState<[string, string][]>([]);
-  const [logType, setLogType] = useState('activity');
+  const [logType, setLogType] = useState(
+    LOG_TYPES.map(({ value }) => value).includes(searchParams.get('type')!)
+      ? searchParams.get('type')
+      : 'activity',
+  );
   const [startTime, setStartTime] = useState<Dayjs | null>(
     dayjs().subtract(1, 'day'),
   );
   const [endTime, setEndTime] = useState<Dayjs | null>(dayjs());
-  const [refreshInterval, setRefreshInterval] = useState(2);
+  const [refreshInterval, setRefreshInterval] = useState(10);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -79,11 +89,16 @@ const LogViewer = () => {
             fullWidth
             select
             value={logType}
-            onChange={(e) => setLogType(e.target.value)}
+            onChange={(e) => {
+              setLogType(e.target.value);
+              setSearchParams({
+                type: e.target.value,
+              });
+            }}
           >
-            {LOG_TYPES.map((type) => (
-              <MenuItem key={type} value={type}>
-                {type}
+            {LOG_TYPES.map(({ label, value }) => (
+              <MenuItem key={value} value={value}>
+                {label}
               </MenuItem>
             ))}
           </TextField>
