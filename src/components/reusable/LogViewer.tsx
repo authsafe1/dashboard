@@ -71,7 +71,7 @@ const LogViewer = () => {
       width="100%"
       spacing={2}
     >
-      <Grid container width="100%" spacing={1}>
+      <Grid container width="100%" spacing={2}>
         <Grid size={{ xs: 12, md: 6, lg: 3 }}>
           <TextField
             label="Log Type"
@@ -149,7 +149,6 @@ const LogViewer = () => {
             logs.map((object, index) => {
               const timestamp = object[0];
               const logData = object[1];
-              console.log(timestamp, logData);
               const logObject = JSON.parse(logData);
               const logTimestamp = new Date(
                 Number(timestamp) / 1e6,
@@ -172,7 +171,7 @@ const LogViewer = () => {
                     variant="body2"
                     sx={{ color: 'gray', minWidth: '200px' }}
                   >
-                    {logTimestamp}
+                    {dayjs(logTimestamp).format('D MMM YYYY HH:mm:ss (UTC Z)')}
                   </Typography>
 
                   {/* Log Level */}

@@ -12,20 +12,35 @@ import dayjs from 'dayjs';
 import { useLoaderData, useNavigate } from 'react-router';
 import { brand } from '../../config/theme';
 
-type ILoaderData = [
-  number,
-  number,
-  number,
-  {
-    xAxis: number[];
-    yAxis: number[];
-  },
-  number[],
-];
+type ILoaderData = [number, number, number, [string, string]];
+
+const processLogData = (apiResponse: [string, string]) => {
+  const dailyCounts: Record<string, number> = {};
+
+  apiResponse.forEach(([timestamp]) => {
+    const date = dayjs(Number(timestamp) / 1e6).format('YYYY-MM-DD');
+
+    if (!dailyCounts[date]) {
+      dailyCounts[date] = 0;
+    }
+    dailyCounts[date]++;
+  });
+
+  const xAxis = Object.keys(dailyCounts)
+    .sort((a, b) => new Date(a).getDate() - new Date(b).getDate())
+    .map((date) => dayjs(date).valueOf());
+
+  const yAxis = xAxis.map(
+    (timestamp) => dailyCounts[dayjs(timestamp).format('YYYY-MM-DD')],
+  );
+
+  return { xAxis, yAxis };
+};
 
 const Insight = () => {
   const loaderData = useLoaderData() as ILoaderData;
   const navigate = useNavigate();
+  const activityChart = processLogData(loaderData[3]);
 
   return (
     <Grid container width="100%" spacing={2} direction="column">
@@ -51,10 +66,7 @@ const Insight = () => {
               </CardActionArea>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <CardActionArea
-                onClick={() => navigate('/log/authorization?skip=0&take=10')}
-                sx={{ p: 2 }}
-              >
+              <CardActionArea onClick={() => navigate('/log')} sx={{ p: 2 }}>
                 <Typography variant="h5" color="textSecondary">
                   Authorization Logs
                 </Typography>
@@ -62,10 +74,7 @@ const Insight = () => {
               </CardActionArea>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <CardActionArea
-                onClick={() => navigate('/log/security?skip=0&take=10')}
-                sx={{ p: 2 }}
-              >
+              <CardActionArea onClick={() => navigate('/log')} sx={{ p: 2 }}>
                 <Typography variant="h5" color="textSecondary">
                   Security Alerts
                 </Typography>
@@ -86,7 +95,7 @@ const Insight = () => {
               height={300}
               xAxis={[
                 {
-                  data: loaderData[3].xAxis,
+                  data: activityChart.xAxis,
                   scaleType: 'time',
                   valueFormatter: (value) =>
                     value === null ? '' : dayjs(value).format('D-MMM-YYYY'),
@@ -94,7 +103,7 @@ const Insight = () => {
               ]}
               series={[
                 {
-                  data: loaderData[3].yAxis,
+                  data: activityChart.yAxis,
                   color: brand[400],
                   area: false,
                 },
