@@ -14,7 +14,7 @@ import { brand } from '../../config/theme';
 
 type ILoaderData = [number, number, number, [string, string]];
 
-const processLogData = (apiResponse: [string, string]) => {
+const processLogData = (apiResponse: [string, string] = [] as any) => {
   const dailyCounts: Record<string, number> = {};
 
   apiResponse.forEach(([timestamp]) => {
@@ -66,7 +66,10 @@ const Insight = () => {
               </CardActionArea>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <CardActionArea onClick={() => navigate('/log')} sx={{ p: 2 }}>
+              <CardActionArea
+                onClick={() => navigate('/log?type=authorization')}
+                sx={{ p: 2 }}
+              >
                 <Typography variant="h5" color="textSecondary">
                   Authorization Logs
                 </Typography>
@@ -74,7 +77,10 @@ const Insight = () => {
               </CardActionArea>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <CardActionArea onClick={() => navigate('/log')} sx={{ p: 2 }}>
+              <CardActionArea
+                onClick={() => navigate('/log?type=security')}
+                sx={{ p: 2 }}
+              >
                 <Typography variant="h5" color="textSecondary">
                   Security Alerts
                 </Typography>

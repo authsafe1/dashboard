@@ -1,6 +1,6 @@
-import React from "react";
-import {Grid2 as Grid, Typography} from "@mui/material";
-import {LogViewer} from "../../components"
+import { Grid2 as Grid, Typography } from '@mui/material';
+import React from 'react';
+import { LogViewer } from '../../components';
 
 const LogsPage: React.FC = () => {
   return (
@@ -10,14 +10,13 @@ const LogsPage: React.FC = () => {
           <Grid rowSpacing={2}>
             <Typography variant="h4">Logs</Typography>
             <Typography color="textSecondary">
-              Monitor and analyze system activity, authentication attempts, and security events in real time.
-              Filter logs by level, type, and timeframe to get precise insights into your application's security and
-              performance.
+              Monitor and analyze system activity, authentication attempts, and
+              security events in real time.
             </Typography>
           </Grid>
         </Grid>
         <Grid container width="100%">
-          <LogViewer/>
+          <LogViewer />
         </Grid>
       </Grid>
     </>
