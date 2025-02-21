@@ -1,9 +1,13 @@
 import {
-  Box,
   CircularProgress,
   Grid2 as Grid,
   MenuItem,
   Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
@@ -50,11 +54,14 @@ const LogViewer = () => {
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL
-          }/log?startTime=${startTime?.toISOString()}&endTime=${endTime?.toISOString()}&type=${logType}`,
+          }/log?startTime=${startTime?.toISOString()}&endTime=${endTime?.toISOString()}&type=${logType}&_=${new Date().getTime()}`,
           {
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
             },
           },
         );
@@ -148,77 +155,65 @@ const LogViewer = () => {
       </Grid>
       <Grid container width="100%" sx={{ height: 500, overflow: 'auto' }}>
         <Grid size={{ xs: 12 }}>
-          {loading ? (
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-                p: 1,
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : logs.length > 0 ? (
-            logs.map((object, index) => {
-              const timestamp = object[0];
-              const logData = object[1];
-              const logObject = JSON.parse(logData);
-              const logTimestamp = new Date(
-                Number(timestamp) / 1e6,
-              ).toISOString();
-              const logLevel = logObject.level || 'info';
-              const logMessage = logObject.message || 'No message';
-
-              return (
-                <Box
-                  key={`${index}-${timestamp}`}
-                  sx={{
-                    display: 'flex',
-                    gap: 2,
-                    p: 1,
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  {/* Timestamp */}
-                  <Typography
-                    variant="body2"
-                    sx={{ color: 'gray', minWidth: '200px' }}
-                  >
-                    {dayjs(logTimestamp).format('D MMM YYYY HH:mm:ss (UTC Z)')}
-                  </Typography>
-
-                  {/* Log Level */}
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: levelColors[logLevel] || 'white',
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                      minWidth: '80px',
-                    }}
-                  >
-                    {logLevel}
-                  </Typography>
-
-                  {/* Log Message */}
-                  <Typography variant="body2">{logMessage}</Typography>
-                </Box>
-              );
-            })
-          ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-                p: 1,
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
-              }}
-            >
-              <Typography variant="body2">No Logs available</Typography>
-            </Box>
-          )}
+          <TableContainer>
+            <Table>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell align="center">
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                ) : logs.length > 0 ? (
+                  logs.map((object, index) => {
+                    const timestamp = object[0];
+                    const logData = object[1];
+                    const logObject = JSON.parse(logData);
+                    const logTimestamp = new Date(
+                      Number(timestamp) / 1e6,
+                    ).toISOString();
+                    const logLevel = logObject.level || 'info';
+                    const logMessage = logObject.message || 'No message';
+                    return (
+                      <TableRow key={index}>
+                        <TableCell sx={{ width: 300 }}>
+                          <Typography variant="body2" sx={{ color: 'gray' }}>
+                            {dayjs(logTimestamp).format(
+                              'D MMM YYYY HH:mm:ss (UTC Z)',
+                            )}
+                          </Typography>
+                        </TableCell>
+                        <TableCell sx={{ width: 100 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: levelColors[logLevel] || 'white',
+                              fontWeight: 'bold',
+                              textTransform: 'uppercase',
+                              minWidth: '80px',
+                            }}
+                          >
+                            {logLevel}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{logMessage}</Typography>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontSize: 'medium' }}>
+                        No logs available
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
       </Grid>
     </Grid>
