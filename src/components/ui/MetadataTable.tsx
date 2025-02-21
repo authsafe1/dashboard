@@ -71,7 +71,8 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
                 <TableCell>
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     value={item.key}
                     onChange={(e) => handleKeyChange(index, e.target.value)}
                     placeholder="Enter key"
@@ -87,7 +88,8 @@ const MetadataTable: React.FC<MetadataTableProps> = ({
                 <TableCell>
                   <TextField
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                    size="small"
                     value={item.value}
                     onChange={(e) => handleValueChange(index, e.target.value)}
                     placeholder="Enter value"
