@@ -151,7 +151,7 @@ export default {
       to: '/log',
       text: 'Logs',
       Icon: History,
-    }
+    },
   ],
   billingTiers: {
     FREE: {
@@ -205,7 +205,6 @@ export default {
   ],
   eventCatalog: [
     'organization.created',
-    'organization.verified',
     'organization.updated',
     'organization.deleted',
     'organization.photo.updated',
