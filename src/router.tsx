@@ -106,11 +106,9 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: '',
         element: <AuthProtectedRoute />,
         children: [
           {
-            path: '',
             element: <OrganizationLayout />,
             children: [
               {
@@ -178,16 +176,6 @@ const router = createBrowserRouter([
                     loader: apiKeysLoader,
                     element: <ApiKeys />,
                   },
-                  // {
-                  //   path: 'branding',
-                  //   children: [
-                  //     {
-                  //       path: 'login',
-                  //       element: <BrandingLogin />,
-                  //       loader: brandingLoginLoader,
-                  //     },
-                  //   ],
-                  // },
                 ],
               },
             ],
