@@ -38,6 +38,7 @@ interface IOrganizationLoaderData {
     id: string;
     name: string;
     domain: string;
+    metadata: object;
     createdAt: string;
     updatedAt: string;
   }[];
@@ -102,6 +103,7 @@ interface MoreOpenState {
     id: string;
     name: string;
     domain: string;
+    metadata: object;
   };
 }
 
@@ -319,7 +321,7 @@ const Organizations = () => {
   });
   const [moreMenuOpen, setMoreMenuOpen] = useState<MoreOpenState>({
     open: null,
-    state: { id: '', name: '', domain: '' },
+    state: { id: '', name: '', domain: '', metadata: {} },
   });
   const [apiResponse, setApiResponse] = useState({
     error: false,
@@ -334,7 +336,7 @@ const Organizations = () => {
 
   const { revalidate } = useRevalidator();
 
-  const { changeOrganization } = useOrganization();
+  const { changeOrganization, organization } = useOrganization();
 
   const navigate = useNavigate();
 
@@ -562,10 +564,8 @@ const Organizations = () => {
     setBody({ ...body, [name]: value });
   };
 
-  const { organization } = useOrganization();
-
-  const parseMetadata = (metadata?: object): KeyValue[] => {
-    return Object.entries(metadata as object).map(([key, value]) => ({
+  const parseMetadata = (metadata: object = {}): KeyValue[] => {
+    return Object.entries(metadata).map(([key, value]) => ({
       key,
       value: value as string,
     }));
@@ -604,7 +604,7 @@ const Organizations = () => {
       domain: moreMenuOpen.state.domain,
     });
     setIsMetadataEditable(true);
-    setMetadata(parseMetadata(organization?.metadata));
+    setMetadata(parseMetadata(moreMenuOpen.state.metadata));
     setEditUser(true);
   };
 
@@ -743,7 +743,7 @@ const Organizations = () => {
                     action={
                       <Tooltip title="More Info">
                         <IconButton
-                          onClick={(event) =>
+                          onClick={(event) => {
                             setMoreMenuOpen({
                               ...moreMenuOpen,
                               open: event.currentTarget,
@@ -751,9 +751,10 @@ const Organizations = () => {
                                 id: value.id,
                                 name: value.name,
                                 domain: value.domain,
+                                metadata: value.metadata,
                               },
-                            })
-                          }
+                            });
+                          }}
                         >
                           <MoreVert />
                         </IconButton>
