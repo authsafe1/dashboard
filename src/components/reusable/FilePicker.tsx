@@ -26,7 +26,9 @@ const FileUploader: FC<FileUploaderProps> = ({
       type="file"
       onChange={handleFileChange}
       slotProps={{
+        ...props.slotProps,
         input: {
+          ...props.slotProps?.input,
           startAdornment: (
             <InputAdornment position="start">
               <AttachFile />

@@ -17,6 +17,7 @@ import {
   DialogTitle,
   Grid2 as Grid,
   IconButton,
+  InputAdornment,
   InputBase,
   LinearProgress,
   Menu,
@@ -39,7 +40,7 @@ import dayjs from 'dayjs';
 import React, { FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
-import { Alert, FileUploader, Password, RolePicker } from '../../components';
+import { Alert, FilePicker, Password, RolePicker } from '../../components';
 import { Role } from '../../components/reusable/RolePicker';
 import constants from '../../config/constants';
 import { readAndParseExcel } from '../../utils/csv';
@@ -426,24 +427,29 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
       <DialogTitle>Bulk Create User</DialogTitle>
       <DialogContent>
         <Grid container spacing={1} alignItems="center">
-          <Grid size={{ xs: 10 }}>
-            <FileUploader
+          <Grid size={{ xs: 12 }}>
+            <FilePicker
               fullWidth
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               onFileSelect={(file) => handleParseFile(file)}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title="Download user template">
+                        <IconButton
+                          color="primary"
+                          href="/template/bulk-user-template.xlsx"
+                          download="Bulk User Template.xlsx"
+                        >
+                          <Download />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
-          </Grid>
-          <Grid size={{ xs: 2 }}>
-            <Tooltip title="Download user template">
-              <IconButton
-                color="primary"
-                size="large"
-                href="/template/bulk-user-template.xlsx"
-                download="Bulk User Template.xlsx"
-              >
-                <Download />
-              </IconButton>
-            </Tooltip>
           </Grid>
           <Grid width="100%">
             <Box
@@ -456,7 +462,7 @@ const CreateBulkUser: FC<ICreateBulkUsersProps> = ({
             >
               <Info sx={{ color: 'text.secondary', fontSize: 'small' }} />
               <Typography color="textSecondary" fontSize="small">
-                Maximum 100 rows will be parsed
+                Maximum 100 users will be parsed.
               </Typography>
             </Box>
             <TableContainer sx={{ maxHeight: 500 }}>
