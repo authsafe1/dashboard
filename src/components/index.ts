@@ -2,7 +2,8 @@ import AuthSafeIcon from './icons/AuthSafeIcon';
 import Alert from './reusable/Alert';
 import AvatarUploader from './reusable/AvatarUploader';
 import ErrorTooltip from './reusable/ErrorTooltip';
-import FileUploader from './reusable/FileUploader';
+import FilePicker from './reusable/FilePicker.tsx';
+import LogViewer from './reusable/LogViewer.tsx';
 import Password from './reusable/Password';
 import PermissionPicker from './reusable/PermissionPicker';
 import RolePicker from './reusable/RolePicker';
@@ -17,7 +18,6 @@ import MetadataTable from './ui/MetadataTable';
 import MoreMenu from './ui/MoreMenu';
 import Preview from './ui/Preview';
 import ProfileAvatar from './ui/ProfileAvatar';
-import LogViewer from './reusable/LogViewer.tsx'
 
 export {
   Alert,
@@ -25,14 +25,14 @@ export {
   AvatarUploader,
   ErrorTooltip,
   FAQ,
-  FileUploader,
+  FilePicker,
   Footer,
   GrantSelector,
+  LogViewer,
   MetadataTable,
   MoreMenu,
   Password,
   PermissionPicker,
-  LogViewer,
   Preview,
   ProfileAvatar,
   RolePicker,
