@@ -26,7 +26,7 @@ import {
 } from 'react-router';
 import { Alert, Preview } from '~/components';
 import constants from '~/config/constants';
-import { useOrganization } from '~/context/OrganizationContext';
+import { useOrganization } from '~/context/organization-context';
 import { fetchApi } from '~/utils/loaders';
 import type { Route } from './+types/branding';
 

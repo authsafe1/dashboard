@@ -23,7 +23,7 @@ import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Alert, AvatarUploader, Password, SecretManager } from '~/components';
 import constants from '~/config/constants';
-import { useAuth } from '~/context/AuthContext';
+import { useAuth } from '~/context/auth-context';
 
 interface IDeleteOrganizationProps {
   open: boolean;

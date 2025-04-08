@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useOrganization } from '~/context/OrganizationContext';
+import { useOrganization } from '~/context/organization-context';
 
 export interface Permission {
   id: string;

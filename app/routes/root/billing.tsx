@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { Alert } from '~/components';
 import constants from '~/config/constants';
 import { brand } from '~/config/theme';
-import { Plan, useAuth } from '~/context/AuthContext';
+import { Plan, useAuth } from '~/context/auth-context';
 
 declare global {
   interface Window {

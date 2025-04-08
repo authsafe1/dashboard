@@ -14,7 +14,7 @@ import {
 import { type FormEventHandler, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import constants from '~/config/constants';
-import { useThemeToggle } from '~/context/ThemeContext';
+import { useThemeToggle } from '~/context/theme-context';
 import { Alert, AuthSafeIcon, Password } from '../../components';
 
 const ResetPassword = () => {

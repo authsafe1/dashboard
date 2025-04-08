@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 import { ScreenLoader } from '~/components';
-import { useOrganization } from '~/context/OrganizationContext';
+import { useOrganization } from '~/context/organization-context';
 
 export const OrganizationProtectedRoute = () => {
   const { organization, loading } = useOrganization();

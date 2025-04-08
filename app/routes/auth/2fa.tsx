@@ -15,8 +15,8 @@ import { type FormEventHandler, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { Alert, AuthSafeIcon, ScreenLoader } from '~/components';
 import constants from '~/config/constants';
-import { useAuth } from '~/context/AuthContext';
-import { useThemeToggle } from '~/context/ThemeContext';
+import { useAuth } from '~/context/auth-context';
+import { useThemeToggle } from '~/context/theme-context';
 
 const TwoFactorAuthentication = () => {
   const [searchParams] = useSearchParams();

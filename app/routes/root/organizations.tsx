@@ -30,7 +30,7 @@ import {
 } from 'react-router';
 import { Alert, MetadataTable } from '~/components';
 import constants from '~/config/constants';
-import { useOrganization } from '~/context/OrganizationContext';
+import { useOrganization } from '~/context/organization-context';
 import { fetchPaginatedData } from '~/utils/loaders';
 import type { Route } from './+types/organizations';
 

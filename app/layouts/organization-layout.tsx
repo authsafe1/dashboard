@@ -32,8 +32,8 @@ import {
 } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar, RouteLoader } from '../components';
 import constants from '../config/constants';
-import { useAuth } from '../context/AuthContext';
-import { useThemeToggle } from '../context/ThemeContext';
+import { useAuth } from '../context/auth-context';
+import { useThemeToggle } from '../context/theme-context';
 
 const ToggleThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 55,

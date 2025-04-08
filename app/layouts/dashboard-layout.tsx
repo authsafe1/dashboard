@@ -47,9 +47,9 @@ import {
 } from 'react-router';
 import { AuthSafeIcon, ProfileAvatar, RouteLoader } from '../components';
 import constants from '../config/constants';
-import { useAuth } from '../context/AuthContext';
-import { useOrganization } from '../context/OrganizationContext';
-import { useThemeToggle } from '../context/ThemeContext';
+import { useAuth } from '../context/auth-context';
+import { useOrganization } from '../context/organization-context';
+import { useThemeToggle } from '../context/theme-context';
 
 const drawerWidth = 300;
 

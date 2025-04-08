@@ -16,9 +16,9 @@ import {
   ScrollRestoration,
   useNavigate,
 } from 'react-router';
-import { AuthProvider } from '~/context/AuthContext';
-import { OrganizationProvider } from '~/context/OrganizationContext';
-import { ThemeProvider } from '~/context/ThemeContext';
+import { AuthProvider } from '~/context/auth-context';
+import { OrganizationProvider } from '~/context/organization-context';
+import { ThemeProvider } from '~/context/theme-context';
 import type { Route } from './+types/root';
 
 interface IBackButtonProps {

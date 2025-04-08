@@ -17,8 +17,8 @@ import { type FormEventHandler, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import constants from '~/config/constants';
-import { useAuth } from '~/context/AuthContext';
-import { useThemeToggle } from '~/context/ThemeContext';
+import { useAuth } from '~/context/auth-context';
+import { useThemeToggle } from '~/context/theme-context';
 import { Alert, AuthSafeIcon, Password, ScreenLoader } from '../../components';
 
 const Register = () => {

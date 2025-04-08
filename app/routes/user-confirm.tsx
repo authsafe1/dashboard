@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
 import { Alert, AuthSafeIcon, Password } from '~/components';
 import constants from '~/config/constants';
-import { useThemeToggle } from '~/context/ThemeContext';
+import { useThemeToggle } from '~/context/theme-context';
 
 const UserConfirm = () => {
   const loaderData: any = useLoaderData();

@@ -16,8 +16,8 @@ import { type FormEventHandler, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import isEmail from 'validator/es/lib/isEmail';
 import { Alert, AuthSafeIcon } from '~/components';
-import { useAuth } from '~/context/AuthContext';
-import { useThemeToggle } from '~/context/ThemeContext';
+import { useAuth } from '~/context/auth-context';
+import { useThemeToggle } from '~/context/theme-context';
 
 const ForgotPassword = () => {
   const [body, setBody] = useState({
