@@ -14,7 +14,7 @@ import {
 import { blue, green, orange, purple, red } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 const LOG_TYPES = [
@@ -32,7 +32,7 @@ const levelColors: Record<string, string> = {
   verbose: purple[700], // MUI Purple
 };
 
-const LogViewer = () => {
+const LogViewer: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [logs, setLogs] = useState<[string, string][]>([]);
   const [logType, setLogType] = useState(
