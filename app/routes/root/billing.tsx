@@ -1,4 +1,5 @@
-import { AutoAwesome, CheckCircleRounded } from '@mui/icons-material';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
 import {
   Box,
   Button,

@@ -1,4 +1,4 @@
-import { InfoOutlined } from '@mui/icons-material';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import {
   Box,
   Button,

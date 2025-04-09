@@ -1,4 +1,4 @@
-import { Google } from '@mui/icons-material';
+import Google from '@mui/icons-material/Google';
 import {
   Box,
   Button,

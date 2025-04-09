@@ -1,9 +1,7 @@
-import {
-  ArrowBack,
-  DarkMode,
-  LightMode,
-  Link as LinkIcon,
-} from '@mui/icons-material';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import DarkMode from '@mui/icons-material/DarkMode';
+import LightMode from '@mui/icons-material/LightMode';
+import LinkIcon from '@mui/icons-material/Link';
 import {
   Button,
   Card,

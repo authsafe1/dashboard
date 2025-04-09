@@ -1,4 +1,6 @@
-import { Add, Close, MoreHoriz } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import Close from '@mui/icons-material/Close';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import {
   Button,
   Dialog,

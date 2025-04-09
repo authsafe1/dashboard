@@ -1,26 +1,24 @@
-import {
-  AdminPanelSettings,
-  Apps,
-  Badge,
-  BarChart,
-  Bolt,
-  Brush,
-  Business,
-  CreditCard,
-  GroupAdd,
-  History,
-  IntegrationInstructions,
-  Key,
-  Laptop,
-  Link,
-  Person,
-  PersonAdd,
-  Shield,
-  Storage,
-  Timeline,
-  Verified,
-  Webhook,
-} from '@mui/icons-material';
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
+import Apps from '@mui/icons-material/Apps';
+import Badge from '@mui/icons-material/Badge';
+import BarChart from '@mui/icons-material/BarChart';
+import Bolt from '@mui/icons-material/Bolt';
+import Brush from '@mui/icons-material/Brush';
+import Business from '@mui/icons-material/Business';
+import CreditCard from '@mui/icons-material/CreditCard';
+import GroupAdd from '@mui/icons-material/GroupAdd';
+import History from '@mui/icons-material/History';
+import IntegrationInstructions from '@mui/icons-material/IntegrationInstructions';
+import Key from '@mui/icons-material/Key';
+import Laptop from '@mui/icons-material/Laptop';
+import Link from '@mui/icons-material/Link';
+import Person from '@mui/icons-material/Person';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import Shield from '@mui/icons-material/Shield';
+import Storage from '@mui/icons-material/Storage';
+import Timeline from '@mui/icons-material/Timeline';
+import Verified from '@mui/icons-material/Verified';
+import Webhook from '@mui/icons-material/Webhook';
 
 export default {
   steps: [

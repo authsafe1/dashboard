@@ -1,4 +1,5 @@
-import { Add, MoreHoriz } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import {
   Autocomplete,
   Button,

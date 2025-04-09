@@ -1,13 +1,11 @@
-import {
-  ChevronLeft,
-  KeyboardArrowDown,
-  Logout,
-  MenuBook,
-  Menu as MenuIcon,
-  Palette,
-  Person,
-  Settings,
-} from '@mui/icons-material';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Logout from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuBook from '@mui/icons-material/MenuBook';
+import Palette from '@mui/icons-material/Palette';
+import Person from '@mui/icons-material/Person';
+import Settings from '@mui/icons-material/Settings';
 import {
   Alert,
   AlertTitle,

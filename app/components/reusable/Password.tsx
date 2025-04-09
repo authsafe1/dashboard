@@ -1,4 +1,7 @@
-import { Close, Done, Visibility, VisibilityOff } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
+import Done from '@mui/icons-material/Done';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Grid,
   IconButton,

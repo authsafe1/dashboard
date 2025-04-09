@@ -1,4 +1,7 @@
-import { Logout, MenuBook, Palette, Person } from '@mui/icons-material';
+import Logout from '@mui/icons-material/Logout';
+import MenuBook from '@mui/icons-material/MenuBook';
+import Palette from '@mui/icons-material/Palette';
+import Person from '@mui/icons-material/Person';
 import {
   Alert,
   AlertTitle,

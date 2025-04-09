@@ -1,4 +1,4 @@
-import { AttachFile } from '@mui/icons-material';
+import AttachFile from '@mui/icons-material/AttachFile';
 import { InputAdornment, TextField, type TextFieldProps } from '@mui/material';
 import type { FC } from 'react';
 

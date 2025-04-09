@@ -1,9 +1,7 @@
-import {
-  CheckCircle,
-  ContentCopy,
-  Visibility,
-  VisibilityOff,
-} from '@mui/icons-material';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import ContentCopy from '@mui/icons-material/ContentCopy';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   IconButton,
   InputAdornment,

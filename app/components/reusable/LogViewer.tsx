@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { blue, green, orange, purple, red } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { type FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
@@ -40,10 +40,10 @@ const LogViewer: FC = () => {
       ? searchParams.get('type')
       : 'activity',
   );
-  const [startTime, setStartTime] = useState<Dayjs | null>(
+  const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(
     dayjs().subtract(1, 'day'),
   );
-  const [endTime, setEndTime] = useState<Dayjs | null>(dayjs());
+  const [endTime, setEndTime] = useState<dayjs.Dayjs | null>(dayjs());
   const [refreshInterval, setRefreshInterval] = useState(10);
   const [loading, setLoading] = useState(false);
 

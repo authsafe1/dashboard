@@ -1,4 +1,4 @@
-import { PhotoCameraOutlined } from '@mui/icons-material';
+import PhotoCameraOutlined from '@mui/icons-material/PhotoCameraOutlined';
 import { Box, type BoxProps, CircularProgress } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import ProfileAvatar from '~/components/ui/ProfileAvatar';

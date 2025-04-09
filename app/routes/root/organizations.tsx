@@ -1,4 +1,6 @@
-import { Add, ArrowForward, MoreVert } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import MoreVert from '@mui/icons-material/MoreVert';
 import {
   Button,
   Card,
