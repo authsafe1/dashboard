@@ -41,9 +41,7 @@ export const OrganizationProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [organization, setOrganization] = useState<Organization | null>(null);
-  const [organizationId, setOrganizationId] = useState<string | null>(
-    localStorage.getItem('organization-id'),
-  );
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetchOrganization = useCallback(async (id: string | null) => {
@@ -93,6 +91,12 @@ export const OrganizationProvider: FC<{ children: React.ReactNode }> = ({
   }, [fetchOrganization, organizationId]);
 
   useEffect(() => {
+    const cachedOrganizationId = localStorage.getItem('organization-id');
+
+    if (cachedOrganizationId) {
+      setOrganizationId(localStorage.getItem('organization-id'));
+    }
+
     checkOrganization();
   }, [checkOrganization]);
 
