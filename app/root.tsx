@@ -4,8 +4,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { Box, Button, Container, Typography } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { FC, PropsWithChildren } from 'react';
 import {
   isRouteErrorResponse,
@@ -16,9 +14,6 @@ import {
   ScrollRestoration,
   useNavigate,
 } from 'react-router';
-import { AuthProvider } from '~/context/auth-context';
-import { OrganizationProvider } from '~/context/organization-context';
-import { ThemeProvider } from '~/context/theme-context';
 import type { Route } from './+types/root';
 
 interface IBackButtonProps {
@@ -168,13 +163,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
         <Links />
       </head>
       <body>
-        <ThemeProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <OrganizationProvider>
-              <AuthProvider>{children}</AuthProvider>
-            </OrganizationProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
