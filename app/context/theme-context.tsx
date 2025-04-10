@@ -9,6 +9,7 @@ import React, {
   type FC,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { getTheme } from '../config/theme';
@@ -34,8 +35,14 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
     ? 'dark'
     : 'light';
 
-  const cachedTheme = localStorage.getItem('theme') as PaletteMode;
-  const [theme, setTheme] = useState<PaletteMode>(cachedTheme || preferredMode);
+  const [theme, setTheme] = useState<PaletteMode>(preferredMode);
+
+  useEffect(() => {
+    const cachedTheme = localStorage.getItem('theme') as PaletteMode;
+    if (cachedTheme) {
+      setTheme(cachedTheme);
+    }
+  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) => {
