@@ -1,5 +1,5 @@
 {
-  "name": "dashboard-temp",
+  "name": "@authsafe/dashboard",
   "private": true,
   "type": "module",
   "scripts": {
