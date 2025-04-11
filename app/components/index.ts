@@ -4,7 +4,6 @@ import AvatarUploader from './reusable/AvatarUploader';
 import ErrorTooltip from './reusable/ErrorTooltip';
 import FilePicker from './reusable/FilePicker';
 import { RouteLoader, ScreenLoader } from './reusable/Loader';
-import LogViewer from './reusable/LogViewer';
 import Password from './reusable/Password';
 import PermissionPicker from './reusable/PermissionPicker';
 import RolePicker from './reusable/RolePicker';
@@ -27,7 +26,6 @@ export {
   FilePicker,
   Footer,
   GrantSelector,
-  LogViewer,
   MetadataTable,
   MoreMenu,
   Password,
