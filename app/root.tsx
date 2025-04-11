@@ -145,8 +145,6 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </head>
       <body suppressHydrationWarning>
-        <ScrollRestoration />
-        <Scripts />
         <CacheProvider value={emotionCache}>
           <ThemeProvider>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -156,6 +154,8 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
             </LocalizationProvider>
           </ThemeProvider>
         </CacheProvider>
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   );
