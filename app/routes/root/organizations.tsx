@@ -33,7 +33,7 @@ import {
 import { Alert, MetadataTable } from '~/components';
 import constants from '~/config/constants';
 import { useOrganization } from '~/context/organization-context';
-import { fetchPaginatedData } from '~/utils/loaders';
+import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/organizations';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

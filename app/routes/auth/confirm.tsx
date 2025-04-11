@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useLoaderData } from 'react-router';
-import { fetchApi } from '~/utils/loaders';
+import { fetchApi } from '~/utils/fetchService';
 import type { Route } from './+types/confirm';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

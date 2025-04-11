@@ -25,7 +25,7 @@ import {
 import { Alert, Preview } from '~/components';
 import constants from '~/config/constants';
 import { useOrganization } from '~/context/organization-context';
-import { fetchApi } from '~/utils/loaders';
+import { fetchApi } from '~/utils/fetchService';
 import type { Route } from './+types/branding';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

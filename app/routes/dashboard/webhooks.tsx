@@ -29,7 +29,7 @@ import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
 import { Alert } from '~/components';
 import constants from '~/config/constants';
-import { fetchPaginatedData } from '~/utils/loaders';
+import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/webhooks';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

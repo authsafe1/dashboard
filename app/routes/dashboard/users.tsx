@@ -32,7 +32,7 @@ import isEmail from 'validator/es/lib/isEmail';
 import { Alert, Password, RolePicker } from '~/components';
 import type { Role } from '~/components/reusable/RolePicker';
 import constants from '~/config/constants';
-import { fetchPaginatedData } from '~/utils/loaders';
+import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/users';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

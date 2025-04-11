@@ -33,7 +33,7 @@ import {
 import isURL from 'validator/es/lib/isURL';
 import { Alert, GrantSelector, SecretManager } from '~/components';
 import constants from '~/config/constants';
-import { fetchPaginatedData } from '~/utils/loaders';
+import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/applications';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

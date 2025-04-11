@@ -11,7 +11,7 @@ import { LineChart } from '@mui/x-charts';
 import dayjs from 'dayjs';
 import { useLoaderData, useNavigate } from 'react-router';
 import { brand } from '~/config/theme';
-import { fetchApi } from '~/utils/loaders';
+import { fetchApi } from '~/utils/fetchService';
 
 export async function clientLoader() {
   const endpoints = [

@@ -28,7 +28,7 @@ import { type FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert } from '~/components';
 import constants from '~/config/constants';
-import { fetchPaginatedData } from '~/utils/loaders';
+import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/permissions';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
