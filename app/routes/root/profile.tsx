@@ -748,7 +748,7 @@ const Profile = () => {
           <Card variant="outlined">
             <CardHeader title="Delete Profile" />
             <CardContent>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} direction="column">
                 <Grid>
                   <Typography>
                     Deleting your profile is permanent and cannot be undone. All
