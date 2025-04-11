@@ -25,7 +25,8 @@ import type { Route } from './+types/root';
 
 export const meta: Route.MetaFunction = () => [
   { title: 'Dashboard | Authsafe' },
-  { charSet: 'utf-8' },
+  { charSet: 'UTF-8' },
+  { name: 'emotion-insertion-point', content: '' },
   { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
   { name: 'title', content: 'authsafe - Secure Access Management' },
   {
