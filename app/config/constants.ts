@@ -146,7 +146,7 @@ export default {
       Icon: CreditCard,
     },
     {
-      to: '/log',
+      to: '/logs',
       text: 'Logs',
       Icon: History,
     },
@@ -202,10 +202,6 @@ export default {
     'Create Role',
   ],
   eventCatalog: [
-    'organization.created',
-    'organization.updated',
-    'organization.deleted',
-    'organization.photo.updated',
     'user.invited',
     'user.created',
     'user.updated',
