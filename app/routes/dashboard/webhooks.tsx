@@ -29,6 +29,7 @@ import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import isURL from 'validator/es/lib/isURL';
 import { Alert } from '~/components';
 import constants from '~/config/constants';
+import type { IWebhookLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/webhooks';
 
@@ -56,19 +57,6 @@ interface ICreateWebhookProps {
   handleInputChange: (name: string, value: string | string[]) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
-}
-
-interface IWebhookLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    url: string;
-    description: string;
-    events: string[];
-    createdAt: string;
-    updatedAt: string;
-  }[];
 }
 
 interface IMoreMenuProps {
@@ -329,7 +317,7 @@ const Webhooks = () => {
 
   const { revalidate } = useRevalidator();
 
-  const loaderData = useLoaderData() as IWebhookLoaderData;
+  const loaderData = useLoaderData<IWebhookLoaderData>();
 
   const handleWebhookModalOpen = () => {
     setAddWebhook(true);

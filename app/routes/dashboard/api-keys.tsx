@@ -28,6 +28,7 @@ import { type FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert, SecretManager } from '~/components';
 import constants from '~/config/constants';
+import type { IApiKeyLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/api-keys';
 
@@ -40,19 +41,6 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     +skip,
     +take,
   );
-}
-
-interface IApiKeyLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    description: string;
-    token: string;
-    createdAt: string;
-    updatedAt: string;
-    expiresAt: string;
-  }[];
 }
 
 interface ICreateApiKeyProps {
@@ -440,7 +428,7 @@ const ApiKeys = () => {
     return 10;
   }, [searchParams]);
 
-  const loaderData = useLoaderData() as IApiKeyLoaderData;
+  const loaderData = useLoaderData<IApiKeyLoaderData>();
 
   const handleCreateApiKey = async () => {
     const tempValidation = { ...validation };

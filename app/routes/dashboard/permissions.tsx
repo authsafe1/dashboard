@@ -28,6 +28,7 @@ import { type FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert } from '~/components';
 import constants from '~/config/constants';
+import type { IPermissionLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/permissions';
 
@@ -40,18 +41,6 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     +skip,
     +take,
   );
-}
-
-interface IPermissionLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    key: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
 }
 
 interface IMoreMenuProps {
@@ -361,7 +350,7 @@ const Permissions = () => {
     return 10;
   }, [searchParams]);
 
-  const loaderData = useLoaderData() as IPermissionLoaderData;
+  const loaderData = useLoaderData<IPermissionLoaderData>();
 
   const handleCreatePermission = async () => {
     const tempValidation = { ...validation };

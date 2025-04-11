@@ -32,6 +32,7 @@ import isEmail from 'validator/es/lib/isEmail';
 import { Alert, Password, RolePicker } from '~/components';
 import type { Role } from '~/components/reusable/RolePicker';
 import constants from '~/config/constants';
+import type { IUserLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/users';
 
@@ -44,19 +45,6 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     +skip,
     +take,
   );
-}
-
-interface IUserLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    email: string;
-    isVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
-    Role: Role;
-  }[];
 }
 
 interface IRoleAssignmentProps {
@@ -820,7 +808,7 @@ const Users = () => {
     setDeleteUser(false);
   };
 
-  const loaderData = useLoaderData() as IUserLoaderData;
+  const loaderData = useLoaderData<IUserLoaderData>();
 
   return (
     <>

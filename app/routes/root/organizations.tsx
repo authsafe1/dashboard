@@ -33,6 +33,7 @@ import {
 import { Alert, MetadataTable } from '~/components';
 import constants from '~/config/constants';
 import { useOrganization } from '~/context/organization-context';
+import type { IOrganizationLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/organizations';
 
@@ -40,23 +41,11 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const { skip = 0, take = 10 } = Object.fromEntries(
     new URL(request.url).searchParams.entries(),
   );
-  return fetchPaginatedData(
+  return fetchPaginatedData<IOrganizationLoaderData>(
     `${import.meta.env.VITE_API_URL}/organization`,
     +skip,
     +take,
   );
-}
-
-interface IOrganizationLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    domain: string;
-    metadata: object;
-    createdAt: string;
-    updatedAt: string;
-  }[];
 }
 
 interface IMoreMenuProps {
@@ -648,7 +637,7 @@ const Organizations = () => {
     setDeleteUser(false);
   };
 
-  const loaderData = useLoaderData() as IOrganizationLoaderData;
+  const loaderData = useLoaderData<IOrganizationLoaderData>();
 
   return (
     <>

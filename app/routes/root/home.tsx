@@ -11,6 +11,7 @@ import { LineChart } from '@mui/x-charts';
 import dayjs from 'dayjs';
 import { useLoaderData, useNavigate } from 'react-router';
 import { brand } from '~/config/theme';
+import type { IHomeLoaderData } from '~/types/models';
 import { fetchApi } from '~/utils/fetchService';
 
 export async function clientLoader() {
@@ -25,8 +26,6 @@ export async function clientLoader() {
   const data = await Promise.all(endpoints.map((url) => fetchApi(url)));
   return data;
 }
-
-type ILoaderData = [number, number, number, [string, string]];
 
 const processLogData = (apiResponse: [string, string] = [] as any) => {
   const dailyCounts: Record<string, number> = {};
@@ -52,7 +51,7 @@ const processLogData = (apiResponse: [string, string] = [] as any) => {
 };
 
 const Insight = () => {
-  const loaderData = useLoaderData() as ILoaderData;
+  const loaderData = useLoaderData<IHomeLoaderData>();
   const navigate = useNavigate();
   const activityChart = processLogData(loaderData[3]);
 
@@ -81,7 +80,7 @@ const Insight = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <CardActionArea
-                onClick={() => navigate('/log?type=authorization')}
+                onClick={() => navigate('/logs?type=authorization')}
                 sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">
@@ -92,7 +91,7 @@ const Insight = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <CardActionArea
-                onClick={() => navigate('/log?type=security')}
+                onClick={() => navigate('/logs?type=security')}
                 sx={{ p: 2 }}
               >
                 <Typography variant="h5" color="textSecondary">

@@ -16,7 +16,7 @@ import constants from '~/config/constants';
 import { useThemeToggle } from '~/context/theme-context';
 
 const UserConfirm = () => {
-  const loaderData: any = useLoaderData();
+  const loaderData = useLoaderData<any>();
 
   const [body, setBody] = useState({
     name: '',

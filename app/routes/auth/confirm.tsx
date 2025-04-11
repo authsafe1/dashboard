@@ -18,7 +18,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 }
 
 const AuthConfirm = () => {
-  const loaderData: any = useLoaderData();
+  const loaderData: any = useLoaderData<any>();
 
   return (
     <Box

@@ -28,6 +28,7 @@ import { type FC, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator, useSearchParams } from 'react-router';
 import { Alert, PermissionPicker } from '~/components';
 import constants from '~/config/constants';
+import type { IRoleLoaderData } from '~/types/models';
 import { fetchPaginatedData } from '~/utils/fetchService';
 import type { Route } from './+types/roles';
 
@@ -40,19 +41,6 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     +skip,
     +take,
   );
-}
-
-interface IRoleLoaderData {
-  count: number;
-  all: {
-    id: string;
-    name: string;
-    key: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-    Permissions: [];
-  }[];
 }
 
 interface ICreateRoleProps {
@@ -381,7 +369,7 @@ const Roles = () => {
 
   const { revalidate } = useRevalidator();
 
-  const loaderData = useLoaderData() as IRoleLoaderData;
+  const loaderData = useLoaderData<IRoleLoaderData>();
 
   const handleCreateRole = async () => {
     const tempValidation = { ...validation };
