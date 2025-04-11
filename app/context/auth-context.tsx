@@ -62,13 +62,13 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isRequestPending, setRequestPending] = useState(false);
+  const [isRequestPending, setIsRequestPending] = useState(false);
   const isAuthenticated = useMemo(() => !!profile, [profile]);
 
   const debouncedCheckAuthRef = useRef(
     debounce(async () => {
       if (isRequestPending) return;
-      setRequestPending(true);
+      setIsRequestPending(true);
       setLoading(true);
       try {
         const response = await fetch(
@@ -91,7 +91,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         setProfile(null);
       } finally {
         setLoading(false);
-        setRequestPending(false);
+        setIsRequestPending(false);
       }
     }, 300),
   );
